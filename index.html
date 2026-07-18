@@ -101,13 +101,14 @@ nav.scrolled .lang-toggle button.active{background:var(--ink);color:var(--cream)
   background:rgba(251,248,241,.12);backdrop-filter:blur(8px);
   border:1px solid rgba(251,248,241,.25);border-radius:14px;
   color:var(--cream);padding:10px 16px;font-size:.8rem;line-height:1;
-  display:flex;align-items:center;gap:8px;white-space:nowrap;
+  display:flex;flex-direction:column;align-items:center;gap:6px;white-space:nowrap;
   opacity:0;animation:fadeUp 1s 1.5s ease forwards;
 }
-.hero__badge b{font-family:var(--serif);font-size:1.15rem;font-weight:700;letter-spacing:.02em;line-height:1;display:inline-flex;align-items:center}
+.hero__badge .row{display:flex;align-items:center;gap:8px;line-height:1}
+.hero__badge b{font-size:.8rem;font-weight:600;letter-spacing:.02em;line-height:1;display:inline-flex;align-items:center}
 .hero__badge span{display:inline-flex;align-items:center;line-height:1}
 .hero__badge .dot{opacity:.5}
-.hero__badge .sep{opacity:.5;margin:0 2px}
+.hero__badge .sep{display:none}
 .scroll-hint{position:absolute;bottom:20px;left:0;right:0;z-index:3;color:rgba(251,248,241,.6);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s 1.8s ease forwards;pointer-events:none}
 .scroll-hint svg{display:block;width:16px;height:16px;opacity:.8}
 
@@ -249,7 +250,8 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
   <header class="hero">
     <div class="hero__bg" id="heroBg" style="background-image:url('photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp')"></div>
     <div class="hero__badge">
-      <b>★ 4.7</b><span class="dot">·</span><span data-cs="518 recenzí" data-en="518 reviews">518 recenzí</span><span class="sep">|</span><span data-cs="Otevřeno denně 9–22" data-en="Open daily 9–22">Otevřeno denně 9–22</span>
+      <div class="row"><b>★ 4.7</b><span class="dot">·</span><span data-cs="518 recenzí" data-en="518 reviews">518 recenzí</span></div>
+      <div class="row"><span data-cs="Otevřeno denně 9–22" data-en="Open daily 9–22">Otevřeno denně 9–22</span></div>
     </div>
     <div class="hero__inner">
       <h1 id="heroTitle" aria-label="PF Café"></h1>
