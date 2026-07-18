@@ -1,0 +1,27 @@
+{
+  "placeId": "ChIJxQWZYyWVEkcRu3qjoTlKr6w",
+  "slug": "pf-cafe",
+  "name": "PF Café",
+  "address": "Dominikánské nám. 685/1A, 602 00 Brno-Brno-střed, Česko",
+  "phone": "+420 605 289 064",
+  "hours": [
+    "pondělí: 9:09–22:00",
+    "úterý: 9:09–22:00",
+    "středa: 9:09–22:00",
+    "čtvrtek: 9:09–22:00",
+    "pátek: 9:09–22:00",
+    "sobota: 9:09–22:00",
+    "neděle: 9:09–22:00"
+  ],
+  "location": {
+    "lat": 49.1937524,
+    "lng": 16.6070308
+  },
+  "rating": 4.7,
+  "userRatingCount": 518,
+  "googleMapsUri": "https://maps.google.com/?cid=12443245906833406651&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+  "primaryType": "coffee_shop",
+  "mapsEmbedUrl": "https://www.google.com/maps?q=49.1937524,16.6070308&z=16&output=embed",
+  "hasWebsite": false,
+  "websiteUri": null
+}

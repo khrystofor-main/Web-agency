@@ -1,0 +1,7 @@
+# Original heavy photos (18.5 MB) — optimized versions live in photos/optimized/
+photos/demo/
+
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store
