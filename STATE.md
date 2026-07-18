@@ -1,6 +1,6 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-18 · Status: 🟢 v1.2 deployed (branch `fix/badge-typography-layout`)
+> Last updated: 2026-07-18 · Status: 🟢 v1.3 deployed (branch `fix/mobile-overflow-load`)
 
 ## Goal
 
@@ -16,7 +16,7 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 | Photos | WebP, q80, longest side 1920px | `photos/optimized/` (771 KB total, from 18.5 MB originals) |
 | Animations | IntersectionObserver + vanilla JS scroll handlers | `prefers-reduced-motion` respected |
 | i18n | `data-cs` / `data-en` attributes + `setLang()` | Persisted in `localStorage` (`pf-cafe-lang`) |
-| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `fix/badge-typography-layout` |
+| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `fix/mobile-overflow-load` |
 
 ## Locked decisions (grill-me, 2026-07-18)
 
@@ -62,6 +62,14 @@ IDEA.md                    — original one-line brief
 ```
 
 ## Changelog
+
+### 2026-07-18 — v1.3 (branch `fix/mobile-overflow-load`, deployed)
+- **Mobile overflow fix:** page no longer zoomable/shifted on load in Safari (WebKit)
+- Root cause: `overflow-x:hidden` ignored by Safari for transformed elements
+- Fix: `overflow-x:clip` on html/body + `.gallery-sec`, `.gtrack-wrap`, `.philo-sec`, `.menu-sec`, `.visit-sec`
+- Gallery track: added `translate3d(0,0,0)` initial state for compositor layer
+- Performance: unified 3 scroll handlers into 1 rAF-throttled handler
+- Verified: WebKit overflowAmount 24px → 0px, all smoke tests pass
 
 ### 2026-07-18 — v1.2 (branch `fix/badge-typography-layout`, deployed)
 - Hero badge typography: ★ 4.7 now uses same sans font (Inter) and same .8rem size as "518 recenzí" / "Otevřeno denně 9–22" (was serif Playfair 1.15rem — visual mismatch)
