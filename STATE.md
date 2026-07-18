@@ -1,6 +1,6 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-18 · Status: 🟢 v1 live locally, iterating
+> Last updated: 2026-07-18 · Status: 🟢 v1.1 deployed (branch `fix/badge-alignment-scroll-hint`)
 
 ## Goal
 
@@ -16,7 +16,7 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 | Photos | WebP, q80, longest side 1920px | `photos/optimized/` (771 KB total, from 18.5 MB originals) |
 | Animations | IntersectionObserver + vanilla JS scroll handlers | `prefers-reduced-motion` respected |
 | i18n | `data-cs` / `data-en` attributes + `setLang()` | Persisted in `localStorage` (`pf-cafe-lang`) |
-| Hosting | local only, `python -m http.server 8765` | http://127.0.0.1:8765/index.html |
+| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `fix/badge-alignment-scroll-hint` |
 
 ## Locked decisions (grill-me, 2026-07-18)
 
@@ -60,6 +60,14 @@ cafe info/pf-cafe.json     — source data
 STATE.md                   — this file
 IDEA.md                    — original one-line brief
 ```
+
+## Changelog
+
+### 2026-07-18 — v1.1 (branch `fix/badge-alignment-scroll-hint`, deployed)
+- Hero badge: all items now vertically centered on one axis (`align-items:center`, was `baseline` — texts jumped)
+- Scroll hint "posouvejte / scroll": centered horizontally via full-width flex (animation `fadeUp` used to override `translateX(-50%)` and break centering)
+- Scroll hint: added visible static down-arrow SVG under the text (16px, explicit size attrs, `display:block`)
+- Bug: SVG inside flex column without width/height attrs could collapse — fixed
 
 ## Next steps / open ideas
 
