@@ -1,6 +1,6 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-18 · Status: 🟢 v1.1 deployed (branch `fix/badge-alignment-scroll-hint`)
+> Last updated: 2026-07-18 · Status: 🟢 v1.2 deployed (branch `fix/badge-typography-layout`)
 
 ## Goal
 
@@ -16,7 +16,7 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 | Photos | WebP, q80, longest side 1920px | `photos/optimized/` (771 KB total, from 18.5 MB originals) |
 | Animations | IntersectionObserver + vanilla JS scroll handlers | `prefers-reduced-motion` respected |
 | i18n | `data-cs` / `data-en` attributes + `setLang()` | Persisted in `localStorage` (`pf-cafe-lang`) |
-| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `fix/badge-alignment-scroll-hint` |
+| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `fix/badge-typography-layout` |
 
 ## Locked decisions (grill-me, 2026-07-18)
 
@@ -62,6 +62,11 @@ IDEA.md                    — original one-line brief
 ```
 
 ## Changelog
+
+### 2026-07-18 — v1.2 (branch `fix/badge-typography-layout`, deployed)
+- Hero badge typography: ★ 4.7 now uses same sans font (Inter) and same .8rem size as "518 recenzí" / "Otevřeno denně 9–22" (was serif Playfair 1.15rem — visual mismatch)
+- Badge layout: split into 2 stacked rows — rating+reviews on top, opening hours moved to bottom row
+- Removed unused `|` separator (`.sep` now `display:none`, HTML cleaned)
 
 ### 2026-07-18 — v1.1 (branch `fix/badge-alignment-scroll-hint`, deployed)
 - Hero badge: all items now vertically centered on one axis (`align-items:center`, was `baseline` — texts jumped)
