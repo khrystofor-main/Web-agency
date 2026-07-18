@@ -33,8 +33,11 @@ body{
   font-weight:400;
   line-height:1.6;
   overflow-x:hidden;
+  overflow-x:clip; /* modern: clips transformed elements in Safari */
   -webkit-font-smoothing:antialiased;
 }
+/* Safari fallback: clip on html too */
+html{overflow-x:clip}
 img{display:block;max-width:100%}
 h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15}
 
@@ -124,6 +127,8 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
 .reveal-left{opacity:0;transform:translateX(-46px);transition:opacity .9s cubic-bezier(.19,1,.22,1),transform .9s cubic-bezier(.19,1,.22,1)}
 .reveal-right{opacity:0;transform:translateX(46px);transition:opacity .9s cubic-bezier(.19,1,.22,1),transform .9s cubic-bezier(.19,1,.22,1)}
 .reveal-left.in,.reveal-right.in{opacity:1;transform:none}
+/* Clip sections so off-screen transformed children don't expand page width */
+.philo-sec,.menu-sec,.visit-sec{overflow-x:clip}
 
 /* ============ PHILOSOPHY ============ */
 .philo{display:grid;gap:36px;align-items:center}
@@ -174,12 +179,12 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
 .menu-item span{font-size:.86rem;color:var(--ink-soft)}
 
 /* ============ GALLERY ============ */
-.gallery-sec{max-width:none;padding-left:0;padding-right:0;background:var(--green-deep);color:var(--cream)}
+.gallery-sec{max-width:none;padding-left:0;padding-right:0;background:var(--green-deep);color:var(--cream);overflow-x:clip}
 .gallery-head{max-width:1100px;margin:0 auto 34px;padding:0 22px}
 .gallery-head .kicker{color:#E4A86B}
 .gallery-head .lead{color:rgba(251,248,241,.7)}
-.gtrack-wrap{overflow:hidden}
-.gtrack{display:flex;gap:18px;padding:0 22px;will-change:transform}
+.gtrack-wrap{overflow:hidden;overflow-x:clip}
+.gtrack{display:flex;gap:18px;padding:0 22px;will-change:transform;transform:translate3d(0,0,0)}
 .gcard{
   flex:0 0 auto;width:min(74vw,340px);aspect-ratio:3/4;border-radius:16px;overflow:hidden;position:relative;
 }
@@ -474,16 +479,26 @@ function buildHours(l){
   ).join('');
 }
 
-/* ============ nav scrolled state ============ */
+/* ============ unified scroll handler (rAF-throttled) ============ */
 const nav=document.getElementById('nav');
-addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>40)},{passive:true});
-
-/* ============ hero parallax ============ */
 const heroBg=document.getElementById('heroBg');
-addEventListener('scroll',()=>{
-  const y=scrollY;
-  if(y<innerHeight) heroBg.style.transform=`translateY(${y*.35}px) scale(${1+y*.0002})`;
-},{passive:true});
+let ticking=false;
+function onScroll(){
+  if(!ticking){
+    requestAnimationFrame(()=>{
+      const y=scrollY;
+      // nav state
+      nav.classList.toggle('scrolled',y>40);
+      // hero parallax
+      if(y<innerHeight) heroBg.style.transform=`translateY(${y*.35}px) scale(${1+y*.0002})`;
+      // gallery drift
+      galleryDrift();
+      ticking=false;
+    });
+    ticking=true;
+  }
+}
+addEventListener('scroll',onScroll,{passive:true});
 
 /* ============ reveal observer ============ */
 const io=new IntersectionObserver(es=>{
@@ -522,7 +537,6 @@ function galleryDrift(){
   const overflow=Math.max(gtrack.scrollWidth-innerWidth+44,0);
   gtrack.style.transform=`translateX(${-p*overflow}px)`;
 }
-addEventListener('scroll',galleryDrift,{passive:true});
 addEventListener('resize',galleryDrift);
 
 /* ============ init ============ */
