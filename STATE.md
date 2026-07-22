@@ -5,6 +5,7 @@
 ## v2.0.1 (branch `main-v2-fix-galerie`)
 
 - **Fix: touch swipe in gallery carousel on mobile.** Carousel drag used Pointer Events, but the viewport was missing `touch-action`, so the browser intercepted horizontal finger swipes as page scroll/pan and fired `pointercancel` — mouse drag worked, touch swipe didn't. Added `touch-action: pan-y` (vertical page scroll still works, horizontal swipes go to the carousel) + `-webkit-user-select: none` on `.carousel__viewport` (index.html:136).
+- **Carousel no longer loops at the edges.** `go()` now clamps to `[0, N-1]` instead of modulo-wrapping, so slide 6 can't flip further (and slide 1 can't flip back) — no more fast rewind through all photos. Prev/next arrows get `disabled` + dimmed style at the edges; edge drags get rubber-band resistance (dx × 0.35) so the user feels the wall. Autoplay changed to ping-pong (reverses direction at the edges) instead of rewinding 6→1.
 
 ## v2.0 overview (branch `main-v2`)
 

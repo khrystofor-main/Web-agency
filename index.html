@@ -152,6 +152,8 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
   transition:background .25s,transform .25s;
 }
 .carousel__btn:hover{background:rgba(34,56,43,.85);transform:translateY(-50%) scale(1.06)}
+.carousel__btn:disabled{opacity:.35;cursor:default;transform:translateY(-50%)}
+.carousel__btn:disabled:hover{background:rgba(34,56,43,.55);transform:translateY(-50%)}
 .carousel__btn--prev{left:34px}
 .carousel__btn--next{right:34px}
 @media(max-width:759px){.carousel__btn--prev{left:28px}.carousel__btn--next{right:28px}}
@@ -477,14 +479,19 @@ addEventListener('scroll',onScroll,{passive:true});
   });
   const dots=[...dotsBox.children];
 
+  const btnPrev=document.getElementById('carPrev');
+  const btnNext=document.getElementById('carNext');
   function go(i){
-    idx=(i+slides.length)%slides.length;
+    idx=Math.max(0,Math.min(slides.length-1,i));
     track.style.transform=`translateX(${-idx*100}%)`;
     dots.forEach((d,j)=>d.classList.toggle('active',j===idx));
     counter.textContent=(idx+1)+' / '+slides.length;
+    btnPrev.disabled=(idx===0);
+    btnNext.disabled=(idx===slides.length-1);
   }
-  document.getElementById('carPrev').addEventListener('click',()=>{go(idx-1);resetAuto();});
-  document.getElementById('carNext').addEventListener('click',()=>{go(idx+1);resetAuto();});
+  btnPrev.addEventListener('click',()=>{go(idx-1);resetAuto();});
+  btnNext.addEventListener('click',()=>{go(idx+1);resetAuto();});
+  go(0);
 
   // drag / swipe
   let startX=null,dx=0;
@@ -497,6 +504,8 @@ addEventListener('scroll',onScroll,{passive:true});
   viewport.addEventListener('pointermove',e=>{
     if(startX===null)return;
     dx=e.clientX-startX;
+    // rubber-band resistance at the edges
+    if((idx===0&&dx>0)||(idx===slides.length-1&&dx<0)) dx*=0.35;
     track.style.transform=`translateX(calc(${-idx*100}% + ${dx}px))`;
   });
   function endDrag(){
@@ -516,9 +525,10 @@ addEventListener('scroll',onScroll,{passive:true});
     if(e.key==='ArrowRight'){go(idx+1);resetAuto();}
   });
 
-  // autoplay
-  let auto=setInterval(()=>go(idx+1),5000);
-  function resetAuto(){clearInterval(auto);auto=setInterval(()=>go(idx+1),5000);}
+  // autoplay (ping-pong: reverses direction at the edges instead of rewinding)
+  let dir=1;
+  let auto=setInterval(()=>{if(idx===slides.length-1)dir=-1;else if(idx===0)dir=1;go(idx+dir);},5000);
+  function resetAuto(){clearInterval(auto);auto=setInterval(()=>{if(idx===slides.length-1)dir=-1;else if(idx===0)dir=1;go(idx+dir);},5000);}
   viewport.addEventListener('pointerenter',()=>clearInterval(auto));
   viewport.addEventListener('pointerleave',resetAuto);
 
