@@ -1,6 +1,19 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-18 · Status: 🟢 v1.3 deployed (branch `fix/mobile-overflow-load`)
+> Last updated: 2026-07-22 · Status: 🟢 v1.3 deployed (branch `fix/mobile-overflow-load`) · 🧪 v2.0 in progress (branch `main-v2`)
+
+## v2.0 overview (branch `main-v2`)
+
+Alternative version with simplified structure — only 3 content sections, in this order:
+
+1. **Hero** — unchanged from v1.3
+2. **Galerie** — **classic carousel** (arrows, dots, counter, swipe/drag, autoplay 5s, keyboard ←/→). No scroll-scrub drift. Same 6 photos.
+3. **Nabídka (Menu)** — full real menu with **prices + photos**, rendered from a `MENU` JS data array (source: `cafe info/Menu.md`). 10 categories (Kávové nápoje … Nealkoholické drinky) with sticky sidebar/pills + scrollspy (same pattern as v1). Items with a photo show a 72px thumb; items without one show a dashed placeholder frame. Dessert photos that don't map to a single menu item are shown as a photo strip under "Něco sladkého". Allergen list at the bottom.
+4. **Návštěva** — unchanged (also fixed `tel:` links to real number, was `+420****9064`).
+
+- Section **Filozofie removed** (nav, HTML, CSS).
+- Menu photos: `photos/menu photos/*.png` (originals) → compressed to `photos/menu-optimized/*.webp` (max 800px, q80, ~971 KB total, from ~13 MB).
+- Photo mapping: 11 menu items have photos (Caffè e latte, Flat white, Espresso tonic, Chai/Matcha latte, 2× limonáda, Croissant, slaný francouzský toast, Lívance, Full English, Chléb s medem, Grilovaný Camembert); all others → placeholder.
 
 ## Goal
 
@@ -62,6 +75,15 @@ IDEA.md                    — original one-line brief
 ```
 
 ## Changelog
+
+### 2026-07-22 — v2.0 (branch `main-v2`)
+- **Structure change:** removed Filozofie section; order is now Hero → Galerie → Nabídka → Návštěva (nav updated)
+- **Galerie:** replaced scroll-driven horizontal drift with a classic carousel — prev/next buttons, pagination dots, 1/6 counter, pointer swipe/drag, keyboard arrows, 5s autoplay (pauses on hover). Same 6 photos and captions
+- **Nabídka:** replaced 4 teaser categories with the full real menu from `cafe info/Menu.md` — 10 categories, ~90 items, all with prices. Menu data lives in a `MENU` JS array; section renders dynamically
+- **Menu photos:** new `photos/menu-optimized/` (WebP, ≤800px, q80, 971 KB total, from ~13 MB PNGs in `photos/menu photos/`). 11 items matched to photos by name; 7 more dessert photos shown as a strip under "Něco sladkého"; missing photos get a dashed placeholder frame
+- **Allergen list** added at bottom of menu
+- Fixed `tel:` links to the real number +420 605 289 064 (was masked `+420****9064`)
+- Verified: Playwright smoke test (desktop 1280px + mobile 390px), zero JS errors, no overflow
 
 ### 2026-07-18 — v1.3 (branch `fix/mobile-overflow-load`, deployed)
 - **Mobile overflow fix:** page no longer zoomable/shifted on load in Safari (WebKit)
