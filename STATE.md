@@ -1,6 +1,11 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-22 · Status: 🟡 v2.0.2 fix on branch `main-v2-fix-menu` (not yet deployed) — live is still `main-v2`: https://khrystofor-main.github.io/pf-cafe-lex/
+> Last updated: 2026-07-22 · Status: 🟢 v2.0.3 deployed (branch `main-v2-fix-visuals`): https://khrystofor-main.github.io/pf-cafe-lex/
+
+## v2.0.3 (branch `main-v2-fix-visuals`)
+
+- **Smooth hero parallax/zoom on mobile.** Hero image transform was applied directly from `scrollY` inside the scroll event; mobile scroll events arrive in bursts, so the zoom looked jerky on fast swipes. Now the scroll handler only records a target value and the image lerps toward it each frame (factor 0.12) — buttery smooth even on abrupt scrolls.
+- **Fix: page auto-scrolled down to the menu/gallery on load.** The menu script called `setActive()` on page load, whose mobile tab-centering `scrollIntoView` pulled the viewport away from the hero. Tab centering now only happens on an actual tab click.
 
 ## v2.0.2 (branch `main-v2-fix-menu`)
 
