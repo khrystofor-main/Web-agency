@@ -1,6 +1,6 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-22 · Status: 🟢 v1.3 deployed (branch `fix/mobile-overflow-load`) · 🧪 v2.0 in progress (branch `main-v2`)
+> Last updated: 2026-07-22 · Status: 🟢 v2.0 deployed (branch `main-v2`) — https://khrystofor-main.github.io/pf-cafe-lex/
 
 ## v2.0 overview (branch `main-v2`)
 
@@ -29,7 +29,7 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 | Photos | WebP, q80, longest side 1920px | `photos/optimized/` (771 KB total, from 18.5 MB originals) |
 | Animations | IntersectionObserver + vanilla JS scroll handlers | `prefers-reduced-motion` respected |
 | i18n | `data-cs` / `data-en` attributes + `setLang()` | Persisted in `localStorage` (`pf-cafe-lang`) |
-| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `fix/mobile-overflow-load` |
+| Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `main-v2` |
 
 ## Locked decisions (grill-me, 2026-07-18)
 
