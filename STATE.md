@@ -1,6 +1,10 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-22 · Status: 🟢 v2.0 deployed (branch `main-v2`) — https://khrystofor-main.github.io/pf-cafe-lex/
+> Last updated: 2026-07-22 · Status: 🟡 v2.0.1 fix on branch `main-v2-fix-galerie` (not yet deployed) — live is still `main-v2`: https://khrystofor-main.github.io/pf-cafe-lex/
+
+## v2.0.1 (branch `main-v2-fix-galerie`)
+
+- **Fix: touch swipe in gallery carousel on mobile.** Carousel drag used Pointer Events, but the viewport was missing `touch-action`, so the browser intercepted horizontal finger swipes as page scroll/pan and fired `pointercancel` — mouse drag worked, touch swipe didn't. Added `touch-action: pan-y` (vertical page scroll still works, horizontal swipes go to the carousel) + `-webkit-user-select: none` on `.carousel__viewport` (index.html:136).
 
 ## v2.0 overview (branch `main-v2`)
 
