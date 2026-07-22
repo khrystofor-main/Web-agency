@@ -1,6 +1,15 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-22 · Status: 🟡 v2.0.1 fix on branch `main-v2-fix-galerie` (not yet deployed) — live is still `main-v2`: https://khrystofor-main.github.io/pf-cafe-lex/
+> Last updated: 2026-07-22 · Status: 🟡 v2.0.2 fix on branch `main-v2-fix-menu` (not yet deployed) — live is still `main-v2`: https://khrystofor-main.github.io/pf-cafe-lex/
+
+## v2.0.2 (branch `main-v2-fix-menu`)
+
+- **Menu categories on mobile → single horizontal scrollable strip.** Previously the category pills wrapped onto many rows and covered half the phone screen. Now `flex-wrap:nowrap; overflow-x:auto` (scrollbar hidden) so all 10 categories sit in one line, swipeable left/right. Tapping a category auto-scrolls it to the center of the strip.
+- **Menu shows only the selected category.** Replaced the scrollspy/all-groups-long-list with tab behavior: clicking a category switches which group is displayed (`display:none` on the others). Initial view shows "Kávové nápoje". Applies to both mobile and desktop. Switching a category always smooth-scrolls to the top of the items list.
+- **Menu item cards redesigned.** Photo is now full-width on top (`aspect-ratio:4/3`, like gallery images) instead of a 72px side thumbnail; name + price sit in one row below the photo. Cards are vertical (`flex-direction:column`).
+- **Menu item font: Playfair Display → Inter (600).** Playfair Display uses oldstyle (text) figures where digits have ascenders/descenders and visually "jump" up and down; Inter has lining figures, so names and prices now sit on one level. Headings elsewhere keep Playfair.
+- **Menu items now translate on CZ→EN toggle.** Every MENU item got an English name (4th data slot); rendered `<b>` carries `data-cs`/`data-en` so `setLang()` picks it up like the rest of the page.
+- **"Něco sladkého" photo strip fixed.** The 7 loose dessert photos (`dessert-strip`) are now rendered as regular menu-item cards (big photo, label "Domácí dezert — výběr na baru", price "—") instead of a bare image grid that looked like a bug.
 
 ## v2.0.1 (branch `main-v2-fix-galerie`)
 
