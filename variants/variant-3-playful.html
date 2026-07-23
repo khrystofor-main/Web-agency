@@ -728,6 +728,9 @@ const MENU=[
   function setActive(id,centerTab){
     cats.forEach(c=>c.classList.toggle('active',c.dataset.target===id));
     groups.forEach(g=>{g.style.display=(g.id===id)?'':'none'});
+    /* page height changes with the category — stale ScrollTrigger positions
+       leave later sections (Návštěva) stuck at opacity 0 */
+    if(window.ScrollTrigger) ScrollTrigger.refresh();
     const active=cats.find(c=>c.dataset.target===id);
     if(centerTab&&active) active.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
   }
