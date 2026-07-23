@@ -56,7 +56,7 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 2. **Real site** (real address, phone, map) — not a demo
 3. **Palette:** warm paper cream `#F6F1E7` bg, ink `#23201A`, green `#33523E` / `#22382B`, accent orange `#C8742C` (NOT dark #1A1A1E — café = cozy)
 4. **Fonts:** Playfair Display + Inter
-5. **Menu without prices** — philosophy + categories only ("ask at the counter")
+5. ~~**Menu without prices** — philosophy + categories only ("ask at the counter")~~ **Revised in v2:** full real menu **with prices + photos** (10 categories, ~90 items), rendered from the `MENU` JS array (source: `cafe info/Menu.md`)
 6. **Photos compressed** to WebP (originals stay in `photos/demo/`, gitignored)
 7. **Full CZ/EN dual** — every string translated, CZ default
 8. **Animations:** IntersectionObserver base + vanilla JS for effects (option C — no GSAP, no pure CSS scroll-timeline)
@@ -126,7 +126,7 @@ IDEA.md                    — original one-line brief
 ## Next steps / open ideas
 
 - [ ] User review pass: colors, animation timing, copy
-- [ ] Possibly: real menu with prices if owner provides
+- [x] ~~Possibly: real menu with prices if owner provides~~ — done in v2 (full menu with prices + photos)
 - [ ] Possibly: OG meta tags + favicon before any public deploy
 - [ ] Deploy target TBD (Netlify/Vercel/GitHub Pages) — repo is private for now
 
