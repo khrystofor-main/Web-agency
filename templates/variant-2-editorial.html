@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="cs" data-variant-name="Editorial">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Šablona · Editorial</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --paper:#F7F3EC;
+  --paper-2:#EFE9DE;
+  --ink:#1C1A17;
+  --ink-soft:#6E675E;
+  --brand:#B33A2B;          /* přepisovatelné přes SITE.brand.color */
+  --oxblood:var(--brand);
+  --line:rgba(28,26,23,.25);
+  --line-strong:#1C1A17;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Newsreader',Georgia,serif;
+  --nav-h:58px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-weight:400;
+  line-height:1.65;
+  overflow-x:hidden;
+  overflow-x:clip;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--display);font-weight:900;line-height:1.02;letter-spacing:-.015em}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:rgba(247,243,236,0);
+  transition:background .35s,box-shadow .35s;
+}
+nav.scrolled{background:rgba(247,243,236,.95);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line-strong)}
+nav .logo{font-family:var(--display);font-weight:900;font-size:1.25rem;color:var(--ink);text-decoration:none}
+nav .right{display:flex;align-items:center;gap:18px}
+nav .links{display:none;gap:24px}
+nav .links a{color:var(--ink-soft);text-decoration:none;font-family:var(--display);font-style:italic;font-weight:600;font-size:.92rem;transition:color .2s}
+nav .links a:hover{color:var(--oxblood)}
+@media(min-width:760px){nav .links{display:flex}}
+.lang-toggle{display:flex;border-bottom:1px solid var(--line-strong);gap:2px}
+.lang-toggle button{
+  background:none;border:0;padding:5px 9px;cursor:pointer;
+  font-family:var(--body);font-size:.8rem;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-soft);transition:.2s;
+}
+.lang-toggle button.active{color:var(--oxblood);font-style:italic}
+
+/* ============ HERO (masthead) ============ */
+.hero{padding:calc(var(--nav-h) + 34px) 20px 0;overflow:hidden}
+.hero__inner{max-width:1160px;margin:0 auto}
+.masthead{border-top:3px double var(--line-strong);border-bottom:1px solid var(--line-strong);padding:10px 0 4px;text-align:center;overflow:hidden}
+.masthead h1{font-size:clamp(4rem,17vw,13rem);line-height:.95;letter-spacing:-.02em}
+.dateline{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;
+  border-bottom:3px double var(--line-strong);padding:9px 0;margin-bottom:26px;
+  font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+}
+.dateline b{color:var(--ink);font-weight:500}
+.dateline .ox{color:var(--oxblood)}
+.hero__body{display:grid;gap:26px}
+@media(min-width:860px){.hero__body{grid-template-columns:.9fr 1.6fr;gap:44px;align-items:end}}
+.hero__standfirst{padding-bottom:8px}
+.hero__standfirst p{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:clamp(1.2rem,2.6vw,1.55rem);line-height:1.4;color:var(--ink);
+}
+.hero__cta{
+  display:inline-block;margin-top:20px;
+  font-family:var(--display);font-style:italic;font-weight:600;font-size:1.05rem;
+  color:var(--oxblood);text-decoration:none;border-bottom:2px solid var(--oxblood);
+  padding-bottom:2px;transition:.2s;
+}
+.hero__cta:hover{color:var(--ink);border-color:var(--ink)}
+.hero__photo{margin:0;overflow:hidden}
+.hero__photo img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.hero__photo figcaption{
+  display:flex;justify-content:space-between;gap:14px;padding:8px 2px 0;
+  font-size:.8rem;font-style:italic;color:var(--ink-soft);
+  border-bottom:1px solid var(--line);padding-bottom:10px;
+}
+.hero__scroll{text-align:center;padding:26px 0 6px;font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* ============ SECTIONS ============ */
+section{position:relative;padding:90px 20px;max-width:1160px;margin:0 auto}
+.secnum{
+  position:absolute;top:64px;left:-10px;z-index:0;pointer-events:none;
+  font-family:var(--display);font-weight:900;font-size:clamp(6rem,18vw,15rem);line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(28,26,23,.16);
+}
+@media(min-width:1250px){.secnum{left:-70px}}
+.sec-head{position:relative;z-index:1}
+.kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--oxblood);font-weight:500;margin-bottom:16px;
+}
+.kicker::before{content:"";width:34px;height:1px;background:var(--oxblood)}
+.h2{font-size:clamp(2.4rem,7vw,4.6rem);margin-bottom:20px}
+.lead{color:var(--ink-soft);max-width:56ch;font-size:clamp(1.02rem,2.4vw,1.15rem)}
+.menu-sec,.visit-sec,.gallery-sec{overflow-x:clip}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ GALLERY (carousel, editorial frame) ============ */
+.carousel{position:relative;margin-top:46px;border-top:3px double var(--line-strong);padding-top:18px}
+.carousel__viewport{overflow:hidden;cursor:grab;touch-action:pan-y;-webkit-user-select:none;border:1px solid var(--line-strong)}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__track{display:flex;transition:transform .55s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3;user-select:none}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
+  position:absolute;left:0;bottom:0;
+  background:var(--paper);color:var(--ink);
+  font-family:var(--display);font-style:italic;font-weight:600;font-size:.95rem;
+  padding:8px 18px;border-top:1px solid var(--line-strong);border-right:1px solid var(--line-strong);
+}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:46px;height:46px;border-radius:50%;border:1px solid var(--line-strong);
+  background:var(--paper);color:var(--ink);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .25s,color .25s;
+}
+.carousel__btn:hover{background:var(--ink);color:var(--paper)}
+.carousel__btn:disabled{opacity:.3;cursor:default}
+.carousel__btn:disabled:hover{background:var(--paper);color:var(--ink)}
+.carousel__btn--prev{left:14px}
+.carousel__btn--next{right:14px}
+.carousel__dots{display:flex;justify-content:center;gap:9px;margin-top:18px}
+.carousel__dot{
+  width:8px;height:8px;border-radius:50%;border:1px solid var(--line-strong);padding:0;cursor:pointer;
+  background:var(--paper);transition:background .3s,transform .3s;
+}
+.carousel__dot.active{background:var(--oxblood);border-color:var(--oxblood);transform:scale(1.25)}
+.carousel__counter{
+  position:absolute;top:18px;right:0;z-index:3;
+  background:var(--paper);border-left:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);
+  color:var(--ink);font-family:var(--display);font-style:italic;font-weight:600;font-size:.85rem;
+  padding:6px 14px;
+}
+
+/* ============ MENU ============ */
+.menu-cats{
+  position:sticky;top:var(--nav-h);z-index:5;background:var(--paper);
+  display:flex;gap:4px 26px;margin:34px 0 40px;padding:12px 0;
+  border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.menu-cats::-webkit-scrollbar{display:none}
+.menu-cat{
+  flex:0 0 auto;border:0;background:none;cursor:pointer;white-space:nowrap;
+  font-family:var(--display);font-style:italic;font-weight:600;font-size:1.02rem;
+  color:var(--ink-soft);padding:2px 0;transition:color .2s;position:relative;
+}
+.menu-cat.active{color:var(--oxblood)}
+.menu-cat.active::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;background:var(--oxblood)}
+.menu-group{margin-bottom:40px}
+.menu-group h3{font-size:clamp(1.6rem,4vw,2.2rem);margin-bottom:12px}
+.menu-note{
+  border-top:3px double var(--line-strong);border-bottom:1px solid var(--line);
+  padding:12px 2px;font-size:.95rem;font-style:italic;color:var(--ink-soft);
+  margin:0 0 22px;max-width:70ch;
+}
+.menu-items{display:grid;gap:22px}
+@media(min-width:640px){.menu-items{grid-template-columns:1fr 1fr}}
+.menu-item{
+  display:flex;flex-direction:column;gap:10px;
+  border-bottom:1px dotted var(--line);padding-bottom:16px;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .7s var(--ease),transform .7s var(--ease);
+}
+.menu-item.in{opacity:1;transform:none}
+.menu-item__ph{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--paper-2);border:1px solid var(--line)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover}
+.menu-item__ph--empty{
+  border:1px dashed var(--line);background:transparent;
+  display:flex;align-items:center;justify-content:center;color:rgba(28,26,23,.28);
+}
+.menu-item__ph--empty svg{width:36px;height:36px}
+.menu-item__body{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.menu-item__body b{font-family:var(--display);font-weight:600;font-size:1.05rem;display:block;line-height:1.3}
+.menu-item__price{
+  flex:0 0 auto;font-family:var(--display);font-weight:600;color:var(--oxblood);
+  font-size:1rem;white-space:nowrap;
+}
+.allergens{font-size:.85rem;color:var(--ink-soft);line-height:1.8;margin-top:8px}
+.allergens b{color:var(--ink)}
+
+/* ============ VISIT ============ */
+.visit{display:grid;gap:40px;margin-top:42px}
+@media(min-width:880px){.visit{grid-template-columns:1fr 1fr;gap:64px;align-items:start}}
+.info-card{border-top:3px double var(--line-strong);padding:20px 0 8px;margin-bottom:22px}
+.info-card h3{font-size:1.3rem;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:900}
+.info-card h3 svg{flex:0 0 auto;color:var(--oxblood)}
+.hours-list{list-style:none}
+.hours-list li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dotted var(--line);font-size:.98rem}
+.hours-list li:last-child{border:0}
+.hours-list .today{color:var(--oxblood);font-weight:500;font-style:italic}
+.addr{font-size:1.05rem;line-height:1.75}
+.addr a{color:var(--oxblood);font-style:italic;text-decoration:none;border-bottom:1px solid rgba(179,58,43,.4);transition:.2s}
+.addr a:hover{border-color:var(--oxblood)}
+.phone-big{
+  font-family:var(--display);font-weight:600;font-size:1.5rem;color:var(--ink);text-decoration:none;transition:color .2s;
+}
+.phone-big:hover{color:var(--oxblood)}
+.map-wrap{border:1px solid var(--line-strong);aspect-ratio:4/3;background:var(--paper-2)}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:sepia(.35) saturate(.7) contrast(1.02)}
+
+/* ============ FOOTER ============ */
+footer{background:var(--ink);color:rgba(247,243,236,.72);padding:52px 20px 40px;text-align:center}
+footer .flogo{font-family:var(--display);font-weight:900;font-size:1.8rem;color:var(--paper);margin-bottom:8px}
+footer p{font-size:.88rem;margin:4px 0}
+footer a{color:var(--paper);text-decoration:none;border-bottom:1px solid rgba(247,243,236,.35)}
+footer a:hover{color:#E4A188;border-color:#E4A188}
+footer .tiny{margin-top:22px;font-size:.74rem;color:rgba(247,243,236,.4)}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  .reveal,.menu-item{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="#top" data-site="brand.name"></a>
+  <div class="right">
+    <div class="links">
+      <a href="#galerie" data-cs="Galerie" data-en="Gallery">Galerie</a>
+      <a href="#nabidka" data-cs="Nabídka" data-en="Menu">Nabídka</a>
+      <a href="#navsteva" data-cs="Návštěva" data-en="Visit">Návštěva</a>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button id="btn-cs" class="active" onclick="setLang('cs')">CZ</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO / MASTHEAD -->
+  <header class="hero">
+    <div class="hero__inner">
+      <div class="masthead"><h1 id="heroTitle" data-site="brand.name"></h1></div>
+      <div class="dateline">
+        <span data-site="hero.kicker"></span>
+        <span class="ox" data-site-if="rating">★ <span data-site="rating.score"></span> · <span data-site="rating.count"></span> <span data-cs="recenzí" data-en="reviews">recenzí</span></span>
+        <span data-site="hours.summary"></span>
+      </div>
+      <div class="hero__body">
+        <div class="hero__standfirst">
+          <p data-site="hero.sub"></p>
+          <a class="hero__cta" href="#navsteva"><span data-cs="Kde nás najdete ↓" data-en="Find us ↓">Kde nás najdete ↓</span></a>
+        </div>
+        <figure class="hero__photo">
+          <div style="overflow:hidden"><img id="heroImg" data-site-src="hero.image" data-site-alt="hero.imageAlt" alt=""></div>
+          <figcaption>
+            <span data-site="hero.caption"></span>
+            <span data-site="hero.captionMeta"></span>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="hero__scroll" data-cs="posouvejte" data-en="scroll">posouvejte</p>
+    </div>
+  </header>
+
+  <!-- GALLERY — carousel -->
+  <section id="galerie" class="gallery-sec">
+    <div class="secnum" aria-hidden="true">01</div>
+    <div class="sec-head">
+      <p class="kicker" data-cs="Galerie" data-en="Gallery">Galerie</p>
+      <h2 class="h2" data-cs="Okamžiky z kavárny" data-en="Moments from the café">Okamžiky z kavárny</h2>
+      <p class="lead" data-cs="Listujte šipkami nebo přejeďte prstem." data-en="Browse with the arrows or swipe.">Listujte šipkami nebo přejeďte prstem.</p>
+    </div>
+    <div class="carousel">
+      <div class="carousel__counter" id="carCounter">1 / 6</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" aria-label="Předchozí">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" aria-label="Další">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack">
+        </div>
+      </div>
+      <div class="carousel__dots" id="carDots"></div>
+    </div>
+  </section>
+
+  <!-- MENU — full menu with prices & photos -->
+  <section id="nabidka" class="menu-sec">
+    <div class="secnum" aria-hidden="true">02</div>
+    <div class="sec-head">
+      <p class="kicker" data-cs="Nápojový a jídelní lístek" data-en="Drinks &amp; food menu">Nápojový a jídelní lístek</p>
+      <h2 class="h2" data-cs="Nabídka" data-en="Our menu">Nabídka</h2>
+      <p class="lead" data-site="menu.intro"></p>
+    </div>
+
+    <div class="menu-cats" id="menuCats"></div>
+    <div class="menu-groups" id="menuGroups"></div>
+
+    <div class="menu-group" style="margin-top:10px">
+      <h3 data-cs="Seznam alergenů" data-en="Allergen list">Seznam alergenů</h3>
+      <p class="allergens" id="allergenList"></p>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section id="navsteva" class="visit-sec">
+    <div class="secnum" aria-hidden="true">03</div>
+    <div class="sec-head">
+      <p class="kicker" data-cs="Návštěva" data-en="Visit">Návštěva</p>
+      <h2 class="h2" data-cs="Těšíme se na vás" data-en="We look forward to you">Těšíme se na vás</h2>
+    </div>
+    <div class="visit">
+      <div>
+        <div class="info-card">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-cs="Adresa" data-en="Address">Adresa</span></h3>
+          <p class="addr">
+            <span data-site="contact.address.line1"></span><br>
+            <span data-site="contact.address.line2"></span><br>
+            <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Otevřít v Mapách Google →" data-en="Open in Google Maps →">Otevřít v Mapách Google →</a>
+          </p>
+        </div>
+        <div class="info-card">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-cs="Otevírací doba" data-en="Opening hours">Otevírací doba</span></h3>
+          <ul class="hours-list" id="hoursList"></ul>
+        </div>
+        <div class="info-card">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg><span data-cs="Telefon" data-en="Phone">Telefon</span></h3>
+          <a class="phone-big" data-site-href="contact.phoneHref" data-site="contact.phone"></a>
+        </div>
+      </div>
+      <div>
+        <div class="map-wrap">
+          <iframe data-site-map loading="lazy" title="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="flogo" data-site="brand.name"></div>
+  <p data-site="contact.address.short"></p>
+  <p><a data-site-href="contact.phoneHref" data-site="contact.phone"></a> · <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Mapy Google" data-en="Google Maps">Mapy Google</a></p>
+  <p class="tiny">© <span id="year"></span> <span data-site="brand.name"></span> · <span data-site="footer.credits"></span></p>
+  <p class="tiny"><a href="index.html" data-cs="← Všechny šablony" data-en="← All templates">← Všechny šablony</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<!-- ===== Šablona: data a logika ===== -->
+<script>window.TEMPLATE={letterClass:'ch',letterIndexVar:false,placeholderIcon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'};</script>
+<script src="assets/site.config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+/* ===== Animírované prvky specifické pro tuto šablonu ===== */
+if(window.gsap && window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+  const mm=gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)',()=>{
+
+    /* masthead: title rises from behind the rules */
+    gsap.from('#heroTitle',{yPercent:104,duration:1.1,ease:'power4.out',delay:.15});
+    gsap.from('.dateline span',{opacity:0,y:12,duration:.7,stagger:.12,delay:.7,ease:'power2.out'});
+    gsap.from('.hero__standfirst',{opacity:0,y:24,duration:.9,delay:.9,ease:'power2.out'});
+    gsap.from('.hero__photo',{opacity:0,y:30,duration:1,delay:.65,ease:'power2.out'});
+    gsap.fromTo('#heroImg',{scale:1.15},{scale:1,duration:1.6,delay:.65,ease:'power2.out'});
+
+    /* section heads: masked rise */
+    document.querySelectorAll('.sec-head').forEach(head=>{
+      gsap.from(head.children,{
+        opacity:0,y:34,duration:.9,stagger:.1,ease:'power3.out',
+        scrollTrigger:{trigger:head,start:'top 82%'}
+      });
+    });
+
+    /* giant margin numbers drift slower than the page (parallax) */
+    document.querySelectorAll('.secnum').forEach(num=>{
+      gsap.fromTo(num,{y:80},{y:-80,ease:'none',
+        scrollTrigger:{trigger:num.parentElement,start:'top bottom',end:'bottom top',scrub:true}
+      });
+    });
+
+    /* carousel frame reveal */
+    gsap.from('.carousel',{opacity:0,y:34,duration:.9,ease:'power3.out',
+      scrollTrigger:{trigger:'.carousel',start:'top 85%'}});
+
+    /* visit cards */
+    gsap.from('.visit .info-card',{opacity:0,y:26,duration:.7,stagger:.14,ease:'power2.out',
+      scrollTrigger:{trigger:'.visit',start:'top 82%'}});
+    gsap.from('.map-wrap',{opacity:0,y:26,duration:.8,ease:'power2.out',
+      scrollTrigger:{trigger:'.map-wrap',start:'top 85%'}});
+  });
+}
+</script>
+</body>
+</html>

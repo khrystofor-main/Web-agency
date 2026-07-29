@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="cs" data-variant-name="Playful">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Šablona · Playful</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --cream:#FFF6E9;
+  --cream-2:#FFEDCF;
+  --mustard:#E9A820;
+  --brand:#FF6B57;          /* přepisovatelné přes SITE.brand.color */
+  --coral:var(--brand);
+  --choco:#47281E;
+  --choco-soft:#7A5A4C;
+  --display:'Baloo 2',system-ui,sans-serif;
+  --body:'Nunito',system-ui,sans-serif;
+  --nav-h:62px;
+  --r:26px;
+  --shadow:5px 5px 0 var(--choco);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{
+  background:var(--cream);
+  color:var(--choco);
+  font-family:var(--body);
+  font-weight:400;
+  line-height:1.6;
+  overflow-x:hidden;
+  overflow-x:clip;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.05}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;transition:background .3s,box-shadow .3s;
+}
+nav.scrolled{background:rgba(255,246,233,.94);backdrop-filter:blur(10px);box-shadow:0 2px 0 var(--choco)}
+nav .logo{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--choco);text-decoration:none}
+nav .logo span{color:var(--coral)}
+nav .right{display:flex;align-items:center;gap:16px}
+nav .links{display:none;gap:20px}
+nav .links a{color:var(--choco-soft);text-decoration:none;font-family:var(--display);font-weight:600;font-size:.95rem;transition:color .2s}
+nav .links a:hover{color:var(--coral)}
+@media(min-width:760px){nav .links{display:flex}}
+.lang-toggle{display:flex;border:2px solid var(--choco);border-radius:99px;overflow:hidden;background:var(--cream)}
+.lang-toggle button{
+  background:none;border:0;padding:5px 12px;cursor:pointer;
+  font-family:var(--display);font-size:.8rem;font-weight:700;
+  color:var(--choco-soft);transition:.2s;
+}
+.lang-toggle button.active{background:var(--coral);color:#fff}
+
+/* ============ HERO ============ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:calc(var(--nav-h) + 30px) 20px 60px;overflow:hidden}
+.hero__blob{position:absolute;border-radius:50%;pointer-events:none}
+.hero__blob.b1{width:46vw;height:46vw;max-width:560px;max-height:560px;background:var(--cream-2);top:-12%;right:-10%}
+.hero__blob.b2{width:22vw;height:22vw;max-width:250px;max-height:250px;background:rgba(233,168,32,.25);bottom:6%;left:-6%}
+.hero__grid{position:relative;max-width:1140px;margin:0 auto;width:100%;display:grid;gap:44px;align-items:center}
+@media(min-width:860px){.hero__grid{grid-template-columns:1.05fr .95fr;gap:60px}}
+.hero__kicker{
+  display:inline-block;font-family:var(--display);font-weight:700;font-size:.85rem;
+  background:var(--mustard);color:var(--choco);padding:6px 16px;border-radius:99px;
+  border:2px solid var(--choco);box-shadow:3px 3px 0 var(--choco);
+  transform:rotate(-2deg);margin-bottom:22px;
+}
+.hero h1{font-size:clamp(3.6rem,12vw,7.6rem);color:var(--choco);display:flex;flex-wrap:wrap}
+.hero h1 .ch{display:inline-block}
+.hero__sub{color:var(--choco-soft);font-size:clamp(1.02rem,2.5vw,1.2rem);font-weight:600;max-width:36ch;margin-top:16px}
+.hero__cta{
+  display:inline-flex;align-items:center;gap:10px;margin-top:28px;padding:15px 30px;
+  border-radius:99px;background:var(--coral);color:#fff;text-decoration:none;
+  font-family:var(--display);font-weight:700;font-size:1.02rem;
+  border:2px solid var(--choco);box-shadow:var(--shadow);
+  transition:transform .2s,box-shadow .2s;
+}
+.hero__cta:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--choco)}
+.hero__photo{position:relative}
+.hero__photo .frame{
+  overflow:hidden;border-radius:44% 56% 52% 48% / 46% 44% 56% 54%;
+  border:3px solid var(--choco);transform:rotate(2deg);
+  box-shadow:8px 8px 0 var(--mustard);
+}
+.hero__photo img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.hero__badge{
+  position:absolute;top:-18px;right:2px;z-index:3;
+  background:var(--coral);color:#fff;
+  border:2px dashed #fff;outline:3px solid var(--coral);
+  border-radius:18px;padding:12px 16px;
+  font-family:var(--display);font-weight:700;font-size:.85rem;line-height:1.3;text-align:center;
+  transform:rotate(7deg);box-shadow:4px 4px 0 rgba(71,40,30,.3);
+}
+.hero__badge b{display:block;font-size:1.25rem}
+.scroll-hint{
+  position:absolute;bottom:18px;left:0;right:0;text-align:center;
+  font-family:var(--display);font-weight:700;font-size:.8rem;color:var(--choco-soft);
+}
+.scroll-hint .bounce{display:inline-block;animation:bounceDown 1.6s ease infinite}
+@keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ============ MARQUEE ============ */
+.marquee{background:var(--coral);border-top:3px solid var(--choco);border-bottom:3px solid var(--choco);overflow:hidden;padding:12px 0}
+.marquee--mustard{background:var(--mustard)}
+.marquee__track{display:flex;gap:0;white-space:nowrap;width:max-content;animation:marquee 22s linear infinite}
+.marquee span{
+  font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;padding-right:28px;
+}
+.marquee--mustard span{color:var(--choco)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============ GENERIC SECTION ============ */
+section{padding:88px 20px;max-width:1140px;margin:0 auto}
+.kicker{
+  display:inline-block;font-family:var(--display);font-weight:700;font-size:.82rem;
+  background:var(--cream-2);border:2px solid var(--choco);border-radius:99px;
+  padding:5px 15px;color:var(--choco);margin-bottom:18px;transform:rotate(-1.5deg);
+}
+.h2{font-size:clamp(2.3rem,6.5vw,3.8rem);margin-bottom:18px;color:var(--choco)}
+.h2 .dot{color:var(--coral)}
+.lead{color:var(--choco-soft);font-weight:600;max-width:56ch;font-size:clamp(1rem,2.4vw,1.12rem)}
+.menu-sec,.visit-sec,.gallery-sec{overflow-x:clip}
+
+/* ============ GALLERY (carousel, playful frame) ============ */
+.gallery-sec{max-width:none;background:var(--cream-2);border-top:3px solid var(--choco);border-bottom:3px solid var(--choco)}
+.gallery-inner{max-width:1140px;margin:0 auto}
+.carousel{position:relative;margin-top:44px}
+.carousel__viewport{
+  overflow:hidden;border-radius:30px;border:3px solid var(--choco);
+  box-shadow:8px 8px 0 var(--mustard);background:#fff;
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;
+}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__track{display:flex;transition:transform .55s cubic-bezier(.34,1.3,.5,1);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3;user-select:none}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
+  position:absolute;left:16px;bottom:14px;
+  background:#fff;border:2px solid var(--choco);border-radius:99px;
+  font-family:var(--display);font-weight:700;font-size:.85rem;color:var(--choco);
+  padding:6px 16px;box-shadow:3px 3px 0 var(--choco);transform:rotate(-2deg);
+}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:48px;height:48px;border-radius:50%;border:2px solid var(--choco);
+  background:var(--coral);color:#fff;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:3px 3px 0 var(--choco);
+  transition:transform .2s,box-shadow .2s,opacity .2s;
+}
+.carousel__btn:hover{transform:translateY(-50%) translate(1px,1px);box-shadow:2px 2px 0 var(--choco)}
+.carousel__btn:disabled{opacity:.35;cursor:default}
+.carousel__btn--prev{left:14px}
+.carousel__btn--next{right:14px}
+.carousel__dots{display:flex;justify-content:center;gap:10px;margin-top:20px}
+.carousel__dot{
+  width:12px;height:12px;border-radius:50%;border:2px solid var(--choco);padding:0;cursor:pointer;
+  background:#fff;transition:background .3s,transform .3s;
+}
+.carousel__dot.active{background:var(--coral);transform:scale(1.25)}
+.carousel__counter{
+  position:absolute;top:-14px;right:14px;z-index:3;
+  background:var(--mustard);border:2px solid var(--choco);border-radius:99px;
+  color:var(--choco);font-family:var(--display);font-weight:700;font-size:.8rem;
+  padding:5px 14px;box-shadow:3px 3px 0 var(--choco);transform:rotate(3deg);
+}
+
+/* ============ MENU ============ */
+.menu-cats{
+  position:sticky;top:var(--nav-h);z-index:5;background:var(--cream);
+  display:flex;gap:10px;margin:34px 0 40px;padding:12px 0;
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.menu-cats::-webkit-scrollbar{display:none}
+.menu-cat{
+  flex:0 0 auto;border:2px solid var(--choco);background:#fff;cursor:pointer;border-radius:99px;
+  font-family:var(--display);font-size:.9rem;font-weight:700;color:var(--choco);
+  padding:8px 18px;transition:.2s;box-shadow:3px 3px 0 var(--choco);white-space:nowrap;
+}
+.menu-cat:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--choco)}
+.menu-cat.active{background:var(--coral);color:#fff;transform:translate(2px,2px);box-shadow:1px 1px 0 var(--choco)}
+.menu-group{margin-bottom:40px}
+.menu-group h3{font-size:clamp(1.5rem,3.8vw,2rem);margin-bottom:12px}
+.menu-note{
+  background:var(--cream-2);border:2px solid var(--choco);border-radius:18px;
+  padding:12px 18px;font-size:.9rem;font-weight:600;color:var(--choco-soft);
+  margin:0 0 22px;max-width:66ch;box-shadow:4px 4px 0 var(--mustard);transform:rotate(-.4deg);
+}
+.menu-items{display:grid;gap:18px}
+@media(min-width:640px){.menu-items{grid-template-columns:1fr 1fr}}
+.menu-item{
+  background:#fff;border:2px solid var(--choco);border-radius:22px;
+  padding:12px;display:flex;flex-direction:column;gap:10px;
+  box-shadow:4px 4px 0 var(--choco);
+  opacity:0;transform:translateY(20px) scale(.94);
+  transition:opacity .5s cubic-bezier(.34,1.4,.64,1),transform .5s cubic-bezier(.34,1.4,.64,1),box-shadow .2s;
+}
+.menu-item.in{opacity:1;transform:none}
+.menu-item:hover{box-shadow:6px 6px 0 var(--mustard)}
+.menu-item__ph{width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:var(--cream-2)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover}
+.menu-item__ph--empty{
+  border:2px dashed rgba(71,40,30,.3);background:transparent;
+  display:flex;align-items:center;justify-content:center;color:rgba(71,40,30,.35);
+  font-size:1.6rem;
+}
+.menu-item__body{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:0 4px}
+.menu-item__body b{font-family:var(--body);font-weight:700;font-size:.98rem;display:block;line-height:1.35}
+.menu-item__price{
+  flex:0 0 auto;font-family:var(--display);font-weight:800;color:var(--coral);
+  font-size:1rem;white-space:nowrap;
+}
+.allergens{font-size:.82rem;font-weight:600;color:var(--choco-soft);line-height:1.8;margin-top:8px}
+.allergens b{color:var(--choco)}
+
+/* ============ VISIT ============ */
+.visit{display:grid;gap:40px;margin-top:40px}
+@media(min-width:860px){.visit{grid-template-columns:1fr 1fr;gap:60px;align-items:start}}
+.info-card{
+  background:#fff;border:2px solid var(--choco);border-radius:var(--r);
+  padding:24px 26px;margin-bottom:20px;box-shadow:5px 5px 0 var(--choco);
+}
+.info-card h3{font-size:1.2rem;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.info-card h3 svg{flex:0 0 auto;color:var(--coral)}
+.hours-list{list-style:none}
+.hours-list li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:2px dotted rgba(71,40,30,.2);font-size:.95rem;font-weight:600}
+.hours-list li:last-child{border:0}
+.hours-list .today{color:var(--coral);font-weight:800}
+.addr{font-size:1.02rem;font-weight:600;line-height:1.75}
+.addr a{color:var(--coral);font-weight:800;text-decoration:none;border-bottom:2px solid rgba(255,107,87,.4);transition:.2s}
+.addr a:hover{border-color:var(--coral)}
+.info-card.phone-card{background:var(--coral);border-color:var(--choco);color:#fff;box-shadow:5px 5px 0 var(--mustard)}
+.info-card.phone-card h3{color:#fff}
+.info-card.phone-card h3 svg{color:#fff}
+.phone-big{color:#fff;font-family:var(--display);font-size:1.45rem;font-weight:800;text-decoration:none}
+.map-wrap{border:3px solid var(--choco);border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;background:var(--cream-2);box-shadow:7px 7px 0 var(--mustard)}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:saturate(1.1)}
+
+/* ============ FOOTER ============ */
+.footer-wave{display:block;width:100%;margin-bottom:-1px}
+footer{background:var(--choco);color:rgba(255,246,233,.8);padding:46px 20px 38px;text-align:center}
+footer .flogo{font-family:var(--display);font-weight:800;font-size:1.7rem;color:var(--cream);margin-bottom:8px}
+footer .flogo span{color:var(--coral)}
+footer p{font-size:.88rem;font-weight:600;margin:4px 0}
+footer a{color:var(--cream);text-decoration:none;border-bottom:2px solid rgba(255,246,233,.35)}
+footer a:hover{color:var(--mustard);border-color:var(--mustard)}
+footer .tiny{margin-top:20px;font-size:.72rem;font-weight:400;color:rgba(255,246,233,.45)}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  .marquee__track{animation:none}
+  .menu-item{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="#top" data-site-split="brand.name"></a>
+  <div class="right">
+    <div class="links">
+      <a href="#galerie" data-cs="Galerie" data-en="Gallery">Galerie</a>
+      <a href="#nabidka" data-cs="Nabídka" data-en="Menu">Nabídka</a>
+      <a href="#navsteva" data-cs="Návštěva" data-en="Visit">Návštěva</a>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button id="btn-cs" class="active" onclick="setLang('cs')">CZ</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero__blob b1"></div>
+    <div class="hero__blob b2"></div>
+    <div class="hero__grid">
+      <div>
+        <p class="hero__kicker" data-site="hero.kicker"></p>
+        <h1 id="heroTitle" data-site-letters="brand.name"></h1>
+        <p class="hero__sub" data-site="hero.sub"></p>
+        <a class="hero__cta" href="#navsteva">
+          <span data-cs="Kde nás najdete" data-en="Find us">Kde nás najdete</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </a>
+      </div>
+      <div class="hero__photo">
+        <div class="hero__badge" data-site-if="rating">
+          <b>★ <span data-site="rating.score"></span></b>
+          <span><span data-site="rating.count"></span> <span data-cs="recenzí" data-en="reviews">recenzí</span></span><br>
+          <span data-site="hours.summary"></span>
+        </div>
+        <div class="frame"><img data-site-src="hero.image" data-site-alt="hero.imageAlt" alt=""></div>
+      </div>
+    </div>
+    <div class="scroll-hint"><span data-cs="posouvejte" data-en="scroll">posouvejte</span> <span class="bounce">↓</span></div>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marquee1"></div>
+  </div>
+
+  <!-- GALLERY — carousel -->
+  <section id="galerie" class="gallery-sec">
+    <div class="gallery-inner">
+      <p class="kicker anim-pop" data-cs="Galerie" data-en="Gallery">Galerie</p>
+      <h2 class="h2 anim-pop"><span data-cs="Okamžiky z kavárny" data-en="Moments from the café">Okamžiky z kavárny</span><span class="dot">✨</span></h2>
+      <p class="lead anim-pop" data-cs="Listujte šipkami nebo přejeďte prstem." data-en="Browse with the arrows or swipe.">Listujte šipkami nebo přejeďte prstem.</p>
+      <div class="carousel anim-pop">
+        <div class="carousel__counter" id="carCounter">1 / 6</div>
+        <button class="carousel__btn carousel__btn--prev" id="carPrev" aria-label="Předchozí">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel__btn carousel__btn--next" id="carNext" aria-label="Další">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="carousel__viewport" id="carViewport">
+          <div class="carousel__track" id="carTrack">
+          </div>
+        </div>
+        <div class="carousel__dots" id="carDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU — full menu with prices & photos -->
+  <section id="nabidka" class="menu-sec">
+    <p class="kicker anim-pop" data-cs="Nápojový a jídelní lístek" data-en="Drinks &amp; food menu">Nápojový a jídelní lístek</p>
+    <h2 class="h2 anim-pop"><span data-cs="Nabídka" data-en="Our menu">Nabídka</span><span class="dot">!</span></h2>
+    <p class="lead anim-pop" data-site="menu.intro"></p>
+
+    <div class="menu-cats" id="menuCats"></div>
+    <div class="menu-groups" id="menuGroups"></div>
+
+    <div class="menu-group" style="margin-top:10px">
+      <h3 data-cs="Seznam alergenů" data-en="Allergen list">Seznam alergenů</h3>
+      <p class="allergens" id="allergenList"></p>
+    </div>
+  </section>
+
+  <!-- MARQUEE 2 -->
+  <div class="marquee marquee--mustard" aria-hidden="true">
+    <div class="marquee__track" id="marquee2"></div>
+  </div>
+
+  <!-- VISIT -->
+  <section id="navsteva" class="visit-sec">
+    <p class="kicker anim-pop" data-cs="Návštěva" data-en="Visit">Návštěva</p>
+    <h2 class="h2 anim-pop"><span data-cs="Těšíme se na vás" data-en="We look forward to you">Těšíme se na vás</span><span class="dot">!</span></h2>
+    <div class="visit">
+      <div>
+        <div class="info-card anim-pop">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-cs="Adresa" data-en="Address">Adresa</span></h3>
+          <p class="addr">
+            <span data-site="contact.address.line1"></span><br>
+            <span data-site="contact.address.line2"></span><br>
+            <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Otevřít v Mapách Google →" data-en="Open in Google Maps →">Otevřít v Mapách Google →</a>
+          </p>
+        </div>
+        <div class="info-card anim-pop">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-cs="Otevírací doba" data-en="Opening hours">Otevírací doba</span></h3>
+          <ul class="hours-list" id="hoursList"></ul>
+        </div>
+        <div class="info-card phone-card anim-pop">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg><span data-cs="Telefon" data-en="Phone">Telefon</span></h3>
+          <a class="phone-big" data-site-href="contact.phoneHref" data-site="contact.phone"></a>
+        </div>
+      </div>
+      <div class="anim-pop">
+        <div class="map-wrap">
+          <iframe data-site-map loading="lazy" title="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<svg class="footer-wave" viewBox="0 0 1440 52" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C240,55 480,0 720,22 C960,44 1200,8 1440,28 L1440,52 L0,52 Z" fill="#47281E"/></svg>
+<footer>
+  <div class="flogo" data-site-split="brand.name"></div>
+  <p data-site="contact.address.short"></p>
+  <p><a data-site-href="contact.phoneHref" data-site="contact.phone"></a> · <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Mapy Google" data-en="Google Maps">Mapy Google</a></p>
+  <p class="tiny">© <span id="year"></span> <span data-site="brand.name"></span> · <span data-site="footer.credits"></span></p>
+  <p class="tiny"><a href="index.html" data-cs="← Všechny šablony" data-en="← All templates">← Všechny šablony</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<!-- ===== Šablona: data a logika ===== -->
+<script>window.TEMPLATE={letterClass:'ch',letterIndexVar:false,placeholderIcon:'☕'};</script>
+<script src="assets/site.config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+/* ===== Animírované prvky specifické pro tuto šablonu ===== */
+/* běžící pruh se slovy — vlastní data varianty */
+const MARQ={cs:['káva','snídaně','dezerty','limonády','víno','drinky'],
+            en:['coffee','breakfast','desserts','lemonades','wine','drinks']};
+function buildMarquees(l){
+  const words=MARQ[l]||MARQ.cs;
+  const seq=words.map(w=>`<span>${w} ✦</span>`).join('');
+  const html=seq.repeat(4)+seq.repeat(4);
+  const m1=document.getElementById('marquee1');
+  const m2=document.getElementById('marquee2');
+  if(m1)m1.innerHTML=html;
+  if(m2)m2.innerHTML=html;
+}
+(window.SITE_ON_LANG=window.SITE_ON_LANG||[]).push(buildMarquees);
+buildMarquees(document.documentElement.lang);
+
+if(window.gsap && window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+  const mm=gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)',()=>{
+
+    /* hero: letters bounce in, photo + badge pop */
+    gsap.from('#heroTitle .ch',{y:60,opacity:0,rotation:8,duration:.8,stagger:.06,ease:'back.out(2)',delay:.2});
+    gsap.from('.hero__kicker',{scale:0,rotation:-14,opacity:0,duration:.6,ease:'back.out(1.8)',delay:.1});
+    gsap.from('.hero__sub',{opacity:0,y:22,duration:.6,delay:.8,ease:'power2.out'});
+    gsap.from('.hero__cta',{scale:0,opacity:0,duration:.6,delay:1,ease:'back.out(1.9)'});
+    gsap.from('.hero__photo .frame',{scale:.7,opacity:0,rotation:9,duration:.9,delay:.45,ease:'back.out(1.6)'});
+    gsap.from('.hero__badge',{scale:0,rotation:40,opacity:0,duration:.7,delay:1.15,ease:'back.out(2.2)'});
+    gsap.from('.scroll-hint',{opacity:0,duration:.6,delay:1.5});
+
+    /* generic pop-in for tagged blocks */
+    document.querySelectorAll('.anim-pop').forEach(el=>{
+      gsap.from(el,{opacity:0,y:34,scale:.96,duration:.7,ease:'back.out(1.5)',
+        scrollTrigger:{trigger:el,start:'top 85%'}});
+    });
+  });
+}
+</script>
+</body>
+</html>

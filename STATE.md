@@ -1,8 +1,29 @@
 # PF Café — Website · Project State
 
-> Last updated: 2026-07-23 · Status: 🟢 v2.0.3 deployed (branch `main-v2-fix-visuals`): https://khrystofor-main.github.io/pf-cafe-lex/ · design-варианты в работе (branch `claude/website-design-variants-087cb0`)
+> Last updated: 2026-07-29 · Status: 🟢 v2.0.3 deployed (branch `main-v2-fix-visuals`): https://khrystofor-main.github.io/pf-cafe-lex/ · дизайн-варианты переведены в переиспользуемые шаблоны (`templates/`)
 
-## 2026-07-23 — Design-варианты (branch `claude/website-design-variants-087cb0`)
+## 2026-07-29 — `variants/` → `templates/`: шаблоны вместо сайта одного кафе
+
+Пять вариантов перестали быть сайтом PF Café и стали заготовками, которые наполняются данными любого заведения. Решения пользователя: общий внешний конфиг + общий движок; контент PF Café остаётся демо-данными; темизация ограничена контентом и бренд-цветом (структура секций не переключается).
+
+```
+templates/assets/site.config.js          — ВСЕ данные заведения (demo: PF Café)
+templates/assets/site.config.example.js  — пустой скелет с комментариями
+templates/assets/site.js                 — движок: i18n, часы, галерея, меню, карусель, nav, reveal
+templates/variant-1..5-*.html            — только разметка + CSS + свой JS варианта
+templates/index.html                     — хаб (добавлена недостающая карточка варианта 3)
+templates/README.md                      — инструкция «как сделать сайт для своего кафе»
+```
+
+- Подстановка через data-атрибуты: `data-site`, `data-site-href/-src/-alt`, `data-site-letters` (hero по буквам), `data-site-split` (двухцветное лого `PF <span>Café</span>`), `data-site-map`, `data-site-if`. `data-cs`/`data-en` остались для копирайта, принадлежащего дизайну варианта
+- Массив `MENU` (~120 строк) был продублирован 5 раз и разошёлся между файлами — теперь единственный источник `SITE.menu.groups`, эталон взят из варианта 1
+- Скрипты подключены как классические `<script src>` без модулей и `fetch`, чтобы шаблоны открывались по `file://`
+- CSS-токены приведены к общему контракту: в каждом варианте добавлен `--brand`, старое имя акцента стало алиасом (`--accent:var(--brand)`, `--oxblood`, `--coral`, `--terra`, `--gold`). `SITE.brand.color` переопределяет `--brand`
+- JS, специфичный для варианта (GSAP в 2/3/5, marquee в 3, parallax солнца в 4), остался в `<script>` в конце своего файла; на смену языка подписывается через `window.SITE_ON_LANG`
+- Мелкие расхождения копирайта, которые накопились между вариантами, унифицированы по конфигу (hero-подзаголовок v5, подписи галереи v5, бейджи с часами в v3/v4)
+- Корневой `index.html` (боевой сайт PF Café) не изменялся
+
+## 2026-07-23 — Design-варианты (branch `claude/website-design-variants-087cb0`, папка позже переименована в `templates/`)
 
 4 альтернативных дизайна текущего сайта (v2-структура: Hero → Galerie-карусель → Nabídka с ценами и фото → Návštěva) + хаб сравнения. Решения grill-me 2026-07-23: отдельные самодостаточные HTML-файлы; полный рестайл при том же порядке секций и дословном CZ/EN контенте; GSAP+ScrollTrigger с CDN разрешён (используют варианты 2 и 3, guard через `gsap.matchMedia('prefers-reduced-motion')`).
 
