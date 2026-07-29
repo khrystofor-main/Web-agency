@@ -1,6 +1,6 @@
 # Šablony webu pro kavárnu
 
-Pět hotových jednostránkových šablon se stejnou strukturou a různým vizuálním
+Čtyři hotové jednostránkové šablony se stejnou strukturou a různým vizuálním
 charakterem. Veškerý obsah konkrétního podniku je v **jednom souboru** —
 `assets/site.config.js`. HTML šablon se nemusí sahat.
 
@@ -8,11 +8,10 @@ charakterem. Veškerý obsah konkrétního podniku je v **jednom souboru** —
 |---|---|---|---|
 | `variant-1-swiss.html` | Swiss Minimal — bílá, černý grotesk, červený akcent | Space Grotesk + Inter | CSS |
 | `variant-2-editorial.html` | Editorial — novinový masthead, čísla sekcí | Fraunces + Newsreader | GSAP |
-| `variant-3-playful.html` | Playful — krémová, korál, běžící pruh | Baloo 2 + Nunito | GSAP |
 | `variant-4-terracotta.html` | Terracotta — písek, oliva, oblouky | Marcellus + Work Sans | CSS |
 | `variant-5-corporate-luxury.html` | Corporate Luxury — námořnická modř a zlatá | Playfair Display + Lato | GSAP |
 
-`index.html` je rozcestník pro porovnání všech pěti.
+`index.html` je rozcestník pro porovnání všech čtyř.
 Demo obsah = PF Café, Brno. Kořenový `../index.html` je hotový web toho podniku,
 není to šablona.
 
@@ -63,7 +62,7 @@ Vše ostatní (typografie, rozvržení, animace) je záměrně v HTML/CSS jednot
 
 - Bez buildu a frameworků. Skripty jsou klasické `<script src>`, takže soubor
   jde otevřít i dvojklikem přes `file://`.
-- Šablony 2, 3 a 5 načítají GSAP z CDN; animace jsou pod
+- Šablony 2 a 5 načítají GSAP z CDN; animace jsou pod
   `prefers-reduced-motion` guardem a bez internetu se web jen nehýbe.
 - Lokální náhled celého repozitáře:
 
