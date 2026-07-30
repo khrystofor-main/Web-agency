@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" data-variant-name="Warm Paper">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<base href="../">
-<title>PF Café — Brno</title>
-<meta name="description" content="PF Café na Dominikánském náměstí v Brně. Káva, dezerty, snídaně. Otevřeno denně 9:00–22:00.">
+<title>Šablona · Warm Paper</title>
+<meta name="description" content="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -18,12 +17,53 @@
   --ink-soft:#5C564B;
   --green:#33523E;
   --green-deep:#22382B;
-  --accent:#C8742C;
-  --cream:#FBF8F1;
+  --heading-green:#22382B;       /* nadpisy kategorií menu */
+  --brand:#C8742C;               /* přepisovatelné přes SITE.brand.color */
+  --accent:var(--brand);
+  --cream:#FBF8F1;               /* text na tmavých plochách — v obou tématech světlý */
+  --card-bg:#FBF8F1;             /* výplň karet */
+  --on-cream:#23201A;            /* text na krémové výplni */
+  --on-ink:#FBF8F1;              /* text na inverzní výplni */
+  --raised-bg:#23201A;           /* patička */
+  --card-line:rgba(35,32,26,.09);
+  --hours-line:rgba(35,32,26,.12);
+  --ph-line:rgba(35,32,26,.22);
+  --ph-empty:rgba(35,32,26,.3);
+  --nav-rgb:246,241,231;
+  --nav-shadow:rgba(35,32,26,.08);
+  --map-filter:sepia(.25) saturate(.85);
   --radius:18px;
   --serif:'Playfair Display',Georgia,serif;
   --sans:'Inter',system-ui,sans-serif;
   --nav-h:60px;
+  color-scheme:light;
+}
+/* ============ NOČNÍ TÉMA ============
+   Papír ztmavne do teplé sépie, zelené plochy do noční zeleně.
+   Oranžový akcent se přimíchá k bílé přes color-mix, takže vlastní
+   barva z brand.color zůstává v platnosti i po setmění. */
+html[data-theme="dark"]{
+  --paper:#191712;
+  --paper-2:#221E17;
+  --ink:#F2ECDF;
+  --ink-soft:#A2988A;
+  --green:#8FB89A;
+  --green-deep:#16211A;
+  --heading-green:#9CC0A6;
+  --accent:var(--brand);
+  --accent:color-mix(in srgb, var(--brand) 72%, #FFFFFF);
+  --card-bg:#221E17;
+  --on-cream:#191712;
+  --on-ink:#191712;
+  --raised-bg:#141210;
+  --card-line:rgba(242,236,223,.1);
+  --hours-line:rgba(242,236,223,.14);
+  --ph-line:rgba(242,236,223,.2);
+  --ph-empty:rgba(242,236,223,.3);
+  --nav-rgb:25,23,18;
+  --nav-shadow:rgba(0,0,0,.5);
+  --map-filter:invert(.9) hue-rotate(180deg) saturate(.5) contrast(.92);
+  color-scheme:dark;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -36,6 +76,7 @@ body{
   overflow-x:hidden;
   overflow-x:clip;
   -webkit-font-smoothing:antialiased;
+  transition:background-color .3s,color .3s;
 }
 html{overflow-x:clip}
 img{display:block;max-width:100%}
@@ -56,9 +97,9 @@ nav{
   transition:background .4s,box-shadow .4s;
 }
 nav.scrolled{
-  background:rgba(246,241,231,.9);
+  background:rgba(var(--nav-rgb),.9);
   backdrop-filter:blur(12px);
-  box-shadow:0 1px 0 rgba(35,32,26,.08);
+  box-shadow:0 1px 0 var(--nav-shadow);
 }
 nav .logo{font-family:var(--serif);font-weight:700;font-size:1.25rem;color:var(--cream);text-decoration:none;transition:color .4s;letter-spacing:.02em}
 nav.scrolled .logo{color:var(--ink)}
@@ -79,8 +120,24 @@ nav.scrolled .lang-toggle{border-color:rgba(35,32,26,.25)}
   color:var(--cream);transition:.3s;
 }
 nav.scrolled .lang-toggle button{color:var(--ink-soft)}
-.lang-toggle button.active{background:var(--cream);color:var(--ink)}
-nav.scrolled .lang-toggle button.active{background:var(--ink);color:var(--cream)}
+.lang-toggle button.active{background:var(--cream);color:var(--on-cream)}
+nav.scrolled .lang-toggle button.active{background:var(--ink);color:var(--on-ink)}
+
+/* přepínač tématu — kulatý, ladí s pilulkou jazyka.
+   Nad hero fotkou je světlý, po odscrollování přebírá barvu textu. */
+.theme-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;padding:0;cursor:pointer;border-radius:50%;
+  border:1.5px solid rgba(251,248,241,.5);background:none;color:var(--cream);
+  transition:border-color .4s,color .4s,background .25s;
+}
+nav.scrolled .theme-btn{border-color:rgba(35,32,26,.25);color:var(--ink-soft)}
+.theme-btn:hover{background:var(--cream);color:var(--on-cream)}
+nav.scrolled .theme-btn:hover{background:var(--ink);color:var(--on-ink)}
+.theme-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .i-sun{display:none}
+html[data-theme="dark"] .theme-btn .i-moon{display:none}
+html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO ============ */
 .hero{position:relative;height:100svh;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;background:var(--green-deep)}
@@ -94,7 +151,7 @@ nav.scrolled .lang-toggle button.active{background:var(--ink);color:var(--cream)
 .hero h1 .ch{display:inline-block;transform:translateY(110%);animation:riseIn 1s cubic-bezier(.19,1,.22,1) forwards;animation-delay:calc(.05s * var(--i) + .2s)}
 @keyframes riseIn{to{transform:translateY(0)}}
 .hero__sub{color:rgba(251,248,241,.85);font-size:clamp(1rem,2.6vw,1.25rem);max-width:34ch;margin-top:14px;font-weight:300;opacity:0;animation:fadeUp 1s .9s ease forwards}
-.hero__cta{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:13px 26px;border-radius:99px;background:var(--cream);color:var(--ink);text-decoration:none;font-weight:600;font-size:.9rem;opacity:0;animation:fadeUp 1s 1.2s ease forwards;transition:transform .25s,background .25s}
+.hero__cta{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:13px 26px;border-radius:99px;background:var(--cream);color:var(--on-cream);text-decoration:none;font-weight:600;font-size:.9rem;opacity:0;animation:fadeUp 1s 1.2s ease forwards;transition:transform .25s,background .25s}
 .hero__cta:hover{transform:translateY(-2px);background:#fff}
 .hero__cta svg{transition:transform .3s}
 .hero__cta:hover svg{transform:translateY(3px)}
@@ -110,6 +167,9 @@ nav.scrolled .lang-toggle button.active{background:var(--ink);color:var(--cream)
 .hero__badge .row{display:flex;align-items:center;gap:8px;line-height:1}
 .hero__badge b{font-size:.8rem;font-weight:600;letter-spacing:.02em;line-height:1;display:inline-flex;align-items:center}
 .hero__badge span{display:inline-flex;align-items:center;line-height:1}
+/* počet recenzí a slovo „recenzí“ jsou dva prvky — inline-flex mezi nimi
+   spolkne mezeru, proto ji drží gap */
+.hero__badge .rev{gap:.35em}
 .hero__badge .dot{opacity:.5}
 .scroll-hint{position:absolute;bottom:20px;left:0;right:0;z-index:3;color:rgba(251,248,241,.6);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s 1.8s ease forwards;pointer-events:none}
 .scroll-hint svg{display:block;width:16px;height:16px;opacity:.8}
@@ -189,14 +249,14 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
   .menu-cat.active{color:var(--ink);padding-left:26px}
   .menu-cat.active::before{width:16px}
 }
-@media(max-width:899px){.menu-cat{font-size:.9rem;background:var(--paper-2)}.menu-cat.active{background:var(--ink);color:var(--cream)}}
+@media(max-width:899px){.menu-cat{font-size:.9rem;background:var(--paper-2)}.menu-cat.active{background:var(--ink);color:var(--on-ink)}}
 .menu-group{margin-bottom:44px;scroll-margin-top:130px}
-.menu-group h3{font-size:1.6rem;margin-bottom:6px;color:var(--green-deep)}
+.menu-group h3{font-size:1.6rem;margin-bottom:6px;color:var(--heading-green)}
 .menu-group .desc{color:var(--ink-soft);font-size:.92rem;margin-bottom:20px;max-width:56ch}
 .menu-items{display:grid;gap:14px}
 @media(min-width:640px){.menu-items{grid-template-columns:1fr 1fr}}
 .menu-item{
-  background:var(--cream);border:1px solid rgba(35,32,26,.08);
+  background:var(--card-bg);border:1px solid var(--card-line);
   border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;
   opacity:0;transform:translateY(22px);
   transition:opacity .7s ease,transform .7s cubic-bezier(.19,1,.22,1),box-shadow .3s;
@@ -209,8 +269,8 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
 }
 .menu-item__ph img{width:100%;height:100%;object-fit:cover}
 .menu-item__ph--empty{
-  border:1.5px dashed rgba(35,32,26,.22);background:transparent;
-  display:flex;align-items:center;justify-content:center;color:rgba(35,32,26,.3);
+  border:1.5px dashed var(--ph-line);background:transparent;
+  display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
 }
 .menu-item__ph--empty svg{width:38px;height:38px}
 .menu-item__body{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
@@ -226,33 +286,30 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
   border-radius:0 12px 12px 0;padding:12px 16px;font-size:.9rem;color:var(--ink-soft);
   margin:14px 0 20px;max-width:64ch;
 }
-.dessert-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:6px}
-.dessert-strip figure{border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--paper-2)}
-.dessert-strip img{width:100%;height:100%;object-fit:cover}
 .allergens{font-size:.82rem;color:var(--ink-soft);line-height:1.8;margin-top:8px}
 .allergens b{color:var(--ink)}
 
 /* ============ VISIT / INFO ============ */
 .visit{display:grid;gap:36px}
 @media(min-width:820px){.visit{grid-template-columns:1fr 1fr;gap:56px;align-items:start}}
-.info-card{background:var(--cream);border:1px solid rgba(35,32,26,.09);border-radius:var(--radius);padding:26px;margin-bottom:16px}
+.info-card{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius);padding:26px;margin-bottom:16px}
 .info-card h3{font-size:1.25rem;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .info-card h3 svg{flex:0 0 auto}
 .hours-list{list-style:none}
-.hours-list li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed rgba(35,32,26,.12);font-size:.95rem}
+.hours-list li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--hours-line);font-size:.95rem}
 .hours-list li:last-child{border:0}
 .hours-list .today{color:var(--accent);font-weight:600}
 .addr{font-size:1.05rem;line-height:1.7}
-.addr a{color:var(--green);font-weight:600;text-decoration:none;border-bottom:1.5px solid rgba(51,82,62,.3);transition:.2s}
+.addr a{color:var(--green);font-weight:600;text-decoration:none;border-bottom:1.5px solid color-mix(in srgb, var(--green) 35%, transparent);transition:.2s}
 .addr a:hover{border-color:var(--green)}
 .info-card.phone-card{background:var(--green-deep);border-color:rgba(251,248,241,.15);color:var(--cream)}
 .info-card.phone-card h3{color:var(--cream)}
-.info-card.phone-card .phone-big{color:var(--cream)}
-.map-wrap{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(35,32,26,.12);aspect-ratio:4/3;background:var(--paper-2)}
-.map-wrap iframe{width:100%;height:100%;border:0;filter:sepia(.25) saturate(.85)}
+.info-card.phone-card .phone-big{color:var(--cream);text-decoration:none}
+.map-wrap{border-radius:var(--radius);overflow:hidden;border:1px solid var(--card-line);aspect-ratio:4/3;background:var(--paper-2)}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:var(--map-filter)}
 
 /* ============ FOOTER ============ */
-footer{background:var(--ink);color:rgba(251,248,241,.75);padding:44px 22px 34px;text-align:center}
+footer{background:var(--raised-bg);color:rgba(251,248,241,.75);padding:44px 22px 34px;text-align:center}
 footer .flogo{font-family:var(--serif);font-size:1.6rem;color:var(--cream);margin-bottom:8px}
 footer p{font-size:.85rem;margin:4px 0}
 footer a{color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(251,248,241,.35)}
@@ -265,11 +322,13 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
   html{scroll-behavior:auto}
 }
 </style>
+<script src="../templates/assets/site.config.js"></script>
+<script src="../templates/assets/theme.js"></script>
 </head>
 <body>
 
 <nav id="nav">
-  <a class="logo" href="#top">PF Café</a>
+  <a class="logo" href="#top" data-site="brand.name"></a>
   <div class="right">
     <div class="links">
       <a href="#galerie" data-cs="Galerie" data-en="Gallery">Galerie</a>
@@ -280,26 +339,28 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
       <button id="btn-cs" class="active" onclick="setLang('cs')">CZ</button>
       <button id="btn-en" onclick="setLang('en')">EN</button>
     </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Přepnout téma / Toggle theme" title="Přepnout téma">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
   </div>
 </nav>
 
 <main id="top">
 
-  <!-- HERO (unchanged) -->
+  <!-- HERO -->
   <header class="hero">
-    <div class="hero__bg" id="heroBg" style="background-image:url('photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp')"></div>
-    <div class="hero__badge">
-      <div class="row"><b>★ 4.7</b><span class="dot">·</span><span data-cs="518 recenzí" data-en="518 reviews">518 recenzí</span></div>
-      <div class="row"><span data-cs="Otevřeno denně 9–22" data-en="Open daily 9–22">Otevřeno denně 9–22</span></div>
+    <!-- fotku dosazuje skript na konci souboru z SITE.hero.image -->
+    <div class="hero__bg" id="heroBg"></div>
+    <div class="hero__badge" data-site-if="rating">
+      <div class="row"><b>★ <span data-site="rating.score"></span></b><span class="dot">·</span><span class="rev"><span data-site="rating.count"></span> <span data-cs="recenzí" data-en="reviews">recenzí</span></span></div>
+      <div class="row"><span data-site="hours.summary"></span></div>
     </div>
     <div class="hero__inner">
-      <h1 id="heroTitle" aria-label="PF Café"></h1>
-      <p class="hero__sub" data-cs="Kavárna na Dominikánském náměstí, kde káva potkává klid. Zastavte se na chvilku — nebo na celé odpoledne."
-                               data-en="A café on Dominikánské náměstí where coffee meets calm. Stop by for a moment — or for the whole afternoon.">
-        Kavárna na Dominikánském náměstí, kde káva potkává klid. Zastavte se na chvilku — nebo na celé odpoledne.
-      </p>
+      <h1 id="heroTitle" data-site-letters="brand.name"></h1>
+      <p class="hero__sub" data-site="hero.sub"></p>
       <a class="hero__cta" href="#navsteva">
-        <span data-cs="Kde nás najdete" data-en="Find us">Kde nás najdete</span>
+        <span data-site="hero.cta"></span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </a>
     </div>
@@ -324,14 +385,8 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
       </button>
       <div class="carousel__viewport" id="carViewport">
-        <div class="carousel__track" id="carTrack">
-          <figure class="carousel__slide"><img src="photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp" alt="Latte art s rostlinami" loading="lazy"><figcaption data-cs="Ranní rituál" data-en="Morning ritual">Ranní rituál</figcaption></figure>
-          <figure class="carousel__slide"><img src="photos/optimized/nathan-dumlao-x5FhHp3-UlI-unsplash.webp" alt="Tři kávy na stole" loading="lazy"><figcaption data-cs="Tři generace kávy" data-en="Three generations of coffee">Tři generace kávy</figcaption></figure>
-          <figure class="carousel__slide"><img src="photos/optimized/toa-heftiba-so-7RsbB_q4-unsplash.webp" alt="Káva a sukulent" loading="lazy"><figcaption data-cs="Náš oblíbený stůl" data-en="Our favourite table">Náš oblíbený stůl</figcaption></figure>
-          <figure class="carousel__slide"><img src="photos/optimized/nathan-dumlao-4QaNg9pu3nk-unsplash.webp" alt="Latte art trio" loading="lazy"><figcaption data-cs="Latte art od baristů" data-en="Latte art by our baristas">Latte art od baristů</figcaption></figure>
-          <figure class="carousel__slide"><img src="photos/optimized/nathan-dumlao-c2Y16tC3yO8-unsplash.webp" alt="Káva v listech" loading="lazy"><figcaption data-cs="Zelený koutek" data-en="Green corner">Zelený koutek</figcaption></figure>
-          <figure class="carousel__slide"><img src="photos/optimized/nadia-valko-HINbY6sHh3M-unsplash.webp" alt="Flat white shora" loading="lazy"><figcaption data-cs="Detail, na kterém záleží" data-en="The detail that matters">Detail, na kterém záleží</figcaption></figure>
-        </div>
+        <!-- slidy generuje site.js ze SITE.gallery -->
+        <div class="carousel__track" id="carTrack"></div>
       </div>
       <div class="carousel__dots" id="carDots"></div>
     </div>
@@ -341,10 +396,7 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
   <section id="nabidka" class="menu-sec">
     <p class="kicker reveal" data-cs="Nápojový a jídelní lístek" data-en="Drinks &amp; food menu">Nápojový a jídelní lístek</p>
     <h2 class="h2 reveal" data-cs="Nabídka" data-en="Our menu">Nabídka</h2>
-    <p class="lead reveal" style="margin-bottom:36px" data-cs="Kompletní nabídka s cenami. U dezertů se ptejte na dnešní výběr na baru."
-                                  data-en="Full menu with prices. For desserts, ask about today's selection at the bar.">
-      Kompletní nabídka s cenami. U dezertů se ptejte na dnešní výběr na baru.
-    </p>
+    <p class="lead reveal" style="margin-bottom:36px" data-site="menu.intro"></p>
 
     <div class="menu-grid">
       <div class="menu-cats" id="menuCats"></div>
@@ -353,18 +405,11 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
 
     <div class="menu-group" style="margin-top:10px">
       <h3 data-cs="Seznam alergenů" data-en="Allergen list">Seznam alergenů</h3>
-      <p class="allergens">
-        <b>A1</b> – <span data-cs="obiloviny obsahující lepek" data-en="cereals containing gluten">obiloviny obsahující lepek</span> ·
-        <b>A3</b> – <span data-cs="vejce" data-en="eggs">vejce</span> ·
-        <b>A5</b> – <span data-cs="podzemnice olejná (arašídy)" data-en="peanuts">podzemnice olejná (arašídy)</span> ·
-        <b>A6</b> – <span data-cs="sójové boby (sója)" data-en="soy">sójové boby (sója)</span> ·
-        <b>A7</b> – <span data-cs="mléko" data-en="milk">mléko</span> ·
-        <b>A8</b> – <span data-cs="skořápkové plody" data-en="nuts">skořápkové plody</span>
-      </p>
+      <p class="allergens" id="allergenList"></p>
     </div>
   </section>
 
-  <!-- VISIT (unchanged) -->
+  <!-- VISIT -->
   <section id="navsteva" class="visit-sec">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Těšíme se na vás" data-en="We look forward to you">Těšíme se na vás</h2>
@@ -373,9 +418,9 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
         <div class="info-card">
           <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-cs="Adresa" data-en="Address">Adresa</span></h3>
           <p class="addr">
-            Dominikánské nám. 685/1A<br>
-            602 00 Brno-střed<br>
-            <a href="https://maps.google.com/?cid=12443245906833406651" target="_blank" rel="noopener" data-cs="Otevřít v Mapách Google →" data-en="Open in Google Maps →">Otevřít v Mapách Google →</a>
+            <span data-site="contact.address.line1"></span><br>
+            <span data-site="contact.address.line2"></span><br>
+            <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Otevřít v Mapách Google →" data-en="Open in Google Maps →">Otevřít v Mapách Google →</a>
           </p>
         </div>
         <div class="info-card">
@@ -384,12 +429,12 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
         </div>
         <div class="info-card phone-card">
           <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg><span data-cs="Telefon" data-en="Phone">Telefon</span></h3>
-          <a class="phone-big" href="tel:+420605289064">+420 605 289 064</a>
+          <a class="phone-big" data-site-href="contact.phoneHref" data-site="contact.phone"></a>
         </div>
       </div>
       <div class="reveal-right">
         <div class="map-wrap">
-          <iframe src="https://www.google.com/maps?q=49.1937524,16.6070308&z=16&output=embed" loading="lazy" title="PF Café mapa" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe data-site-map loading="lazy" title="" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
     </div>
@@ -398,352 +443,51 @@ footer .tiny{margin-top:20px;font-size:.72rem;color:rgba(251,248,241,.4)}
 </main>
 
 <footer>
-  <div class="flogo">PF Café</div>
-  <p>Dominikánské nám. 685/1A, Brno</p>
-  <p><a href="tel:+420605289064">+420 605 289 064</a> · <a href="https://maps.google.com/?cid=12443245906833406651" target="_blank" rel="noopener" data-cs="Mapy Google" data-en="Google Maps">Mapy Google</a></p>
-  <p class="tiny">© <span id="year"></span> PF Café · <span data-cs="Fotky: Nathan Dumlao, Nadia Valko, Toa Heftiba (Unsplash)" data-en="Photos: Nathan Dumlao, Nadia Valko, Toa Heftiba (Unsplash)">Fotky: Nathan Dumlao, Nadia Valko, Toa Heftiba (Unsplash)</span></p>
+  <div class="flogo" data-site="brand.name"></div>
+  <p data-site="contact.address.short"></p>
+  <p><a data-site-href="contact.phoneHref" data-site="contact.phone"></a> · <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Mapy Google" data-en="Google Maps">Mapy Google</a></p>
+  <p class="tiny">© <span id="year"></span> <span data-site="brand.name"></span> · <span data-site="footer.credits"></span></p>
+  <p class="tiny"><a href="../index.html" data-cs="← Všechny šablony" data-en="← All templates">← Všechny šablony</a></p>
 </footer>
 
+<!-- ===== Šablona: data a logika ===== -->
+<script>window.TEMPLATE={letterClass:'ch',letterIndexVar:true,placeholderIcon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'};</script>
+<script src="../templates/assets/site.js"></script>
 <script>
-/* ============ i18n ============ */
-const LANG_KEY='pf-cafe-lang';
-let LANG='cs';
-function setLang(l){
-  LANG=l;
-  localStorage.setItem(LANG_KEY,l);
-  document.documentElement.lang=l;
-  document.querySelectorAll('[data-cs]').forEach(el=>{
-    const v=el.dataset[l]; if(v!==undefined) el.textContent=v;
-  });
-  document.getElementById('btn-cs').classList.toggle('active',l==='cs');
-  document.getElementById('btn-en').classList.toggle('active',l==='en');
-  buildHours(l);
-  buildHeroTitle();
-}
-window.setLang=setLang;
+/* ===== Vlastní chování varianty Warm Paper ===== */
 
-/* ============ hero title letters ============ */
-function buildHeroTitle(){
-  const t=document.getElementById('heroTitle');
-  t.innerHTML='';
-  'PF Café'.split('').forEach((ch,i)=>{
-    const s=document.createElement('span');
-    s.className='ch'; s.style.setProperty('--i',i);
-    s.textContent=ch===' '?'\u00A0':ch;
-    t.appendChild(s);
-  });
-}
-
-/* ============ hours ============ */
-const DAYS_CS=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
-const DAYS_EN=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-function buildHours(l){
-  const ul=document.getElementById('hoursList');
-  const names=l==='en'?DAYS_EN:DAYS_CS;
-  const todayIdx=(new Date().getDay()+6)%7;
-  ul.innerHTML=names.map((d,i)=>
-    `<li class="${i===todayIdx?'today':''}"><span>${d}</span><span>9:00–22:00</span></li>`
-  ).join('');
-}
-
-/* ============ scroll handler (nav + hero parallax) ============ */
-const nav=document.getElementById('nav');
-const heroBg=document.getElementById('heroBg');
-/* smoothed hero parallax: target follows scrollY, current lerps toward it each frame */
-let heroTarget=0,heroCurrent=0,heroRafId=null;
-function heroFrame(){
-  heroCurrent+=(heroTarget-heroCurrent)*0.25; /* smoothing factor */
-  if(Math.abs(heroTarget-heroCurrent)<0.1) heroCurrent=heroTarget;
-  const y=heroCurrent;
-  if(y<innerHeight) heroBg.style.transform=`translateY(${y*.35}px) scale(${1+y*.0002})`;
-  if(heroCurrent!==heroTarget){heroRafId=requestAnimationFrame(heroFrame);}
-  else heroRafId=null;
-}
-function kickHeroLerp(){ if(heroRafId===null) heroRafId=requestAnimationFrame(heroFrame); }
-let ticking=false;
-function onScroll(){
-  const y=scrollY;
-  heroTarget=y;
-  kickHeroLerp();
-  if(!ticking){
-    requestAnimationFrame(()=>{
-      nav.classList.toggle('scrolled',scrollY>40);
-      ticking=false;
-    });
-    ticking=true;
-  }
-}
-addEventListener('scroll',onScroll,{passive:true});
-
-/* ============ CAROUSEL ============ */
+/* hero fotka z konfigurace (je to background, ne <img>, proto ručně) */
 (function(){
-  const track=document.getElementById('carTrack');
-  const viewport=document.getElementById('carViewport');
-  const slides=[...track.children];
-  const dotsBox=document.getElementById('carDots');
-  const counter=document.getElementById('carCounter');
-  let idx=0;
-
-  slides.forEach((_,i)=>{
-    const d=document.createElement('button');
-    d.className='carousel__dot'+(i===0?' active':'');
-    d.setAttribute('aria-label','Slide '+(i+1));
-    d.addEventListener('click',()=>go(i));
-    dotsBox.appendChild(d);
-  });
-  const dots=[...dotsBox.children];
-
-  const btnPrev=document.getElementById('carPrev');
-  const btnNext=document.getElementById('carNext');
-  function go(i){
-    idx=Math.max(0,Math.min(slides.length-1,i));
-    track.style.transform=`translateX(${-idx*100}%)`;
-    dots.forEach((d,j)=>d.classList.toggle('active',j===idx));
-    counter.textContent=(idx+1)+' / '+slides.length;
-    btnPrev.disabled=(idx===0);
-    btnNext.disabled=(idx===slides.length-1);
-  }
-  btnPrev.addEventListener('click',()=>{go(idx-1);resetAuto();});
-  btnNext.addEventListener('click',()=>{go(idx+1);resetAuto();});
-  go(0);
-
-  // drag / swipe
-  let startX=null,dx=0;
-  viewport.addEventListener('pointerdown',e=>{
-    startX=e.clientX;dx=0;
-    viewport.classList.add('dragging');
-    track.style.transition='none';
-    viewport.setPointerCapture(e.pointerId);
-  });
-  viewport.addEventListener('pointermove',e=>{
-    if(startX===null)return;
-    dx=e.clientX-startX;
-    // rubber-band resistance at the edges
-    if((idx===0&&dx>0)||(idx===slides.length-1&&dx<0)) dx*=0.35;
-    track.style.transform=`translateX(calc(${-idx*100}% + ${dx}px))`;
-  });
-  function endDrag(){
-    if(startX===null)return;
-    viewport.classList.remove('dragging');
-    track.style.transition='';
-    if(Math.abs(dx)>60) go(idx+(dx<0?1:-1)); else go(idx);
-    startX=null;dx=0;resetAuto();
-  }
-  viewport.addEventListener('pointerup',endDrag);
-  viewport.addEventListener('pointercancel',endDrag);
-
-  // keyboard
-  viewport.tabIndex=0;
-  viewport.addEventListener('keydown',e=>{
-    if(e.key==='ArrowLeft'){go(idx-1);resetAuto();}
-    if(e.key==='ArrowRight'){go(idx+1);resetAuto();}
-  });
-
-  // autoplay (ping-pong: reverses direction at the edges instead of rewinding)
-  let dir=1;
-  let auto=setInterval(()=>{if(idx===slides.length-1)dir=-1;else if(idx===0)dir=1;go(idx+dir);},5000);
-  function resetAuto(){clearInterval(auto);auto=setInterval(()=>{if(idx===slides.length-1)dir=-1;else if(idx===0)dir=1;go(idx+dir);},5000);}
-  viewport.addEventListener('pointerenter',()=>clearInterval(auto));
-  viewport.addEventListener('pointerleave',resetAuto);
-
-  addEventListener('resize',()=>go(idx));
+  var img = window.SITE && window.SITE.hero && window.SITE.hero.image;
+  if (img) document.getElementById('heroBg').style.backgroundImage = "url('" + img + "')";
 })();
 
-/* ============ MENU DATA (from cafe info/Menu.md) ============ */
-const MP='photos/menu-optimized/';
-const MPEXT='.webp';
-const MENU=[
- {id:'g-kava',cs:'Kávové nápoje',en:'Coffee',
-  note:{cs:'Všechny kávové nápoje rádi připravíme i v ledové variantě (+10 Kč), případně s ovesnou nebo bezlaktozovou alternativou mléka (+15 Kč). Příchuť do kávy nebo konvička mléka 10 Kč, mistička medu nebo shot espressa 20 Kč.',
-        en:'All coffee drinks also available iced (+10 Kč) or with oat / lactose-free milk (+15 Kč). Coffee flavouring or a pot of milk 10 Kč, honey or an espresso shot 20 Kč.'},
-  items:[
-   ['Espresso / espresso lungo','65 Kč',,,'Espresso / espresso lungo'],
-   ['Espresso macchiato (A 7)','70 Kč',,,'Espresso macchiato (A 7)'],
-   ['Espresso doppio','80 Kč',,,'Double espresso'],
-   ['Cappuccino (A 7)','85 Kč',,,'Cappuccino (A 7)'],
-   ['Caffè e latte (A 7)','95 Kč',MP+'Café Latté S Klassickým Mlékem.png',,'Caffè e latte (A 7)'],
-   ['Flat white (A 7)','95 Kč',MP+'Flat White.png',,'Flat white (A 7)'],
-   ['Batch brew 0,2l','85 Kč',,,'Batch brew 0.2l'],
-   ['Espresso tonic 0,4l / Espresso orange 0,2l','95 Kč',MP+'Espresso Tonic.png',,'Espresso tonic 0.4l / Espresso orange 0.2l'],
-   ['Filtrovaná káva V60 0,3l','115 Kč',,,'V60 filter coffee 0.3l'],
-   ['Vídeňská káva (A 7)','95 Kč',,,'Viennese coffee (A 7)'],
-   ['Affogato — vanilková zmrzlina zalitá espressem (A 7)','85 Kč',,,'Affogato — vanilla ice cream topped with espresso (A 7)'],
-   ['Frappé (A 7)','85 Kč',,,'Frappé (A 7)'],
-   ['Ledová káva — se zmrzlinou a šlehačkou (A 7)','115 Kč',,,'Iced coffee — with ice cream and whipped cream (A 7)'],
-   ['Alžírská káva — s vaječným likérem a šlehačkou (A 7)','133 Kč',,,'Algerian coffee — with egg liqueur and whipped cream (A 7)'],
-   ['Espresso Martini (espresso, Kahlúa, vodka)','144 Kč',,,'Espresso Martini (espresso, Kahlúa, vodka)'],
-  ]},
- {id:'g-horka',cs:'Horké nápoje',en:'Hot drinks',
-  items:[
-   ['Sypané čaje Grešík (Earl Grey, zelený, bylinkový, rooibos, ovocný)','85 Kč',,,'Grešík loose-leaf teas (Earl Grey, green, herbal, rooibos, fruit)'],
-   ['Čaj z čerstvé máty nebo zázvoru','89 Kč',,,'Fresh mint or ginger tea'],
-   ['Chai latte / Matcha latte (A 7)','95 / 115 Kč',MP+'Chai Latte.png',,'Chai latte / Matcha latte (A 7)'],
-   ['Belgická čokoláda Callebaut — hořká, mléčná nebo bílá (A 7)','95 Kč',,,'Callebaut Belgian chocolate — dark, milk or white (A 7)'],
-  ]},
- {id:'g-students',cs:'Studené nápoje',en:'Cold drinks',
-  items:[
-   ['Džbán vody s citrusy 1,5 / 0,5l','89 / 49 Kč',,,'Water jug with citrus 1.5 / 0.5l'],
-   ['Curiosa džusy (jablko, pomeranč, multivitamin, jahoda) 0,2l','59 Kč',,,'Curiosa juices (apple, orange, multivitamin, strawberry) 0.2l'],
-   ['Fritz cola VEGAN 0,3l / Matcha grep 0,3l','65 Kč',,,'Fritz cola VEGAN 0.3l / Matcha grapefruit 0.3l'],
-   ['Limonády Vanda (malina nebo mango s bergamotem) 0,4l','85 Kč',MP+'Lemoniada.png',,'Vanda lemonades (raspberry or mango with bergamot) 0.4l'],
-   ['Zázvorová limonáda Gingles 0,4l','85 Kč',MP+'Lemoniada.png',,'Gingles ginger lemonade 0.4l'],
-   ['Čerstvě lisovaná šťáva z pomerančů 0,2l','89 Kč',,,'Freshly squeezed orange juice 0.2l'],
-  ]},
- {id:'g-snidane',cs:'Něco k snídani',en:'Breakfast',
-  note:{cs:'Připravujeme do 12 hodin.',en:'Served until 12 noon.'},
-  items:[
-   ['Croissant s jahodovou marmeládou nebo Nutellou (A 1, 3, 5, 7)','65 Kč',MP+'Croissant A Espressso Tost.png',,'Croissant with strawberry jam or Nutella (A 1, 3, 5, 7)'],
-   ['Bruschetta s rajčaty a mozzarelou (A 1, 7)','133 Kč',,,'Bruschetta with tomatoes and mozzarella (A 1, 7)'],
-   ['Tři vejce do skla s kváskovým chlebem a máslem (A 1, 3, 7)','144 Kč',,,'Three eggs in a glass with sourdough bread and butter (A 1, 3, 7)'],
-   ['Ovocný salát s jogurtem, medem a bio müsli (A 1, 7, 8)','155 Kč',,,'Fruit salad with yoghurt, honey and organic muesli (A 1, 7, 8)'],
-   ['Ovesná kaše s ovocem, skořicí a javorovým sirupem (A 1, 7)','166 Kč',,,'Oatmeal with fruit, cinnamon and maple syrup (A 1, 7)'],
-   ['Francouzský toast sladký s ovocem (A 1, 3, 7)','188 Kč',,,'Sweet French toast with fruit (A 1, 3, 7)'],
-   ['Francouzský toast slaný se sýrem, slaninou a bylinkami (A 1, 3, 7)','199 Kč',MP+'Slaný Francouyský Toust.png',,'Savoury French toast with cheese, bacon and herbs (A 1, 3, 7)'],
-   ['Lívance s tvarohem a javorovým sirupem zdobené ovocem (A 1, 3, 7)','222 Kč',MP+'Livance.png',,'Pancakes with curd cheese and maple syrup, garnished with fruit (A 1, 3, 7)'],
-   ['Full English (vejce, slanina, fazole, párky, rajčata, žampiony) (A 1, 3)','244 Kč',MP+'Full English.png',,'Full English (eggs, bacon, beans, sausages, tomatoes, mushrooms) (A 1, 3)'],
-   ['Krajíc kváskového chleba s máslem a medem (A 1, 7)','65 Kč',MP+'Chléb S Medem.png',,'Slice of sourdough bread with butter and honey (A 1, 7)'],
-  ]},
- {id:'g-sladke',cs:'Něco sladkého',en:'Something sweet',
-  note:{cs:'Vyberte si prosím z naší nabídky výjimečných domácích dezertů na baru.',
-        en:'Please choose from our exceptional homemade desserts at the bar.'},
-  items:[
-   ['Palačinka s marmeládou nebo Nutellou a šlehačkou (A 1, 3, 5, 7)','144 Kč',,,'Pancake with jam or Nutella and whipped cream (A 1, 3, 5, 7)'],
-   ['Palačinka s tvarohem, javorovým sirupem a borůvkami (A 1, 3, 7)','155 Kč',,,'Pancake with curd cheese, maple syrup and blueberries (A 1, 3, 7)'],
-  ],
-  strip:[MP+'Cakes.png',MP+'Cheescake Slice.png',MP+'Čokoládový Cheesecake.png',MP+'Kávový Cheescake.png',MP+'Skořicový Šnek A Cappuccino.png',MP+'Tiramisu.png',MP+'White Cafe & Bulka.png']},
- {id:'g-slane',cs:'Něco slaného',en:'Something savoury',
-  items:[
-   ['Mistička s pistáciemi (A 8)','65 Kč',,,'Bowl of pistachios (A 8)'],
-   ['Toast se šunkou a sýrem, salátek (A 1, 3, 7)','111 Kč',,,'Toast with ham and cheese, side salad (A 1, 3, 7)'],
-   ['Toast se slaninou a Cheddarem, salátek (A 1, 3, 7)','122 Kč',,,'Toast with bacon and Cheddar, side salad (A 1, 3, 7)'],
-   ['Toast s mozzarellou a sušenými rajčaty, salátek (A 1, 3, 7)','133 Kč',,,'Toast with mozzarella and sun-dried tomatoes, side salad (A 1, 3, 7)'],
-   ['Mistička s bylinkovou pomazánkou, kváskový chléb (A 1, 7)','122 Kč',,,'Bowl of herb spread, sourdough bread (A 1, 7)'],
-   ['Mistička s avokádovou pomazánkou, kváskový chléb (A 1, 7)','133 Kč',,,'Bowl of avocado spread, sourdough bread (A 1, 7)'],
-   ['Talířek s více druhy sýrů (A 7) nebo uzenin, kváskový chléb (A 7)','155 Kč',,,'Plate of assorted cheeses (A 7) or cured meats, sourdough bread (A 7)'],
-   ['Vaječná omeleta se šunkou či sýrem, kváskový chléb, salátek (A 1, 3, 7)','166 Kč',,,'Omelette with ham or cheese, sourdough bread, side salad (A 1, 3, 7)'],
-   ['Grilovaný Camembert, brusinky, salátek, kváskový chléb (A 1, 7)','177 Kč',MP+'Grilovaný Hermelin Šalátik.png',,'Grilled Camembert, cranberries, side salad, sourdough bread (A 1, 7)'],
-   ['Prkénko se vším pro dva (pomazánka, sýry, uzeniny, salát, chléb) (A 1, 7)','277 Kč',,,'Platter with everything for two (spread, cheeses, cured meats, salad, bread) (A 1, 7)'],
-   ['Krajíc kváskového chleba navíc (A 1)','25 Kč',,,'Extra slice of sourdough bread (A 1)'],
-  ]},
- {id:'g-pivo',cs:'Pivo',en:'Beer',
-  items:[
-   ['Točené pivo Vorkloster 11° Jantarový ležák 0,3 / 0,5l','49 / 65 Kč',,,'Vorkloster 11° amber lager on tap 0.3 / 0.5l'],
-   ['Lahvové pivo Vorkloster Cero nealkoholické 0,3l','65 Kč',,,'Vorkloster Cero non-alcoholic bottled beer 0.3l'],
-  ]},
- {id:'g-vino',cs:'Víno',en:'Wine',
-  note:{cs:'Točené víno frizzante bianco Grande Romeo 0,1l — 55 Kč · Točené víno Fontaine du Clos suché 0,5 / 0,1l — 222 / 55 Kč. Nabídku lahvových vín obsahuje vinný lístek — výběr moravských vín z Vinařství Osička (Velké Bílovice).',
-        en:'Draught frizzante bianco Grande Romeo 0.1l — 55 Kč · Fontaine du Clos dry 0.5 / 0.1l — 222 / 55 Kč. Bottled wines: Moravian selection from Osička winery (Velké Bílovice).'},
-  items:[
-   ['Müller Thurgau — pozdní sběr, suché 0,7 / 0,1l','359 / 60 Kč',,,'Müller Thurgau — late harvest, dry 0.7 / 0.1l'],
-   ['Rulandské šedé — pozdní sběr, polosuché 0,7 / 0,1l','377 / 60 Kč',,,'Pinot Gris — late harvest, off-dry 0.7 / 0.1l'],
-   ['Chardonnay — pozdní sběr, suché 0,7 / 0,1l','377 / 65 Kč',,,'Chardonnay — late harvest, dry 0.7 / 0.1l'],
-   ['Veltlínské zelené — pozdní sběr, suché 0,7 / 0,1l','359 / 60 Kč',,,'Grüner Veltliner — late harvest, dry 0.7 / 0.1l'],
-   ['Tramín červený — výběr z bobulí, polosladké 0,7 / 0,1l','377 / 65 Kč',,,'Red Traminer — berry selection, semi-sweet 0.7 / 0.1l'],
-   ['Irsai Oliver — pozdní sběr, polosladké 0,7 / 0,1l','377 / 60 Kč',,,'Irsai Olivér — late harvest, semi-sweet 0.7 / 0.1l'],
-   ['Pálava — výběr z bobulí, sladké 0,7 / 0,1l','395 / 65 Kč',,,'Pálava — berry selection, sweet 0.7 / 0.1l'],
-   ['Cabernet Moravia rosé — zemské, suché 0,7 / 0,1l','359 / 55 Kč',,,'Cabernet Moravia rosé — regional, dry 0.7 / 0.1l'],
-   ['Cabernet Moravia — výběr z hroznů, suché 0,7 / 0,1l','377 / 60 Kč',,,'Cabernet Moravia — grape selection, dry 0.7 / 0.1l'],
-   ['Dornfelder — pozdní sběr, suché 0,7 / 0,1l','377 / 60 Kč',,,'Dornfelder — late harvest, dry 0.7 / 0.1l'],
-   ['CHILLÍNO ORIGINÁL 0,5 / 0,1l','359 / 77 Kč',,,'CHILLÍNO ORIGINÁL 0.5 / 0.1l'],
-   ['CHILLÍNO ROSÉ 0,5 / 0,1l','359 / 77 Kč',,,'CHILLÍNO ROSÉ 0.5 / 0.1l'],
-  ]},
- {id:'g-drinky',cs:'Alkoholické drinky',en:'Cocktails',
-  items:[
-   ['Mimosa (Prosecco, pomerančový džus)','111 Kč',,,'Mimosa (Prosecco, orange juice)'],
-   ['Garibaldi (Campari, pomerančový džus)','129 Kč',,,'Garibaldi (Campari, orange juice)'],
-   ['Cuba libre (bílý rum, Coca-cola, limetka)','139 Kč',,,'Cuba libre (white rum, Coca-Cola, lime)'],
-   ['Endorphin drink (gin Endorphin, tonic)','149 Kč',,,'Endorphin drink (Endorphin gin, tonic)'],
-   ['Margarita (tequila, Cointreau, citronová šťáva, sůl)','149 Kč',,,'Margarita (tequila, Cointreau, lemon juice, salt)'],
-   ['Negroni (gin, sladký vermut, Campari)','149 Kč',,,'Negroni (gin, sweet vermouth, Campari)'],
-   ['Aperol Spritz (Aperol, Prosecco, perlivá voda)','149 Kč',,,'Aperol Spritz (Aperol, Prosecco, sparkling water)'],
-   ['Daiquiri (bílý rum, limetková šťáva)','134 Kč',,,'Daiquiri (white rum, lime juice)'],
-   ['Tequila sunrise (tequila, pomerančový džus, grenadina)','159 Kč',,,'Tequila sunrise (tequila, orange juice, grenadine)'],
-   ['Cosmopolitan (vodka, Cointreau, brusinkový džus, limetka)','159 Kč',,,'Cosmopolitan (vodka, Cointreau, cranberry juice, lime)'],
-   ['Mojito (bílý rum, máta, třtinový cukr, limetka)','159 Kč',,,'Mojito (white rum, mint, cane sugar, lime)'],
-   ['Sex on the beach (vodka, broskvová vodka, pom. a brusinkový džus)','145 Kč',,,'Sex on the beach (vodka, peach vodka, orange & cranberry juice)'],
-   ['Moon River (brandy, Cointreau, Galliano, gin, limetka)','169 Kč',,,'Moon River (brandy, Cointreau, Galliano, gin, lime)'],
-   ['Scorpion (bílý a hnědý rum, brandy, Cointreau, pom. džus, limetka)','169 Kč',,,'Scorpion (white & dark rum, brandy, Cointreau, orange juice, lime)'],
-   ['Long Island Iced Tea (gin, vodka, tequila, bílý rum, Cointreau…)','169 Kč',,,'Long Island Iced Tea (gin, vodka, tequila, white rum, Cointreau…)'],
-  ]},
- {id:'g-nealko',cs:'Nealkoholické drinky',en:'Mocktails',
-  items:[
-   ['Virgin Mojito','111 Kč',,,'Virgin Mojito'],
-   ['Safe on the beach','111 Kč',,,'Safe on the beach'],
-   ['Virgin Margarita (pomerančový džus, limetková a citronová šťáva)','111 Kč',,,'Virgin Margarita (orange juice, lime and lemon juice)'],
-  ]},
-];
-
-/* ============ MENU RENDER ============ */
+/* parallax hero: cíl sleduje scrollY, aktuální hodnota se k němu po
+   snímcích dotahuje — pohyb je pak měkčí než přímé mapování na scroll */
 (function(){
-  const catsBox=document.getElementById('menuCats');
-  const groupsBox=document.getElementById('menuGroups');
-  const PH_ICON='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>';
-
-  MENU.forEach((g,i)=>{
-    const b=document.createElement('button');
-    b.className='menu-cat'+(i===0?' active':'');
-    b.dataset.target=g.id;
-    b.dataset.cs=g.cs; b.dataset.en=g.en;
-    b.textContent=g.cs;
-    catsBox.appendChild(b);
-
-    const grp=document.createElement('div');
-    grp.className='menu-group'; grp.id=g.id;
-    let html=`<h3 data-cs="${g.cs}" data-en="${g.en}">${g.cs}</h3>`;
-    if(g.note) html+=`<div class="menu-note" data-cs="${g.note.cs}" data-en="${g.note.en}">${g.note.cs}</div>`;
-    html+='<div class="menu-items">';
-    g.items.forEach(it=>{
-      const [name,price,img,tags,en]=it;
-      const imgUrl=img?encodeURI(img.replace(/\.(png|jpg|jpeg)$/i,MPEXT)):null;
-      const ph=img
-        ? `<div class="menu-item__ph"><img src="${imgUrl}" alt="" loading="lazy"></div>`
-        : `<div class="menu-item__ph menu-item__ph--empty">${PH_ICON}</div>`;
-      const enName=(en||name).replace(/"/g,'&quot;');
-      const csName=name.replace(/"/g,'&quot;');
-      html+=`<div class="menu-item">${ph}<div class="menu-item__body"><b data-cs="${csName}" data-en="${enName}">${name}</b><div class="menu-item__price">${price}</div></div></div>`;
-    });
-    html+='</div>';
-    if(g.strip){
-      html+='<div class="menu-items">'+g.strip.map(s=>{
-        const u=encodeURI(s.replace(/\.(png|jpg|jpeg)$/i,MPEXT));
-        return `<div class="menu-item in"><div class="menu-item__ph"><img src="${u}" alt="" loading="lazy"></div><div class="menu-item__body"><b data-cs="Domácí dezert — výběr na baru" data-en="Homemade dessert — selection at the bar">Domácí dezert — výběr na baru</b><div class="menu-item__price">—</div></div></div>`;
-      }).join('')+'</div>';
-    }
-    grp.innerHTML=html;
-    groupsBox.appendChild(grp);
-  });
-
-  /* tab behavior: show only active category */
-  const cats=[...catsBox.children];
-  const groups=cats.map(c=>document.getElementById(c.dataset.target));
-  function setActive(id,centerTab){
-    cats.forEach(c=>c.classList.toggle('active',c.dataset.target===id));
-    groups.forEach(g=>{g.style.display=(g.id===id)?'':'none'});
-    const active=cats.find(c=>c.dataset.target===id);
-    if(centerTab&&active&&window.innerWidth<900) active.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  var heroBg = document.getElementById('heroBg');
+  if (!heroBg) return;
+  var target = 0, current = 0, rafId = null;
+  function frame(){
+    current += (target - current) * 0.25;
+    if (Math.abs(target - current) < 0.1) current = target;
+    if (current < innerHeight) heroBg.style.transform = 'translateY(' + current * .35 + 'px) scale(' + (1 + current * .0002) + ')';
+    if (current !== target) rafId = requestAnimationFrame(frame); else rafId = null;
   }
-  setActive(cats[0].dataset.target,false);
-  cats.forEach(c=>c.addEventListener('click',()=>{
-    setActive(c.dataset.target,true);
-    const top=document.querySelector('.menu-groups').getBoundingClientRect().top+window.scrollY-document.getElementById('nav').offsetHeight-70;
-    window.scrollTo({top,behavior:'smooth'});
-  }));
-
-  /* stagger */
-  document.querySelectorAll('.menu-items').forEach(gr=>{
-    [...gr.children].forEach((it,i)=>it.style.transitionDelay=Math.min(i*50,500)+'ms');
-  });
+  addEventListener('scroll', function(){
+    target = scrollY;
+    if (rafId === null) rafId = requestAnimationFrame(frame);
+  }, { passive: true });
 })();
 
-/* ============ reveal observer ============ */
-const io=new IntersectionObserver(es=>{
-  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
-},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
-document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.menu-item').forEach(el=>io.observe(el));
-
-/* ============ init ============ */
-document.getElementById('year').textContent=new Date().getFullYear();
-setLang(localStorage.getItem(LANG_KEY)||'cs');
+/* site.js sleduje jen .reveal — boční nájezdy jsou specialita této varianty */
+(function(){
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.reveal-left,.reveal-right').forEach(function(el){ io.observe(el); });
+})();
 </script>
 </body>
 </html>
