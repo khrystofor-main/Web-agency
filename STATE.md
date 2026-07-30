@@ -1,6 +1,23 @@
-# PF Café — Website · Project State
+# Šablony webu pro kavárnu — Project State
 
-> Last updated: 2026-07-29 · Status: 🟢 v2.0.3 deployed (branch `main-v2-fix-visuals`): https://khrystofor-main.github.io/pf-cafe-lex/ · дизайн-варианты переведены в переиспользуемые шаблоны (`templates/`)
+> Last updated: 2026-07-30 · Status: 🟢 пять переиспользуемых шаблонов + хаб-портфолио · деплой v2.0.3: https://khrystofor-main.github.io/pf-cafe-lex/ · текущая ветка `templates-auto-theme`
+
+> Проект начинался как сайт одного заведения (PF Café). Записи ниже 2026-07-29
+> описывают ту стадию и оставлены как история — актуальную картину дают
+> шапка, свежая запись и справочные разделы (Goal / Stack / Site structure / Files).
+
+## 2026-07-30 — ночная тема по времени + Warm Paper как пятая шаблона
+
+Ветка `templates-auto-theme`. Решения пользователя: автосмену темы делать **только** в шаблонах, хаб оставить с ручным переключателем; Warm Paper — не демо-сайт PF Café, а полноценная пятая шаблона, в которую так же вставляются данные любого кафе.
+
+- `templates/assets/theme.js` — общий движок темы. Час читается через `Intl` для `Europe/Prague` (летнее время само), граница дня/ночи — по реальным восходу/закату в ЧР по месяцам + 30 мин сумерек. Скрипт в `<head>` до отрисовки, поэтому ночью не мелькает светлый фон; из-за этого `site.config.js` тоже подключён в шапке
+- Приоритет: ручной выбор (кнопка в навигации, TTL 12 ч) → время в Праге → `theme.default`. `prefers-color-scheme` **сознательно не используется**: у многих телефон в тёмном режиме постоянно, и сайт кафе выглядел бы тёмным в полдень
+- У каждой из пяти шаблон своя ночная палитра в блоке `html[data-theme="dark"]`; цвета натвердо заменены семантическими токенами (`--on-ink`, `--deep`, `--card-bg`, `--raised-bg`, `--on-terra`, `--on-cream`…), карты в тёмной теме инвертируются фильтром
+- `brand.color` работает и ночью: акцент осветляется через `color-mix`, а не переопределяется фиксированным цветом
+- **Warm Paper (`site/index.html`) переведён на общий движок** — 749 → 493 строки. Меню (10 категорий, ~90 позиций), галерея, аллергены, часы, карта строятся из `site.config.js` через `data-site`; свой JS остался только на параллакс героя и боковые наезды `.reveal-left/-right`. Убран `<base href="../">`, добавлен `--brand`
+- Нумерация шаблон 1–5 приведена к карточкам хаба (Warm Paper = 1); в хабе снят ярлык «Referenční web»
+- Починена ссылка «← Všechny šablony» во всех вариантах: вела на несуществующий `templates/index.html` вместо корневого хаба
+- Хаб (`index.html`) получил ночную тему отдельно: ручной переключатель + `prefers-color-scheme`, без привязки ко времени
 
 ## 2026-07-29 — `variants/` → `templates/`: шаблоны вместо сайта одного кафе
 
@@ -73,24 +90,32 @@ Alternative version with simplified structure — only 3 content sections, in th
 
 ## Goal
 
-Real one-page scroll-driven animated website for **PF Café**, Brno (Dominikánské nám. 685/1A).
-Mobile-first. Primary language Czech, EN toggle. Static photos only — animation is text + scroll-driven elements.
+**Five reusable one-page templates** for cafés and small businesses, plus a
+portfolio hub that shows them off. A new client site = fill in one config file,
+pick a template. Mobile-first, Czech primary with an EN toggle, static photos
+only — animation is text + scroll-driven elements.
+
+PF Café (Brno, Dominikánské nám. 685/1A) is the **demo content** every template
+ships with, not the product.
 
 ## Stack
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Markup | Single `index.html` (HTML+CSS+JS inline) | No build step, no frameworks |
-| Fonts | Playfair Display (headings) + Inter (body) | Google Fonts CDN |
-| Photos | WebP, q80, longest side 1920px | `photos/optimized/` (771 KB total, from 18.5 MB originals) |
-| Animations | IntersectionObserver + vanilla JS scroll handlers | `prefers-reduced-motion` respected |
+| Markup | One self-contained HTML per template (HTML+CSS inline) | No build step, no frameworks |
+| Content | `templates/assets/site.config.js` | Single source for all five templates |
+| Engine | `templates/assets/site.js` | i18n, hours, gallery, menu, carousel, nav, reveal |
+| Theme | `templates/assets/theme.js` | Light by day / dark after dusk, `Europe/Prague` |
+| Fonts | Per template, Google Fonts CDN | Warm Paper: Playfair Display + Inter |
+| Photos | WebP, q80, longest side 1920px (menu ≤800px) | `photos/optimized/`, `photos/menu-optimized/` |
+| Animations | IntersectionObserver + vanilla JS; GSAP in templates 3 and 5 | `prefers-reduced-motion` respected |
 | i18n | `data-cs` / `data-en` attributes + `setLang()` | Persisted in `localStorage` (`pf-cafe-lang`) |
 | Hosting | GitHub Pages | https://khrystofor-main.github.io/pf-cafe-lex/ — source branch `main-v2` |
 
 ## Locked decisions (grill-me, 2026-07-18)
 
-1. **One-pager** with anchor nav (Filozofie / Nabídka / Galerie / Návštěva)
-2. **Real site** (real address, phone, map) — not a demo
+1. **One-pager** with anchor nav ~~(Filozofie / Nabídka / Galerie / Návštěva)~~ **Revised in v2:** Galerie / Nabídka / Návštěva — Filozofie dropped
+2. ~~**Real site** (real address, phone, map) — not a demo~~ **Revised 2026-07-29/30:** the deliverable is a set of templates; PF Café data stays as demo content
 3. **Palette:** warm paper cream `#F6F1E7` bg, ink `#23201A`, green `#33523E` / `#22382B`, accent orange `#C8742C` (NOT dark #1A1A1E — café = cozy)
 4. **Fonts:** Playfair Display + Inter
 5. ~~**Menu without prices** — philosophy + categories only ("ask at the counter")~~ **Revised in v2:** full real menu **with prices + photos** (10 categories, ~90 items), rendered from the `MENU` JS array (source: `cafe info/Menu.md`)
@@ -104,16 +129,23 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 
 ## Site structure
 
-- **Hero** — full-viewport dark green, photo bg with parallax+slow-zoom on scroll, "PF Café" letters rise in one-by-one, badge ★4.7 (518 reviews), CTA "Kde nás najdete" → #navsteva, vertical scroll hint
-- **Filozofie** — "Káva není spěch." text slides from left, photo un-zooms from right, stats row (4.7★ / 518 / 7/7)
-- **Nabídka** — sticky category sidebar (desktop) / sticky chip pills (mobile), 4 groups: Káva, Snídaně, Dezerty, Nejen káva. Cards cascade in with 70ms stagger. Scrollspy highlights active category, click scrolls to group
-- **Galerie** — dark green section, 6 photos in horizontal track; vertical page scroll drives `translateX` drift (scroll-driven horizontal gallery). Captions on gradient overlay
-- **Návštěva** — address card, hours list (today highlighted in accent orange, computed via JS), phone card (`tel:` link), embedded Google Map (iframe from JSON's `mapsEmbedUrl`)
-- **Footer** — logo, address, phone, Maps link, photo credits (Nathan Dumlao, Nadia Valko, Toa Heftiba / Unsplash)
+All five templates share the same section order and content; only the visual
+character differs. Everything below is built by `site.js` from the config.
+
+- **Hero** — brand name animated letter by letter, subtitle, CTA → #navsteva, rating badge (★ score + review count, hidden when `rating:null`), hours summary
+- **Galerie** — classic carousel: arrows, dots, 1/6 counter, pointer swipe/drag, keyboard ←/→, 5s ping-pong autoplay. Slides come from `SITE.gallery`
+- **Nabídka** — category tabs (sidebar in Warm Paper, pills/strip elsewhere), one group visible at a time, note blocks, dessert strip, allergen list. 10 categories, ~90 items from `SITE.menu.groups`
+- **Návštěva** — address card, hours list (today highlighted, computed via JS), phone card (`tel:` link), embedded Google Map from `contact.mapCoords`
+- **Footer** — logo, address, phone, Maps link, photo credits, back-link to the hub
+- **Nav** — logo, section anchors, CZ/EN toggle, theme toggle; gains `.scrolled` past 40px
+
+Hub (`index.html`) is a separate portfolio page: hero with portrait, five
+template cards with palette swatches, price, contacts + message form.
 
 ## Data source
 
-`cafe info/pf-cafe.json` — Google Places export. Key facts used:
+`cafe info/pf-cafe.json` — Google Places export, source of the **demo** content
+that now lives in `templates/assets/site.config.js`. Key facts used:
 - Name: PF Café · Rating 4.7 (518) · Daily 9:00–22:00 (rounded from 9:09)
 - Address: Dominikánské nám. 685/1A, 602 00 Brno-střed
 - Phone: +420 605 289 064
@@ -122,13 +154,28 @@ Mobile-first. Primary language Czech, EN toggle. Static photos only — animatio
 ## Files
 
 ```
-index.html                 — entire site (32.6 KB)
-photos/optimized/*.webp    — 6 compressed photos (771 KB total)
-photos/demo/*.jpg          — originals, GITIGNORED (18.5 MB)
-cafe info/pf-cafe.json     — source data
-STATE.md                   — this file
-IDEA.md                    — original one-line brief
+index.html                          — hub / portfolio (own dark theme, manual toggle)
+site/index.html                     — template 1 · Warm Paper
+templates/
+  variant-1-swiss.html              — template 2 · Swiss Minimal
+  variant-2-editorial.html          — template 3 · Editorial (GSAP)
+  variant-4-terracotta.html         — template 4 · Terracotta
+  variant-5-corporate-luxury.html   — template 5 · Corporate Luxury (GSAP)
+  assets/site.config.js             — ALL café data (demo: PF Café)
+  assets/site.config.example.js     — empty skeleton with comments
+  assets/site.js                    — shared engine
+  assets/theme.js                   — light/dark by time in Czechia
+  README.md                         — "how to build a site for your café"
+photos/optimized/*.webp             — hero + gallery (771 KB total)
+photos/menu-optimized/*.webp        — menu items (971 KB total)
+photos/demo/*.jpg                   — originals, GITIGNORED (18.5 MB)
+cafe info/pf-cafe.json              — demo source data (Google Places export)
+STATE.md                            — this file
+IDEA.md                             — original one-line brief
 ```
+
+Numbering follows the hub cards. Warm Paper lives outside `templates/` because
+it came first; it loads the shared engine and config from one level up.
 
 ## Changelog
 
@@ -166,10 +213,13 @@ IDEA.md                    — original one-line brief
 - [x] ~~Possibly: real menu with prices if owner provides~~ — done in v2 (full menu with prices + photos)
 - [ ] Possibly: OG meta tags + favicon before any public deploy
 - [ ] Deploy target TBD (Netlify/Vercel/GitHub Pages) — repo is private for now
+- [ ] Merge `templates-auto-theme` into `main-v2`
 
 ## Conventions
 
 - Czech copy is source of truth; EN follows
-- Animations: 0.7–0.9s, `cubic-bezier(.19,1,.22,1)` easing
-- Radius 18px cards, 99px pills
-- No frameworks, no build — keep it one file
+- Content belongs in `site.config.js`; typography, layout and animation belong in the template
+- Both themes share one rule — colors go through tokens, never hardcoded per theme
+- Animations: 0.7–0.9s, `cubic-bezier(.19,1,.22,1)` easing (Warm Paper; other templates set their own)
+- Radius 18px cards, 99px pills (Warm Paper)
+- No frameworks, no build — one template = one file, openable over `file://`
