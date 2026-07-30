@@ -37,14 +37,74 @@ section > .eyebrow{text-align:center}
   grid-template-columns:1fr;padding-block:72px 80px;
 }
 @media(min-width:760px){.hero{grid-template-columns:300px 1fr;gap:64px}}
+.photo-wrap{position:relative;width:260px;max-width:100%}
 .photo{
-  width:260px;height:320px;max-width:100%;
-  border:1.5px dashed var(--muted);border-radius:18px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  color:var(--muted);background:#F4F0E8;
+  width:100%;height:320px;
+  border:1px solid transparent;border-radius:18px;
+  overflow:hidden;background:#F4F0E8;cursor:pointer;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
 }
-.photo .initials{font-family:'Fraunces',serif;font-size:3rem;color:#C9C1B2}
-.photo .hint{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+.photo:hover{
+  border-color:var(--accent);transform:translateY(-3px);
+  box-shadow:0 14px 30px rgba(28,26,23,.07);
+}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+
+/* klik na foto */
+@keyframes photo-shake{
+  0%,100%{transform:translate(0,-3px)}
+  30%{transform:translate(-7px,-3px)}
+  70%{transform:translate(7px,-3px)}
+}
+.photo.shake{animation:photo-shake .26s ease-in-out;border-color:var(--accent)}
+.ouch{
+  position:absolute;z-index:2;pointer-events:none;
+  color:var(--accent);
+  font-family:'Fraunces',serif;font-style:italic;font-size:1rem;
+  white-space:nowrap;
+  transform:translate(var(--tx,0),var(--ty,0));
+  opacity:0;transition:opacity .18s linear;
+}
+.ouch.show{opacity:1;transition:opacity .1s linear}
+
+/* nápověda "klepněte na foto" v pravém dolním rohu */
+.tap-hint{
+  position:absolute;right:22px;bottom:24px;width:16px;height:16px;
+  pointer-events:none;transition:opacity .25s ease;
+  filter:drop-shadow(0 0 2px rgba(0,0,0,.45));
+}
+/* vlnka pod špičkou prstu */
+.tap-hint::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  border:1px solid #fff;
+  animation:tap-ring 2.4s cubic-bezier(.2,.6,.3,1) infinite;
+}
+/* ruka — špička ukazováčku míří do středu vlnky */
+.tap-hint .hand{
+  position:absolute;left:2.5px;top:6px;width:22px;height:22px;
+  fill:none;stroke:#fff;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+  animation:tap-hand 2.4s ease-in-out infinite;
+}
+@keyframes tap-ring{
+  0%,10%{transform:scale(.35);opacity:0}
+  22%{opacity:.9}
+  60%,100%{transform:scale(1.6);opacity:0}
+}
+@keyframes tap-hand{
+  0%,6%{transform:translate(2.5px,-3px)}
+  18%,32%{transform:translate(0,0)}
+  46%,100%{transform:translate(2.5px,-3px)}
+}
+/* jakmile uživatel najede nebo klikne, nápověda splnila účel */
+.photo:hover .tap-hint,.photo.tapped .tap-hint{opacity:0}
+@media(prefers-reduced-motion:reduce){
+  .tap-hint::before,.tap-hint .hand{animation:none}
+  .tap-hint::before{opacity:.5}
+}
+@media(prefers-reduced-motion:reduce){
+  .photo.shake{animation:none}
+}
 .hero h1{font-size:clamp(2.4rem,6vw,4rem);line-height:1.05;margin-bottom:10px}
 .hero .role{
   font-family:'Fraunces',serif;font-style:italic;
@@ -156,9 +216,19 @@ footer{
 
 <!-- HERO -->
 <header class="wrap hero">
-  <div class="photo" aria-label="Portrét — placeholder">
-    <span class="initials">OK</span>
-    <span class="hint">Foto</span>
+  <div class="photo-wrap">
+    <div class="photo" id="photo" role="button" tabindex="0" aria-label="Portrét — klikněte">
+      <img src="photos/User/User.png" alt="Oleksandr Khrystofor — portrét" width="260" height="320">
+      <span class="tap-hint" aria-hidden="true">
+        <svg class="hand" viewBox="0 0 24 24">
+          <path d="M10 9.5V4a2 2 0 0 0-4 0v10"/>
+          <path d="M10 10V9a2 2 0 0 1 4 0v1"/>
+          <path d="M14 10.5V10a2 2 0 0 1 4 0v1"/>
+          <path d="M18 11a2 2 0 0 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+        </svg>
+      </span>
+    </div>
+    <span class="ouch" id="ouch" role="status">Au! Nesahejte na mě!</span>
   </div>
   <div>
     <p class="eyebrow">Portfolio</p>
@@ -321,6 +391,62 @@ form.addEventListener('submit', (e) => {
   const text = encodeURIComponent(body.value.trim());
   window.location.href = 'mailto:oleksandrkhrystofor@gmail.com?subject=' + subject + '&body=' + text;
 });
+
+/* Klik na portrét: zatřesení + bublina */
+const photo = document.getElementById('photo');
+const ouch = document.getElementById('ouch');
+let ouchTimer;
+
+const OUCH_TEXTS = ['Au! Nesahejte na mě!', 'Au! To bolí!', 'Hej! Ruce pryč!'];
+
+/* pozice po obvodu fotky — smí zasahovat přes okraje, nikdy ne na obličej.
+   wide: true = trčí ven do strany, na úzkých displejích se přeskočí */
+const OUCH_SPOTS = [
+  { top: '16px',    left: '0',    tx: '-14%' },                        // horní roh vlevo
+  { top: '16px',    left: '100%', tx: '-86%' },                        // horní roh vpravo
+  { top: '34%',     left: '0',    tx: '-94%', ty: '-50%', wide: true },// vlevo nahoře
+  { top: '34%',     left: '100%', tx: '-6%',  ty: '-50%', wide: true },// vpravo nahoře
+  { top: '66%',     left: '0',    tx: '-94%', ty: '-50%', wide: true },// vlevo dole
+  { top: '66%',     left: '100%', tx: '-6%',  ty: '-50%', wide: true },// vpravo dole
+  { bottom: '58px', left: '0',    tx: '-14%' },                        // dolní roh vlevo
+  { bottom: '58px', left: '100%', tx: '-86%' }                         // dolní roh vpravo
+];
+
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+function poke() {
+  photo.classList.add('tapped');   // nápověda už není potřeba
+  photo.classList.remove('shake');
+  void photo.offsetWidth;          // restart animace při rychlém klikání
+  photo.classList.add('shake');
+
+  // tvrdý reset na nulu bez přechodu — jinak by se při dalším kliknutí
+  // text jen "dosvítil" a animace by proběhla pouze poprvé
+  ouch.classList.remove('show');
+  ouch.style.transition = 'none';
+  void ouch.offsetWidth;
+  ouch.style.transition = '';
+
+  ouch.textContent = pick(OUCH_TEXTS);
+
+  const roomy = window.innerWidth >= 760;
+  const spot = pick(roomy ? OUCH_SPOTS : OUCH_SPOTS.filter(s => !s.wide));
+  ouch.style.top = spot.top || 'auto';
+  ouch.style.bottom = spot.bottom || 'auto';
+  ouch.style.left = spot.left;
+  ouch.style.setProperty('--tx', spot.tx);
+  ouch.style.setProperty('--ty', spot.ty || '0');
+  ouch.classList.add('show');
+
+  clearTimeout(ouchTimer);
+  ouchTimer = setTimeout(() => ouch.classList.remove('show'), 2000);
+}
+
+photo.addEventListener('click', poke);
+photo.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); }
+});
+photo.addEventListener('animationend', () => photo.classList.remove('shake'));
 </script>
 </body>
 </html>
