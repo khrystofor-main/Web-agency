@@ -19,18 +19,22 @@ body{
   font-family:'Inter',system-ui,sans-serif;
   line-height:1.6;-webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+/* padding-inline / padding-block (longhand) — a shorthand `padding` here
+   would collide between .wrap and section/.hero and cancel one of them out */
+.wrap{max-width:1040px;margin:0 auto;padding-inline:24px}
 h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-.01em}
-section{padding:72px 0}
+section{padding-block:80px}
+.section-title{font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:36px;text-align:center}
 .eyebrow{
   font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);margin-bottom:14px;
 }
+section > .eyebrow{text-align:center}
 
 /* ---------- Hero ---------- */
 .hero{
   display:grid;gap:40px;align-items:center;
-  grid-template-columns:1fr;padding:88px 0 72px;
+  grid-template-columns:1fr;padding-block:72px 80px;
 }
 @media(min-width:760px){.hero{grid-template-columns:300px 1fr;gap:64px}}
 .photo{
@@ -97,16 +101,20 @@ section{padding:72px 0}
 }
 
 /* ---------- Kontakt ---------- */
-.contact-list{display:grid;gap:14px;max-width:520px}
+#kontakt{text-align:center}
+.contact-list{display:grid;gap:14px;max-width:520px;margin:0 auto}
 .contact-list a.row{
-  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
   text-decoration:none;color:inherit;background:var(--card);
   border:1px solid var(--line);border-radius:14px;padding:18px 22px;
   transition:border-color .2s,transform .2s;
 }
+@media(min-width:560px){
+  .contact-list a.row{flex-direction:row;justify-content:space-between;align-items:center;gap:16px}
+}
 .contact-list a.row:hover{border-color:#C9C1B2;transform:translateY(-2px)}
-.contact-list .label{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.contact-list .value{font-weight:600}
+.contact-list .label{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.contact-list .value{font-weight:600;overflow-wrap:anywhere}
 
 .msg-toggle{
   margin-top:26px;padding:12px 26px;border:1px solid var(--ink);border-radius:99px;
@@ -115,17 +123,22 @@ section{padding:72px 0}
 }
 .msg-toggle:hover{background:var(--ink);color:var(--bg)}
 .msg-form{
-  margin-top:18px;max-width:520px;overflow:hidden;
+  margin:18px auto 0;max-width:520px;
   transition:max-height .35s ease,opacity .3s ease;
 }
-.msg-form[hidden]{display:block;max-height:0;opacity:0;pointer-events:none}
-.msg-form:not([hidden]){max-height:400px;opacity:1}
+/* overflow clipping only while collapsed, so the textarea's focus ring
+   isn't cut off once the form is open */
+.msg-form[hidden]{display:block;max-height:0;opacity:0;pointer-events:none;overflow:hidden}
+.msg-form:not([hidden]){max-height:400px;opacity:1;overflow:visible}
 .msg-form textarea{
   width:100%;min-height:130px;resize:vertical;
   border:1px solid var(--line);border-radius:14px;background:var(--card);
   padding:16px;font:inherit;font-size:.92rem;color:var(--ink);
+  text-align:left; /* don't inherit the section's centering */
 }
-.msg-form textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+/* darken the existing border instead of drawing an outline — outline ignores
+   border-radius and gets clipped, leaving dark corner slivers */
+.msg-form textarea:focus{outline:none;border-color:var(--ink)}
 .msg-form button.send{
   margin-top:12px;padding:12px 28px;border:none;border-radius:99px;
   background:var(--ink);color:var(--bg);font:inherit;font-size:.9rem;font-weight:600;
@@ -134,8 +147,8 @@ section{padding:72px 0}
 .msg-form button.send:hover{background:var(--accent)}
 
 footer{
-  padding:36px 0 48px;font-size:.78rem;color:var(--muted);
-  border-top:1px solid var(--line);
+  padding-block:36px 48px;font-size:.78rem;color:var(--muted);
+  border-top:1px solid var(--line);text-align:center;
 }
 </style>
 </head>
@@ -159,7 +172,7 @@ footer{
 <!-- ŠABLONY -->
 <section class="wrap" id="sablony">
   <p class="eyebrow">Ukázky práce</p>
-  <h2 style="font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:36px">Moje šablony</h2>
+  <h2 class="section-title">Moje šablony</h2>
 
   <div class="grid">
 
@@ -239,7 +252,7 @@ footer{
 <!-- CENA -->
 <section class="wrap" id="cena">
   <p class="eyebrow">Spolupráce</p>
-  <h2 style="font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:36px">Cena</h2>
+  <h2 class="section-title">Cena</h2>
 
   <div class="price">
     <div class="amount">300 Kč<span> / měsíc</span></div>
@@ -255,7 +268,7 @@ footer{
 <!-- KONTAKT -->
 <section class="wrap" id="kontakt">
   <p class="eyebrow">Spojme se</p>
-  <h2 style="font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:36px">Kontakt</h2>
+  <h2 class="section-title">Kontakt</h2>
 
   <div class="contact-list">
     <a class="row" href="tel:+420720696256">
