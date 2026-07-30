@@ -54,9 +54,32 @@ templates/
 | jiný počet fotek v galerii | pole `gallery` (karusel se přizpůsobí) |
 | změnit hlavní barvu šablony | `brand.color` (přepíše CSS proměnnou `--brand`) |
 | jednojazyčný web | `lang.available:['cs']` — přepínač CZ/EN pak zmizí z logiky, tlačítko odstraňte z HTML |
+| vypnout noční téma | `theme.auto:false` (web zůstane v `theme.default`) |
+| schovat přepínač témat | `theme.toggle:false` |
 
 Vše ostatní (typografie, rozvržení, animace) je záměrně v HTML/CSS jednotlivé
 šablony — tam se ladí charakter designu.
+
+## Noční téma podle času v Česku
+
+Každá šablona má druhou, tmavou paletu. Přepíná se sama: přes den světlá,
+po soumraku tmavá. Čas se čte pro `Europe/Prague` (letní čas řeší `Intl`),
+takže výsledek nezávisí na tom, odkud se host dívá. Hranice dne a noci
+sleduje skutečný východ a západ slunce v ČR po měsících (v prosinci se
+stmívá kolem 16:30, v červnu až po 21:00) — tabulka je v `assets/theme.js`.
+
+- Návštěvník může téma přepnout tlačítkem v navigaci. Ruční volba má vždy
+  přednost a drží 12 hodin (`theme.manualTtlHours`), pak se web vrátí
+  k automatice.
+- Systémové nastavení zařízení (`prefers-color-scheme`) se **nepoužívá**:
+  spousta lidí má telefon v tmavém režimu nastálo a web kavárny by pak
+  vypadal tmavě i v poledne.
+- Skript běží v `<head>` před vykreslením stránky, aby v noci neproblesklo
+  světlé pozadí. Proto se `site.config.js` načítá také v hlavičce.
+- Barvy noční varianty jsou v CSS bloku `html[data-theme="dark"]` v každé
+  šabloně — tam se ladí, stejně jako zbytek designu.
+- Vlastní `brand.color` funguje i v noci: akcent se přes `color-mix`
+  zesvětlí, aby si na tmavém podkladu udržel kontrast.
 
 ## Poznámky k provozu
 

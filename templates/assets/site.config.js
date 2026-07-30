@@ -8,6 +8,13 @@ window.SITE = {
 
   lang: { default:'cs', available:['cs','en'], storageKey:'pf-cafe-lang' },
 
+  /* Téma: světlé přes den, tmavé po setmění (podle času v Česku).
+     auto:false → web zůstane v tématu `default`.
+     toggle:false → tlačítko přepínače z navigace zmizí.
+     manualTtlHours: za jak dlouho vyprší ruční volba návštěvníka (0 = nikdy). */
+  theme: { auto:true, default:'light', toggle:true,
+           timeZone:'Europe/Prague', storageKey:'pf-cafe-theme', manualTtlHours:12 },
+
   brand: {
     name: 'PF Café',
     title: { cs:'PF Café — Brno', en:'PF Café — Brno' },

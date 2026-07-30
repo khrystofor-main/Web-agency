@@ -19,16 +19,51 @@
   --oxblood:var(--brand);
   --line:rgba(28,26,23,.25);
   --line-strong:#1C1A17;
+  --raised-bg:#1C1A17;           /* patička */
+  --raised-fg:#F7F3EC;
+  --raised-soft:rgba(247,243,236,.72);
+  --raised-faint:rgba(247,243,236,.4);
+  --raised-line:rgba(247,243,236,.35);
+  --secnum-stroke:rgba(28,26,23,.16);
+  --ph-empty:rgba(28,26,23,.28);
+  --nav-rgb:247,243,236;
+  --map-filter:sepia(.35) saturate(.7) contrast(1.02);
   --display:'Fraunces',Georgia,serif;
   --body:'Newsreader',Georgia,serif;
   --nav-h:58px;
   --ease:cubic-bezier(.22,1,.36,1);
+  color-scheme:light;
+}
+/* ============ NOČNÍ TÉMA ============
+   Papír se mění v tmavý novinový tisk: teplá čerň, krémový text.
+   Oxblood se přimíchá k bílé, aby si na tmavém udržel čitelnost —
+   přes color-mix, takže vlastní barva z brand.color zůstává v platnosti. */
+html[data-theme="dark"]{
+  --paper:#16140F;
+  --paper-2:#201C16;
+  --ink:#F1EADD;
+  --ink-soft:#A79C8B;
+  --oxblood:var(--brand);
+  --oxblood:color-mix(in srgb, var(--brand) 68%, #FFFFFF);
+  --line:rgba(241,234,221,.24);
+  --line-strong:#F1EADD;
+  --raised-bg:#201C16;
+  --raised-fg:#F1EADD;
+  --raised-soft:rgba(241,234,221,.72);
+  --raised-faint:rgba(241,234,221,.42);
+  --raised-line:rgba(241,234,221,.32);
+  --secnum-stroke:rgba(241,234,221,.18);
+  --ph-empty:rgba(241,234,221,.3);
+  --nav-rgb:22,20,15;
+  --map-filter:invert(.9) hue-rotate(180deg) saturate(.55) contrast(.95);
+  color-scheme:dark;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:clip}
 body{
   background:var(--paper);
   color:var(--ink);
+  transition:background-color .3s,color .3s;
   font-family:var(--body);
   font-weight:400;
   line-height:1.65;
@@ -43,10 +78,10 @@ h1,h2,h3{font-family:var(--display);font-weight:900;line-height:1.02;letter-spac
 nav{
   position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px;background:rgba(247,243,236,0);
+  padding:0 20px;background:rgba(var(--nav-rgb),0);
   transition:background .35s,box-shadow .35s;
 }
-nav.scrolled{background:rgba(247,243,236,.95);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line-strong)}
+nav.scrolled{background:rgba(var(--nav-rgb),.95);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line-strong)}
 nav .logo{font-family:var(--display);font-weight:900;font-size:1.25rem;color:var(--ink);text-decoration:none}
 nav .right{display:flex;align-items:center;gap:18px}
 nav .links{display:none;gap:24px}
@@ -60,6 +95,19 @@ nav .links a:hover{color:var(--oxblood)}
   color:var(--ink-soft);transition:.2s;
 }
 .lang-toggle button.active{color:var(--oxblood);font-style:italic}
+
+/* přepínač tématu — kruhový, jako tlačítka karuselu */
+.theme-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;padding:0;cursor:pointer;border-radius:50%;
+  border:1px solid var(--line-strong);background:transparent;color:var(--ink);
+  transition:background .25s,color .25s;
+}
+.theme-btn:hover{background:var(--ink);color:var(--paper)}
+.theme-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .i-sun{display:none}
+html[data-theme="dark"] .theme-btn .i-moon{display:none}
+html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO (masthead) ============ */
 .hero{padding:calc(var(--nav-h) + 34px) 20px 0;overflow:hidden}
@@ -101,7 +149,7 @@ section{position:relative;padding:90px 20px;max-width:1160px;margin:0 auto}
 .secnum{
   position:absolute;top:64px;left:-10px;z-index:0;pointer-events:none;
   font-family:var(--display);font-weight:900;font-size:clamp(6rem,18vw,15rem);line-height:1;
-  color:transparent;-webkit-text-stroke:1px rgba(28,26,23,.16);
+  color:transparent;-webkit-text-stroke:1px var(--secnum-stroke);
 }
 @media(min-width:1250px){.secnum{left:-70px}}
 .sec-head{position:relative;z-index:1}
@@ -190,7 +238,7 @@ section{position:relative;padding:90px 20px;max-width:1160px;margin:0 auto}
 .menu-item__ph img{width:100%;height:100%;object-fit:cover}
 .menu-item__ph--empty{
   border:1px dashed var(--line);background:transparent;
-  display:flex;align-items:center;justify-content:center;color:rgba(28,26,23,.28);
+  display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
 }
 .menu-item__ph--empty svg{width:36px;height:36px}
 .menu-item__body{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
@@ -213,22 +261,22 @@ section{position:relative;padding:90px 20px;max-width:1160px;margin:0 auto}
 .hours-list li:last-child{border:0}
 .hours-list .today{color:var(--oxblood);font-weight:500;font-style:italic}
 .addr{font-size:1.05rem;line-height:1.75}
-.addr a{color:var(--oxblood);font-style:italic;text-decoration:none;border-bottom:1px solid rgba(179,58,43,.4);transition:.2s}
+.addr a{color:var(--oxblood);font-style:italic;text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--oxblood) 40%, transparent);transition:.2s}
 .addr a:hover{border-color:var(--oxblood)}
 .phone-big{
   font-family:var(--display);font-weight:600;font-size:1.5rem;color:var(--ink);text-decoration:none;transition:color .2s;
 }
 .phone-big:hover{color:var(--oxblood)}
 .map-wrap{border:1px solid var(--line-strong);aspect-ratio:4/3;background:var(--paper-2)}
-.map-wrap iframe{width:100%;height:100%;border:0;filter:sepia(.35) saturate(.7) contrast(1.02)}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:var(--map-filter)}
 
 /* ============ FOOTER ============ */
-footer{background:var(--ink);color:rgba(247,243,236,.72);padding:52px 20px 40px;text-align:center}
-footer .flogo{font-family:var(--display);font-weight:900;font-size:1.8rem;color:var(--paper);margin-bottom:8px}
+footer{background:var(--raised-bg);color:var(--raised-soft);padding:52px 20px 40px;text-align:center}
+footer .flogo{font-family:var(--display);font-weight:900;font-size:1.8rem;color:var(--raised-fg);margin-bottom:8px}
 footer p{font-size:.88rem;margin:4px 0}
-footer a{color:var(--paper);text-decoration:none;border-bottom:1px solid rgba(247,243,236,.35)}
+footer a{color:var(--raised-fg);text-decoration:none;border-bottom:1px solid var(--raised-line)}
 footer a:hover{color:#E4A188;border-color:#E4A188}
-footer .tiny{margin-top:22px;font-size:.74rem;color:rgba(247,243,236,.4)}
+footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
 
 /* reduced motion */
 @media (prefers-reduced-motion: reduce){
@@ -237,6 +285,8 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:rgba(247,243,236,.4)}
   html{scroll-behavior:auto}
 }
 </style>
+<script src="assets/site.config.js"></script>
+<script src="assets/theme.js"></script>
 </head>
 <body>
 
@@ -252,6 +302,10 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:rgba(247,243,236,.4)}
       <button id="btn-cs" class="active" onclick="setLang('cs')">CZ</button>
       <button id="btn-en" onclick="setLang('en')">EN</button>
     </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Přepnout téma / Toggle theme" title="Přepnout téma">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
   </div>
 </nav>
 
@@ -373,7 +427,6 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:rgba(247,243,236,.4)}
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <!-- ===== Šablona: data a logika ===== -->
 <script>window.TEMPLATE={letterClass:'ch',letterIndexVar:false,placeholderIcon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'};</script>
-<script src="assets/site.config.js"></script>
 <script src="assets/site.js"></script>
 <script>
 /* ===== Animírované prvky specifické pro tuto šablonu ===== */

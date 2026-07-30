@@ -15,6 +15,13 @@ window.SITE = {
 
   lang: { default:'cs', available:['cs','en'], storageKey:'muj-podnik-lang' },
 
+  /* Téma: světlé přes den, tmavé po setmění (podle času v Česku).
+     auto:false → web zůstane v tématu `default`.
+     toggle:false → tlačítko přepínače z navigace zmizí.
+     manualTtlHours: za jak dlouho vyprší ruční volba návštěvníka (0 = nikdy). */
+  theme: { auto:true, default:'light', toggle:true,
+           timeZone:'Europe/Prague', storageKey:'muj-podnik-theme', manualTtlHours:12 },
+
   brand: {
     name: 'Název kavárny',                       // objeví se v logu, hero titulku a patičce
     title: { cs:'Název kavárny — Město', en:'Café Name — City' },   // <title>
