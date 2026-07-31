@@ -493,10 +493,13 @@ window.addEventListener('resize', fitPreview);
    i scroll animace šablon. Dole chvíli počká a vrátí se na začátek. */
 const reducedMotion = matchMedia('(prefers-reduced-motion:reduce)');
 let scrollRafId = null;
+let scrollPos = 0;   // vlastní float — scrollTo zaokrouhluje; sdílí ho autoscroll i kolečko
 function startAutoScroll() {
   cancelAnimationFrame(scrollRafId);
+  const cw = tplFrame.contentWindow;
+  scrollPos = (cw && cw.scrollY) || 0;
   if (reducedMotion.matches) return;
-  let pos = 0, lastT = 0, waitUntil = 0;   // pos je vlastní float — scrollTo zaokrouhluje
+  let lastT = 0, waitUntil = 0;
   function step(t) {
     scrollRafId = requestAnimationFrame(step);
     if (!lastT) { lastT = t; return; }
@@ -505,16 +508,25 @@ function startAutoScroll() {
     if (!w || !w.document.documentElement || pausedByHover) return;
     if (t < waitUntil) return;
     const max = w.document.documentElement.scrollHeight - w.innerHeight;
-    if (pos >= max) { pos = 0; waitUntil = t + 1500; w.scrollTo(0, 0); return; }
-    pos = Math.min(pos + 40 * dt, max);
-    w.scrollTo(0, pos);
-    if (pos >= max) waitUntil = t + 2500;   // dole chvíli postát
+    if (scrollPos >= max) { scrollPos = 0; waitUntil = t + 1500; w.scrollTo(0, 0); return; }
+    scrollPos = Math.min(scrollPos + 80 * dt, max);
+    w.scrollTo(0, scrollPos);
+    if (scrollPos >= max) waitUntil = t + 2500;   // dole chvíli postát
   }
   scrollRafId = requestAnimationFrame(step);
 }
 let pausedByHover = false;
 tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
 tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; });
+/* kolečko nad náhledem skroluje přímo šablonu; hub stojí (preventDefault) */
+tplPreview.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const w = tplFrame.contentWindow;
+  if (!w || !w.document.documentElement) return;
+  const max = w.document.documentElement.scrollHeight - w.innerHeight;
+  scrollPos = Math.min(Math.max(scrollPos + e.deltaY, 0), max);
+  w.scrollTo(0, scrollPos);
+}, { passive: false });
 tplFrame.addEventListener('load', startAutoScroll);
 /* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
 reducedMotion.addEventListener('change', () => {
