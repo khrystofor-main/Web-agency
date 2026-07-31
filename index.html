@@ -156,6 +156,7 @@ section > .eyebrow{text-align:center}
   background:var(--card);border:1px solid var(--line);border-radius:16px;
   padding:26px;transition:background-color .3s,border-color .3s;
 }
+.showcase + .showcase{margin-top:24px}
 .showcase-cat{
   font-family:'Fraunces',serif;font-size:1.35rem;font-weight:600;
   letter-spacing:-.01em;margin-bottom:18px;
@@ -321,10 +322,11 @@ footer{
   <p class="eyebrow">Ukázky práce</p>
   <h2 class="section-title">Moje šablony</h2>
 
-  <div class="showcase">
+  <!-- Obě karty mají stejnou stavbu; skript je oživí přes initShowcase() -->
+  <div class="showcase" id="showcaseCafe">
     <p class="showcase-cat">Šablony pro kavárnu</p>
 
-    <div class="tabs" role="tablist" aria-label="Výběr šablony" id="tplTabs">
+    <div class="tabs tpl-tabs" role="tablist" aria-label="Výběr šablony pro kavárnu">
       <button type="button" role="tab" data-i="0" aria-selected="true">Šablona 1</button>
       <button type="button" role="tab" data-i="1" aria-selected="false">Šablona 2</button>
       <button type="button" role="tab" data-i="2" aria-selected="false">Šablona 3</button>
@@ -333,16 +335,41 @@ footer{
     </div>
 
     <div class="showcase-body">
-      <div class="preview" id="tplPreview">
-        <!-- iframes náhledů vkládá skript (všech pět najednou) -->
-        <a class="preview-link" id="tplPreviewLink" href="site/index.html" aria-label="Otevřít šablonu"></a>
+      <div class="preview tpl-preview">
+        <!-- iframes náhledů vkládá skript (lazy, při prvním zvolení tabu) -->
+        <a class="preview-link tpl-preview-link" href="site/index.html" aria-label="Otevřít šablonu"></a>
       </div>
       <aside class="showcase-info">
-        <h3 id="tplName">Warm Paper</h3>
-        <p class="pair" id="tplPair"></p>
-        <p class="desc" id="tplDesc"></p>
-        <div class="swatches" id="tplSwatches"></div>
-        <a class="open" id="tplOpen" href="site/index.html">Otevřít →</a>
+        <h3 class="tpl-name">Warm Paper</h3>
+        <p class="pair tpl-pair"></p>
+        <p class="desc tpl-desc"></p>
+        <div class="swatches tpl-swatches"></div>
+        <a class="open tpl-open" href="site/index.html">Otevřít →</a>
+      </aside>
+    </div>
+  </div>
+
+  <div class="showcase" id="showcaseBistro">
+    <p class="showcase-cat">Šablony pro bistro</p>
+
+    <div class="tabs tpl-tabs" role="tablist" aria-label="Výběr šablony pro bistro">
+      <button type="button" role="tab" data-i="0" aria-selected="true">Šablona 1</button>
+      <button type="button" role="tab" data-i="1" aria-selected="false">Šablona 2</button>
+      <button type="button" role="tab" data-i="2" aria-selected="false">Šablona 3</button>
+      <button type="button" role="tab" data-i="3" aria-selected="false">Šablona 4</button>
+      <button type="button" role="tab" data-i="4" aria-selected="false">Šablona 5</button>
+    </div>
+
+    <div class="showcase-body">
+      <div class="preview tpl-preview">
+        <a class="preview-link tpl-preview-link" href="templates/bistro/ceska.html" aria-label="Otevřít šablonu"></a>
+      </div>
+      <aside class="showcase-info">
+        <h3 class="tpl-name">Hospodská tabule</h3>
+        <p class="pair tpl-pair"></p>
+        <p class="desc tpl-desc"></p>
+        <div class="swatches tpl-swatches"></div>
+        <a class="open tpl-open" href="templates/bistro/ceska.html">Otevřít →</a>
       </aside>
     </div>
   </div>
@@ -438,8 +465,10 @@ form.addEventListener('submit', (e) => {
   window.location.href = 'mailto:oleksandrkhrystofor@gmail.com?subject=' + subject + '&body=' + text;
 });
 
-/* Vitrína šablon: taby přepínají živý náhled (iframe) + info panel */
-const TEMPLATES = [
+/* Vitrína šablon: taby přepínají živý náhled (iframe) + info panel.
+   Na stránce jsou dvě karty (kavárna, bistro), proto je celá logika
+   v továrně initShowcase() — každá karta má vlastní stav i autoscroll. */
+const TEMPLATES_CAFE = [
   { href:'site/index.html', name:'Warm Paper', pair:'Playfair Display + Inter',
     desc:'Teplý papírový podklad, zelená a terakota. Fotka přes celou obrazovku, boční menu kategorií, měkké nájezdy.',
     colors:['#F6F1E7','#33523E','#22382B','#C8742C'] },
@@ -457,140 +486,182 @@ const TEMPLATES = [
     colors:['#F5F4F1','#0F2C47','#C9A961','#E8E8E8'] }
 ];
 
-const tplTabs = Array.from(document.querySelectorAll('#tplTabs [role="tab"]'));
-const tplPreview = document.getElementById('tplPreview');
-
-/* Pět iframe nad sebou, ale šablona se načte až při prvním zvolení tabu —
-   návštěvník tak jednou vidí, jak se web načítá. Další přepnutí už jen
-   přehodí viditelnost: žádné znovunačítání, pozice skrolu zůstává. */
-let activeIdx = 0;
-const tplFrames = TEMPLATES.map((t, i) => {
-  const f = document.createElement('iframe');
-  f.title = 'Náhled šablony: ' + t.name;
-  if (i !== 0) f.style.visibility = 'hidden';
-  f.addEventListener('load', () => { if (i === activeIdx) startAutoScroll(); });
-  tplPreview.insertBefore(f, document.getElementById('tplPreviewLink'));
-  return f;
-});
-
-/* iframe má pevných 1280×800 (desktopová šířka šablony) a do rámečku
-   se zmenšuje přes scale — šablona tak v náhledu vypadá jako na monitoru */
-function fitPreview() {
-  const s = 'scale(' + tplPreview.clientWidth / 1280 + ')';
-  tplFrames.forEach(f => { f.style.transform = s; });
-}
-
-function selectTemplate(i) {
-  const t = TEMPLATES[i];
-  tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
-  activeIdx = i;
-  tplFrames.forEach((f, j) => { f.style.visibility = j === i ? '' : 'hidden'; });
-  if (!tplFrames[i].getAttribute('src')) tplFrames[i].src = t.href;   // první zvolení = jediné načtení
-  startAutoScroll();
-  document.getElementById('tplName').textContent = t.name;
-  document.getElementById('tplPair').textContent = t.pair;
-  document.getElementById('tplDesc').textContent = t.desc;
-  document.getElementById('tplSwatches').innerHTML =
-    t.colors.map(c => '<span class="sw" style="background:' + c + '"></span>').join('');
-  document.getElementById('tplOpen').href = t.href;
-  document.getElementById('tplPreviewLink').href = t.href;
-  fitPreview();
-}
-
-/* opětovný klik na už aktivní tab sroluje náhled zpátky na začátek */
-function scrollPreviewTop() {
-  const w = tplFrames[activeIdx].contentWindow;
-  if (!w) return;
-  if (reducedMotion.matches) { scrollPos = 0; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
-  scrollPos = w.scrollY;
-  returnToTop = true;   // dojezd obstará animační smyčka, autoscroll naváže bez prodlevy
-  waitUntil = 0;        // zrušit i případnou pauzu dole/nahoře — jinak by nahoře mlčky čekal
-}
-tplTabs.forEach(tab => tab.addEventListener('click', () => {
-  const i = +tab.dataset.i;
-  if (i === activeIdx) scrollPreviewTop(); else selectTemplate(i);
-}));
-document.getElementById('tplTabs').addEventListener('keydown', (e) => {
-  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-  const cur = tplTabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
-  const next = (cur + (e.key === 'ArrowRight' ? 1 : -1) + TEMPLATES.length) % TEMPLATES.length;
-  selectTemplate(next);
-  tplTabs[next].focus();
-});
-window.addEventListener('resize', fitPreview);
+const TEMPLATES_BISTRO = [
+  { href:'templates/bistro/ceska.html', name:'Hospodská tabule', pair:'Bitter + Source Sans 3',
+    desc:'Česká kuchyně. Papírová stěna, křídová tabule s poledním menu, smaltové cedule a zlatý akcent.',
+    colors:['#F4EFE6','#7A2E1E','#2B2724','#C8912F'] },
+  { href:'templates/bistro/vietnamska.html', name:'Street Food', pair:'Be Vietnam Pro + Manrope',
+    desc:'Vietnamská kuchyně. Indigo, limetka a pálivá oranžová, oblé karty, kreslená miska phở s párou.',
+    colors:['#0E3B43','#E4572E','#A7C957','#FFF8EC'] },
+  { href:'templates/bistro/japonska.html', name:'Ma', pair:'Noto Serif JP + Inter',
+    desc:'Japonská kuchyně. Prázdno mezi věcmi: skoro bílá plocha, vlásečnicové linky, jeden rumělkový kruh.',
+    colors:['#FAF8F5','#1A1A1A','#8C2318','#C4B7A6'] },
+  { href:'templates/bistro/italska.html', name:'Trattoria', pair:'Libre Baskerville + Karla',
+    desc:'Italská kuchyně. Smetanová stěna, bazalková markýza, dlaždice cementine a lístek s tečkovaným vodičem.',
+    colors:['#FBF6EC','#2F5D3A','#B33A2B','#E0C48C'] },
+  { href:'templates/bistro/plant-based.html', name:'Zelený minimal', pair:'DM Serif Display + Nunito Sans',
+    desc:'Rostlinná kuchyně. Matcha, hlína a len, měkké tvary, kreslená miska a listy — všechno v CSS.',
+    colors:['#F2F6EF','#3E6B48','#8FBF6A','#D8CBB4'] }
+];
 
 /* Náhled se sám pomalu posouvá dolů, aby bylo vidět víc než jen hero.
    Skroluje se skutečné okno iframe (stejný origin), takže se spouštějí
-   i scroll animace šablon. Dole chvíli počká a vrátí se na začátek. */
+   i scroll animace šablon. Dole chvíli počká a vrátí se na začátek.
+   Nastavení „omezit animace“ i změnu šířky okna hlídáme jedním
+   posluchačem pro celou stránku — instance se do něj přihlásí. */
 const reducedMotion = matchMedia('(prefers-reduced-motion:reduce)');
-let scrollRafId = null;
-let scrollPos = 0;      // vlastní float — scrollTo zaokrouhluje; sdílí ho autoscroll i kolečko
-let manualTarget = null; // cíl ručního skrolování koleckem; scrollPos se k němu měkce dotahuje
-let returnToTop = false; // měkký dojezd na začátek po opětovném kliku na aktivní tab
-let waitUntil = 0;       // pauza autoscrollu dole/nahoře (timestamp)
-function startAutoScroll() {
-  cancelAnimationFrame(scrollRafId);
-  const cw = tplFrames[activeIdx].contentWindow;
-  scrollPos = (cw && cw.scrollY) || 0;
-  manualTarget = null;
-  returnToTop = false;
-  waitUntil = 0;
-  if (reducedMotion.matches) return;
-  let lastT = 0;
-  function step(t) {
+const showcases = [];
+window.addEventListener('resize', () => showcases.forEach(s => s.fit()));
+reducedMotion.addEventListener('change', () => showcases.forEach(s => s.motionChanged()));
+
+function initShowcase(rootEl, TEMPLATES) {
+  const tplTabs = Array.from(rootEl.querySelectorAll('.tpl-tabs [role="tab"]'));
+  const tabsBox = rootEl.querySelector('.tpl-tabs');
+  const tplPreview = rootEl.querySelector('.tpl-preview');
+  const tplPreviewLink = rootEl.querySelector('.tpl-preview-link');
+
+  /* Stav autoscrollu musí vzniknout dřív než iframy: prázdný iframe umí
+     vystřelit `load` ještě během vkládání a startAutoScroll by na proměnné
+     sáhl před jejich inicializací. */
+  let scrollRafId = null;
+  let scrollPos = 0;       // vlastní float — scrollTo zaokrouhluje; sdílí ho autoscroll i kolečko
+  let manualTarget = null; // cíl ručního skrolování koleckem; scrollPos se k němu měkce dotahuje
+  let returnToTop = false; // měkký dojezd na začátek po opětovném kliku na aktivní tab
+  let waitUntil = 0;       // pauza autoscrollu dole/nahoře (timestamp)
+  let pausedByHover = false;
+
+  /* Pět iframe nad sebou, ale šablona se načte až při prvním zvolení tabu —
+     návštěvník tak jednou vidí, jak se web načítá. Další přepnutí už jen
+     přehodí viditelnost: žádné znovunačítání, pozice skrolu zůstává. */
+  let activeIdx = 0;
+  const tplFrames = TEMPLATES.map((t, i) => {
+    const f = document.createElement('iframe');
+    f.title = 'Náhled šablony: ' + t.name;
+    if (i !== 0) f.style.visibility = 'hidden';
+    /* prázdný iframe (about:blank) vystřelí `load` hned při vložení —
+       autoscroll spouštíme až po načtení skutečné šablony */
+    f.addEventListener('load', () => {
+      if (f.getAttribute('src') && i === activeIdx) startAutoScroll();
+    });
+    tplPreview.insertBefore(f, tplPreviewLink);
+    return f;
+  });
+
+  /* iframe má pevných 1280×800 (desktopová šířka šablony) a do rámečku
+     se zmenšuje přes scale — šablona tak v náhledu vypadá jako na monitoru */
+  function fitPreview() {
+    const s = 'scale(' + tplPreview.clientWidth / 1280 + ')';
+    tplFrames.forEach(f => { f.style.transform = s; });
+  }
+
+  function selectTemplate(i) {
+    const t = TEMPLATES[i];
+    tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
+    activeIdx = i;
+    tplFrames.forEach((f, j) => { f.style.visibility = j === i ? '' : 'hidden'; });
+    if (!tplFrames[i].getAttribute('src')) tplFrames[i].src = t.href;   // první zvolení = jediné načtení
+    startAutoScroll();
+    rootEl.querySelector('.tpl-name').textContent = t.name;
+    rootEl.querySelector('.tpl-pair').textContent = t.pair;
+    rootEl.querySelector('.tpl-desc').textContent = t.desc;
+    rootEl.querySelector('.tpl-swatches').innerHTML =
+      t.colors.map(c => '<span class="sw" style="background:' + c + '"></span>').join('');
+    rootEl.querySelector('.tpl-open').href = t.href;
+    tplPreviewLink.href = t.href;
+    fitPreview();
+  }
+
+  /* opětovný klik na už aktivní tab sroluje náhled zpátky na začátek */
+  function scrollPreviewTop() {
+    const w = tplFrames[activeIdx].contentWindow;
+    if (!w) return;
+    if (reducedMotion.matches) { scrollPos = 0; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
+    scrollPos = w.scrollY;
+    returnToTop = true;   // dojezd obstará animační smyčka, autoscroll naváže bez prodlevy
+    waitUntil = 0;        // zrušit i případnou pauzu dole/nahoře — jinak by nahoře mlčky čekal
+  }
+  tplTabs.forEach(tab => tab.addEventListener('click', () => {
+    const i = +tab.dataset.i;
+    if (i === activeIdx) scrollPreviewTop(); else selectTemplate(i);
+  }));
+  tabsBox.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const cur = tplTabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+    const next = (cur + (e.key === 'ArrowRight' ? 1 : -1) + TEMPLATES.length) % TEMPLATES.length;
+    selectTemplate(next);
+    tplTabs[next].focus();
+  });
+
+  function startAutoScroll() {
+    cancelAnimationFrame(scrollRafId);
+    scrollRafId = null;
+    const cw = tplFrames[activeIdx].contentWindow;
+    scrollPos = (cw && cw.scrollY) || 0;
+    manualTarget = null;
+    returnToTop = false;
+    waitUntil = 0;
+    if (reducedMotion.matches) return;
+    let lastT = 0;
+    function step(t) {
+      scrollRafId = requestAnimationFrame(step);
+      if (!lastT) { lastT = t; return; }
+      const dt = (t - lastT) / 1000; lastT = t;
+      const w = tplFrames[activeIdx].contentWindow;
+      if (!w || !w.document.documentElement) return;
+      if (pausedByHover) {
+        /* ruční režim: pozice měkce dojíždí k cíli koleckem — plynulé skrolování */
+        if (manualTarget !== null && Math.abs(manualTarget - scrollPos) > .5) {
+          scrollPos += (manualTarget - scrollPos) * .15;
+          w.scrollTo({ top: scrollPos, behavior: 'instant' });
+        }
+        return;
+      }
+      if (returnToTop) {
+        scrollPos *= .88;   // měkký dojezd nahoru; autoscroll naváže hned dalším snímkem
+        if (scrollPos < 1) { scrollPos = 0; returnToTop = false; waitUntil = 0; }
+        w.scrollTo({ top: scrollPos, behavior: 'instant' });
+        return;
+      }
+      if (t < waitUntil) return;
+      const max = w.document.documentElement.scrollHeight - w.innerHeight;
+      /* behavior:'instant' přebije scroll-behavior:smooth šablon — jinak by každý
+         snímek spouštěl novou plynulou animaci a náhled by se zasekával */
+      if (scrollPos >= max) { scrollPos = 0; waitUntil = t + 1500; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
+      scrollPos = Math.min(scrollPos + 80 * dt, max);
+      w.scrollTo({ top: scrollPos, behavior: 'instant' });
+      if (scrollPos >= max) waitUntil = t + 2500;   // dole chvíli postát
+    }
     scrollRafId = requestAnimationFrame(step);
-    if (!lastT) { lastT = t; return; }
-    const dt = (t - lastT) / 1000; lastT = t;
+  }
+  tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
+  tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; manualTarget = null; });
+  /* kolečko nad náhledem skroluje přímo šablonu; hub stojí (preventDefault) */
+  tplPreview.addEventListener('wheel', (e) => {
+    e.preventDefault();
     const w = tplFrames[activeIdx].contentWindow;
     if (!w || !w.document.documentElement) return;
-    if (pausedByHover) {
-      /* ruční režim: pozice měkce dojíždí k cíli koleckem — plynulé skrolování */
-      if (manualTarget !== null && Math.abs(manualTarget - scrollPos) > .5) {
-        scrollPos += (manualTarget - scrollPos) * .15;
-        w.scrollTo({ top: scrollPos, behavior: 'instant' });
-      }
-      return;
-    }
-    if (returnToTop) {
-      scrollPos *= .88;   // měkký dojezd nahoru; autoscroll naváže hned dalším snímkem
-      if (scrollPos < 1) { scrollPos = 0; returnToTop = false; waitUntil = 0; }
-      w.scrollTo({ top: scrollPos, behavior: 'instant' });
-      return;
-    }
-    if (t < waitUntil) return;
     const max = w.document.documentElement.scrollHeight - w.innerHeight;
-    /* behavior:'instant' přebije scroll-behavior:smooth šablon — jinak by každý
-       snímek spouštěl novou plynulou animaci a náhled by se zasekával */
-    if (scrollPos >= max) { scrollPos = 0; waitUntil = t + 1500; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
-    scrollPos = Math.min(scrollPos + 80 * dt, max);
-    w.scrollTo({ top: scrollPos, behavior: 'instant' });
-    if (scrollPos >= max) waitUntil = t + 2500;   // dole chvíli postát
-  }
-  scrollRafId = requestAnimationFrame(step);
-}
-let pausedByHover = false;
-tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
-tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; manualTarget = null; });
-/* kolečko nad náhledem skroluje přímo šablonu; hub stojí (preventDefault) */
-tplPreview.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  const w = tplFrames[activeIdx].contentWindow;
-  if (!w || !w.document.documentElement) return;
-  const max = w.document.documentElement.scrollHeight - w.innerHeight;
-  manualTarget = Math.min(Math.max((manualTarget === null ? scrollPos : manualTarget) + e.deltaY, 0), max);
-  if (scrollRafId === null) {
-    /* bez animační smyčky (prefers-reduced-motion) skáčeme rovnou na cíl */
-    scrollPos = manualTarget;
-    w.scrollTo({ top: scrollPos, behavior: 'instant' });
-  }
-}, { passive: false });
-/* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
-reducedMotion.addEventListener('change', () => {
-  if (reducedMotion.matches) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
-  else startAutoScroll();
-});
+    manualTarget = Math.min(Math.max((manualTarget === null ? scrollPos : manualTarget) + e.deltaY, 0), max);
+    if (scrollRafId === null) {
+      /* bez animační smyčky (prefers-reduced-motion) skáčeme rovnou na cíl */
+      scrollPos = manualTarget;
+      w.scrollTo({ top: scrollPos, behavior: 'instant' });
+    }
+  }, { passive: false });
 
-selectTemplate(0);
+  selectTemplate(0);
+
+  showcases.push({
+    fit: fitPreview,
+    motionChanged() {
+      if (reducedMotion.matches) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
+      else startAutoScroll();
+    }
+  });
+}
+
+initShowcase(document.getElementById('showcaseCafe'), TEMPLATES_CAFE);
+initShowcase(document.getElementById('showcaseBistro'), TEMPLATES_BISTRO);
 
 /* Klik na portrét: zatřesení + bublina */
 const photo = document.getElementById('photo');

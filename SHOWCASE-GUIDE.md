@@ -252,6 +252,31 @@ reducedMotion.addEventListener('change', () => {
 selectTemplate(0);
 ```
 
+## Несколько витрин на одной странице
+
+Скрипт выше написан под одну карточку с `id`. Когда карточек больше одной
+(на хабе сейчас «Šablony pro kavárnu» и «Šablony pro bistro»), весь блок
+завёрнут в фабрику `initShowcase(rootEl, TEMPLATES)`:
+
+- в разметке `id="tpl…"` заменены на классы `.tpl-tabs`, `.tpl-preview`,
+  `.tpl-preview-link`, `.tpl-name`, `.tpl-pair`, `.tpl-desc`,
+  `.tpl-swatches`, `.tpl-open`; сама карточка получает `id`
+  (`#showcaseCafe`, `#showcaseBistro`) — только чтобы её найти;
+- все `document.getElementById(…)` внутри стали
+  `rootEl.querySelector('.tpl-…')`;
+- состояние (`activeIdx`, `scrollPos`, `manualTarget`, `returnToTop`,
+  `waitUntil`, `scrollRafId`, `pausedByHover`, `tplFrames`) живёт в замыкании
+  — у каждой карточки свой независимый автоскролл;
+- `resize` и `prefers-reduced-motion` слушаются **один раз** на страницу,
+  экземпляры складываются в массив `showcases` и получают вызовы `fit()` /
+  `motionChanged()`. Иначе на каждую карточку вешался бы свой listener.
+
+Вызов в конце: `initShowcase(document.getElementById('showcaseCafe'), TEMPLATES_CAFE);`
+и то же для бистро.
+
+Ленивая загрузка при этом работает как раньше: вторая карточка при открытии
+хаба не тянет ничего, пока по её табу не кликнут.
+
 ## Грабли, на которые уже наступили (не повторять)
 
 1. **Same-origin обязателен.** Доступ к `contentWindow.scrollTo` и высоте

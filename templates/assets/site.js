@@ -108,12 +108,24 @@
       var text = t(get(el.dataset.siteLetters), LANG);
       el.setAttribute('aria-label', text);
       el.innerHTML = '';
+      /* Písmena jsou samostatné inline-block spany a prohlížeč mezi nimi smí
+         zalomit — víceslovný název by se trhal uprostřed slova. Každé slovo
+         je proto v nezalomitelném obalu a mezera visí na jeho konci. */
+      var word = null;
+      function newWord() {
+        word = document.createElement('span');
+        word.style.display = 'inline-block';
+        word.style.whiteSpace = 'nowrap';
+        el.appendChild(word);
+      }
+      newWord();
       text.split('').forEach(function (ch, i) {
         var s = document.createElement('span');
         s.className = LETTER_CLASS;
         if (T.letterIndexVar) s.style.setProperty('--i', i);
         s.textContent = ch === ' ' ? ' ' : ch;
-        el.appendChild(s);
+        word.appendChild(s);
+        if (ch === ' ') newWord();
       });
     });
   }

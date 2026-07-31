@@ -16,6 +16,11 @@ souboru** — `assets/site.config.js`. HTML šablon se nemusí sahat.
 Warm Paper leží mimo tuhle složku (`../site/`), protože vznikl první — engine
 i konfiguraci ale sdílí se zbytkem, jen na ně odkazuje o adresář výš.
 
+Pro bistra je vedle toho samostatná sada pěti šablon podle kuchyně
+(česká, vietnamská, japonská, italská, rostlinná) ve složce
+[`bistro/`](bistro/README.md). Sdílí stejný engine, jen má vlastní konfigurace
+a zatím žádné fotky — vizuál je kreslený v CSS.
+
 Demo obsah = obecná „Kavárna“. Je to jen ukázková náplň: pro nový podnik se
 přepíše `assets/site.config.js` a šablona zůstane beze změny.
 
