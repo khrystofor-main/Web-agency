@@ -443,5 +443,25 @@ footer .tiny{margin-top:22px;font-size:.72rem;color:rgba(241,228,208,.4)}
   },{passive:true});
 })();
 </script>
+<script>
+/* parallax hero fotky: cíl sleduje scrollY, aktuální hodnota se k němu po
+   snímcích dotahuje — pohyb je pak měkčí než přímé mapování na scroll
+   (stejné chování jako u varianty Warm Paper) */
+(function(){
+  var img = document.querySelector('img[data-site-src="hero.image"]');
+  if (!img) return;
+  var target = 0, current = 0, rafId = null;
+  function frame(){
+    current += (target - current) * 0.25;
+    if (Math.abs(target - current) < 0.1) current = target;
+    if (current < innerHeight) img.style.transform = 'translateY(' + current * .35 + 'px) scale(' + (1 + current * .0002) + ')';
+    if (current !== target) rafId = requestAnimationFrame(frame); else rafId = null;
+  }
+  addEventListener('scroll', function(){
+    target = scrollY;
+    if (rafId === null) rafId = requestAnimationFrame(frame);
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>
