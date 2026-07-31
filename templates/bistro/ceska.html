@@ -134,28 +134,52 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .hero__cta:hover{background:transparent;color:var(--ink)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-/* křídová tabule místo fotky — celý „obrázek“ je kreslený v CSS */
-.board{
-  position:relative;background:var(--board);color:var(--board-fg);
-  border:10px solid #4A3524;box-shadow:0 0 0 2px rgba(0,0,0,.35) inset,0 18px 40px rgba(0,0,0,.18);
-  padding:34px 30px;aspect-ratio:4/5;max-height:70vh;
-  display:flex;flex-direction:column;justify-content:center;
-  opacity:0;animation:fadeUp .6s .35s var(--ease) forwards;
-  /* křídový prach */
-  background-image:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.07),transparent 60%),
-                   radial-gradient(ellipse at 75% 80%,rgba(255,255,255,.05),transparent 55%);
+/* nástěnka: fotky s bílým paspartou, přišpendlené trochu nakřivo —
+   celý „obrázek" hero je teď šest snímků z kuchyně */
+.wall{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;
+  padding:6px 4px;
 }
-@media(min-width:900px){.board{aspect-ratio:3/4}}
-.board__head{
-  font-family:var(--serif);font-size:.8rem;letter-spacing:.32em;text-transform:uppercase;
-  color:var(--gold);text-align:center;margin-bottom:8px;
+/* na širokém displeji tři sloupce — nástěnka je pak kompaktní a hero
+   se nenatahuje na dvě obrazovky */
+@media(min-width:900px){.wall{grid-template-columns:repeat(3,1fr);gap:22px 14px}}
+.wall .g-item{
+  margin:0;position:relative;
+  opacity:0;transform:translateY(18px);
+  animation:pin .55s var(--ease) forwards;
+  animation-delay:calc(.09s * var(--n) + .3s);
 }
-.board__title{font-family:var(--serif);font-size:clamp(1.6rem,4.5vw,2.3rem);text-align:center;margin-bottom:24px}
-.board__line{display:flex;align-items:baseline;gap:10px;margin:11px 0;font-size:.98rem}
-.board__line span:first-child{flex:1}
-.board__line i{flex:1;border-bottom:1px dotted var(--board-chalk);transform:translateY(-4px)}
-.board__line b{font-family:var(--serif);color:var(--gold);font-weight:600}
-.board__foot{margin-top:26px;text-align:center;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--board-chalk)}
+/* střídavý náklon — nic není přišpendlené rovně */
+.wall .g-item:nth-child(odd){rotate:-1.8deg}
+.wall .g-item:nth-child(even){rotate:1.4deg}
+.wall .g-item:nth-child(3n){rotate:2.2deg}
+@keyframes pin{to{opacity:1;transform:none}}
+.wall .g-frame{
+  display:block;background:#FBF7EF;padding:9px 9px 0;
+  border:1px solid rgba(43,39,36,.18);
+  box-shadow:0 10px 22px rgba(43,39,36,.22);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+html[data-theme="dark"] .wall .g-frame{background:#2F2A25;border-color:rgba(239,233,220,.14)}
+.wall img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+/* špendlík */
+.wall .g-frame::before{
+  content:"";position:absolute;top:-6px;left:50%;width:11px;height:11px;border-radius:50%;
+  transform:translateX(-50%);background:radial-gradient(circle at 35% 32%,#E0B75E,var(--gold));
+  box-shadow:0 2px 4px rgba(0,0,0,.4);z-index:2;
+}
+.wall figcaption{
+  padding:8px 9px 10px;font-family:var(--serif);font-size:.76rem;line-height:1.4;color:var(--gray);
+  background:#FBF7EF;border:1px solid rgba(43,39,36,.18);border-top:0;
+  transition:color .3s;
+}
+html[data-theme="dark"] .wall figcaption{background:#2F2A25;border-color:rgba(239,233,220,.14)}
+/* po najetí se snímek srovná a vystoupí dopředu */
+.wall .g-item:hover{rotate:0deg;z-index:3}
+.wall .g-item:hover .g-frame{transform:translateY(-6px) scale(1.03);box-shadow:0 18px 34px rgba(43,39,36,.3)}
+.wall .g-item:hover figcaption{color:var(--ink)}
+@media(max-width:520px){.wall{gap:16px 14px}.wall figcaption{font-size:.75rem}}
+
 .hero__meta{
   max-width:1180px;margin:36px auto 0;width:100%;display:flex;flex-wrap:wrap;
   border-top:2px solid var(--line-strong);opacity:0;animation:fadeUp .5s .85s var(--ease) forwards;
@@ -176,33 +200,33 @@ section{padding:80px 20px;max-width:1180px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — smaltové cedule kreslené v CSS ============ */
-.tiles{display:grid;gap:22px;margin-top:40px}
-@media(min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
-.tile{border:2px solid var(--line-strong);background:var(--surface);padding:0;overflow:hidden}
-.tile__art{aspect-ratio:4/3;position:relative;background:var(--board)}
-.tile:nth-child(1) .tile__art{
-  background:
-    repeating-linear-gradient(45deg,rgba(200,145,47,.16) 0 12px,transparent 12px 24px),
-    linear-gradient(160deg,#3A4A3E,#26302B);
+/* ============ ATMOSFÉRA — fotka interiéru pod smaltovým rámem ============ */
+.interier{
+  position:relative;margin-top:38px;border:2px solid var(--line-strong);
+  background:var(--board);overflow:hidden;
 }
-.tile:nth-child(2) .tile__art{
-  background:
-    radial-gradient(circle at 50% 50%,rgba(200,145,47,.22) 0 18%,transparent 19%),
-    repeating-radial-gradient(circle at 50% 50%,transparent 0 26px,rgba(239,233,220,.10) 26px 28px),
-    linear-gradient(160deg,#7A2E1E,#4A1E13);
+.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+/* text sedí na ztmaveném spodku fotky — snímky interiérů jsou tmavé samy o sobě */
+.interier__body{
+  position:absolute;left:0;right:0;bottom:0;padding:26px 22px 20px;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.78));
+  color:#EFE9DC;display:grid;gap:6px 30px;
 }
-.tile:nth-child(3) .tile__art{
-  background:
-    repeating-linear-gradient(0deg,rgba(239,233,220,.10) 0 2px,transparent 2px 16px),
-    linear-gradient(160deg,#5C4B2E,#2B2724);
+@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:44px 30px 26px}}
+.interier__body b{font-family:var(--serif);font-size:1.02rem;display:block}
+.interier__body span{font-size:.85rem;color:rgba(239,233,220,.74)}
+.interier__body .it + .it{margin-top:12px}
+@media(min-width:760px){.interier__body .it + .it{margin-top:0}}
+
+/* široký pás přes celou šířku — fotka jídla na stole */
+.band{margin:0;position:relative;overflow:hidden;border-top:2px solid var(--line-strong);border-bottom:2px solid var(--line-strong)}
+.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+@media(max-width:700px){.band img{aspect-ratio:16/10}}
+.band figcaption{
+  position:absolute;left:0;bottom:0;background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:.86rem;padding:9px 18px;
+  border-top:2px solid var(--line-strong);border-right:2px solid var(--line-strong);
 }
-.tile__art::after{
-  content:"";position:absolute;inset:12px;border:2px solid rgba(239,233,220,.34);
-}
-.tile__cap{padding:14px 16px 16px;font-family:var(--serif);font-size:.95rem}
-.tile__cap .t{display:block}
-.tile__cap span{display:block;font-family:var(--sans);font-size:.8rem;color:var(--gray);margin-top:3px}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -280,7 +304,7 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.board,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
+  .reveal,.menu-item,.wall .g-item,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
   .rule,.hero__rule{transform:scaleX(1)}
   html{scroll-behavior:auto}
 }
@@ -324,17 +348,9 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </a>
       </div>
-      <!-- Křídová tabule s denním menu: kreslená v CSS, žádná fotka -->
-      <div class="board" aria-hidden="true">
-        <p class="board__head" data-cs="Dnes vaříme" data-en="Today we cook">Dnes vaříme</p>
-        <p class="board__title" data-cs="Polední menu" data-en="Lunch menu">Polední menu</p>
-        <p class="board__line"><span data-cs="Česnečka se sýrem" data-en="Garlic soup with cheese">Česnečka se sýrem</span><i></i><b>75</b></p>
-        <p class="board__line"><span data-cs="Svíčková na smetaně" data-en="Beef sirloin in cream">Svíčková na smetaně</span><i></i><b>189</b></p>
-        <p class="board__line"><span data-cs="Guláš z líček" data-en="Beef cheek goulash">Guláš z líček</span><i></i><b>179</b></p>
-        <p class="board__line"><span data-cs="Smažený řízek" data-en="Fried schnitzel">Smažený řízek</span><i></i><b>195</b></p>
-        <p class="board__line"><span data-cs="Ovocné knedlíky" data-en="Fruit dumplings">Ovocné knedlíky</span><i></i><b>135</b></p>
-        <p class="board__foot" data-cs="Po–Pá 11:00–14:00" data-en="Mon–Fri 11:00–14:00">Po–Pá 11:00–14:00</p>
-      </div>
+      <!-- Nástěnka: fotky přišpendlené na stěnu, každá trochu nakřivo.
+           Obsah plní engine z SITE.gallery. -->
+      <div class="wall" id="galleryGrid"></div>
     </div>
   </header>
   <div class="hero__meta">
@@ -349,21 +365,20 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Poctivě a bez okolků" data-en="Honest, no fuss">Poctivě a bez okolků</h2>
     <p class="lead reveal" data-cs="Tři věci, na kterých si zakládáme — a které poznáte hned od dveří." data-en="Three things we stand on — noticeable from the doorway.">Tři věci, na kterých si zakládáme — a které poznáte hned od dveří.</p>
-    <div class="tiles">
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Denní tabule" data-en="Daily board">Denní tabule</span><span data-cs="Menu píšeme každé ráno křídou" data-en="Written in chalk every morning">Menu píšeme každé ráno křídou</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Z trhu za rohem" data-en="From the market">Z trhu za rohem</span><span data-cs="Maso i zelenina od místních" data-en="Meat and vegetables from local farms">Maso i zelenina od místních</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Buchty po babičce" data-en="Grandma's buns">Buchty po babičce</span><span data-cs="Pečeme ráno, dokud jsou" data-en="Baked in the morning, while they last">Pečeme ráno, dokud jsou</span></p>
+    <div class="interier reveal">
+      <img data-site-src="photos.interier" alt="" loading="lazy">
+      <div class="interier__body">
+        <div class="it"><b data-cs="Denní tabule" data-en="Daily board">Denní tabule</b><span data-cs="Menu píšeme každé ráno křídou" data-en="Written in chalk every morning">Menu píšeme každé ráno křídou</span></div>
+        <div class="it"><b data-cs="Z trhu za rohem" data-en="From the market">Z trhu za rohem</b><span data-cs="Maso i zelenina od místních" data-en="Meat and vegetables from local farms">Maso i zelenina od místních</span></div>
+        <div class="it"><b data-cs="Buchty po babičce" data-en="Grandma's buns">Buchty po babičce</b><span data-cs="Pečeme ráno, dokud jsou" data-en="Baked in the morning, while they last">Pečeme ráno, dokud jsou</span></div>
       </div>
     </div>
   </section>
+
+  <figure class="band reveal">
+    <img data-site-src="photos.band1" alt="" loading="lazy">
+    <figcaption data-cs="Prostřeno pro celý stůl" data-en="Laid out for the whole table">Prostřeno pro celý stůl</figcaption>
+  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -379,8 +394,12 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
+  <figure class="band reveal">
+    <img data-site-src="photos.band2" alt="" loading="lazy">
+    <figcaption data-cs="Když si dáte k pivu něco k zakousnutí" data-en="Something to go with the beer">Když si dáte k pivu něco k zakousnutí</figcaption>
+  </figure>
+
   <!-- VISIT -->
-  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Stavte se na oběd" data-en="Drop in for lunch">Stavte se na oběd</h2>

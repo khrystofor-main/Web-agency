@@ -47,6 +47,35 @@ window.SITE = {
     captionMeta: 'BRNO'
   },
 
+  /* Šest fotek na výšku — galerie v hero. Pořadí = pořadí na nástěnce. */
+  gallery: [
+    { src:'../../photos/bistro/ceska/01.webp',
+      alt:{cs:'Maso v omáčce s knedlíkem a červeným zelím',en:'Meat in gravy with dumpling and red cabbage'},
+      caption:{cs:'Omáčka, knedlík, zelí',en:'Gravy, dumpling, cabbage'} },
+    { src:'../../photos/bistro/ceska/06.webp',
+      alt:{cs:'Klobásy s dušeným zelím a hořčicí',en:'Sausages with braised cabbage and mustard'},
+      caption:{cs:'Klobásy a zelí',en:'Sausages and cabbage'} },
+    { src:'../../photos/bistro/ceska/05.webp',
+      alt:{cs:'Pečené brambory s koprem a vepřovou pečení',en:'Roast potatoes with dill and roast pork'},
+      caption:{cs:'Pečínka s bramborem',en:'Roast with potatoes'} },
+    { src:'../../photos/bistro/ceska/02.webp',
+      alt:{cs:'Nudle s hovězím na smetaně a klobásky s hráškem',en:'Beef with cream and noodles, sausages with peas'},
+      caption:{cs:'Ze dvou misek',en:'From two bowls'} },
+    { src:'../../photos/bistro/ceska/04.webp',
+      alt:{cs:'Prostřený stůl: hranolky, vejce, cibulová polévka',en:'Laid table: fries, eggs, onion soup'},
+      caption:{cs:'Když přijdete ve dvou',en:'When you come as two'} },
+    { src:'../../photos/bistro/ceska/03.webp',
+      alt:{cs:'Talíř s masem u stolu ve večerním světle',en:'A plate of meat at the table in evening light'},
+      caption:{cs:'Večer u stolu',en:'Evening at the table'} }
+  ],
+
+  /* Široké fotky mimo galerii: dva pásy a interiér. */
+  photos: {
+    band1: '../../photos/bistro/ceska/07.webp',
+    band2: '../../photos/bistro/ceska/08.webp',
+    interier: '../../photos/bistro/ceska/09.webp'
+  },
+
   menu: {
     intro: {
       cs:'Denní menu píšeme každé ráno na tabuli. Ceny jsou ilustrační.',

@@ -155,6 +155,21 @@
     }).join('');
   }
 
+  /* ---------- galerie bez karuselu ----------
+     Šablony bister nemají posuvný karusel, ale vlastní rozvržení fotek.
+     Engine sem jen vysype <figure> z S.gallery, vzhled si řeší každá
+     šablona sama v CSS (kolik sloupců, jaké rámečky, jaký hover). */
+  function buildGalleryGrid() {
+    var box = $('galleryGrid');
+    if (!box || !S.gallery) return;
+    box.innerHTML = S.gallery.map(function (g, i) {
+      return '<figure class="g-item" style="--n:' + i + '">' +
+        '<span class="g-frame"><img src="' + esc(g.src) + '" alt="' + esc(t(g.alt, DEFAULT_LANG)) + '" loading="lazy"></span>' +
+        (g.caption ? '<figcaption ' + langAttrs(g.caption) + '>' + esc(t(g.caption, DEFAULT_LANG)) + '</figcaption>' : '') +
+        '</figure>';
+    }).join('');
+  }
+
   /* ---------- mapa ---------- */
   function buildMap() {
     all('[data-site-map]').forEach(function (el) {
@@ -384,6 +399,7 @@
   if (S.brand && S.brand.color) document.documentElement.style.setProperty('--brand', S.brand.color);
 
   buildGallery();
+  buildGalleryGrid();
   buildMenu();
   buildAllergens();
   buildMap();
