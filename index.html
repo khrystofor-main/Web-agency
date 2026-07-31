@@ -493,7 +493,8 @@ window.addEventListener('resize', fitPreview);
    i scroll animace šablon. Dole chvíli počká a vrátí se na začátek. */
 const reducedMotion = matchMedia('(prefers-reduced-motion:reduce)');
 let scrollRafId = null;
-let scrollPos = 0;   // vlastní float — scrollTo zaokrouhluje; sdílí ho autoscroll i kolečko
+let scrollPos = 0;      // vlastní float — scrollTo zaokrouhluje; sdílí ho autoscroll i kolečko
+let manualTarget = null; // cíl ručního skrolování koleckem; scrollPos se k němu měkce dotahuje
 function startAutoScroll() {
   cancelAnimationFrame(scrollRafId);
   const cw = tplFrame.contentWindow;
@@ -505,7 +506,15 @@ function startAutoScroll() {
     if (!lastT) { lastT = t; return; }
     const dt = (t - lastT) / 1000; lastT = t;
     const w = tplFrame.contentWindow;
-    if (!w || !w.document.documentElement || pausedByHover) return;
+    if (!w || !w.document.documentElement) return;
+    if (pausedByHover) {
+      /* ruční režim: pozice měkce dojíždí k cíli koleckem — plynulé skrolování */
+      if (manualTarget !== null && Math.abs(manualTarget - scrollPos) > .5) {
+        scrollPos += (manualTarget - scrollPos) * .15;
+        w.scrollTo({ top: scrollPos, behavior: 'instant' });
+      }
+      return;
+    }
     if (t < waitUntil) return;
     const max = w.document.documentElement.scrollHeight - w.innerHeight;
     /* behavior:'instant' přebije scroll-behavior:smooth šablon — jinak by každý
@@ -519,15 +528,19 @@ function startAutoScroll() {
 }
 let pausedByHover = false;
 tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
-tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; });
+tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; manualTarget = null; });
 /* kolečko nad náhledem skroluje přímo šablonu; hub stojí (preventDefault) */
 tplPreview.addEventListener('wheel', (e) => {
   e.preventDefault();
   const w = tplFrame.contentWindow;
   if (!w || !w.document.documentElement) return;
   const max = w.document.documentElement.scrollHeight - w.innerHeight;
-  scrollPos = Math.min(Math.max(scrollPos + e.deltaY, 0), max);
-  w.scrollTo({ top: scrollPos, behavior: 'instant' });
+  manualTarget = Math.min(Math.max((manualTarget === null ? scrollPos : manualTarget) + e.deltaY, 0), max);
+  if (scrollRafId === null) {
+    /* bez animační smyčky (prefers-reduced-motion) skáčeme rovnou na cíl */
+    scrollPos = manualTarget;
+    w.scrollTo({ top: scrollPos, behavior: 'instant' });
+  }
 }, { passive: false });
 tplFrame.addEventListener('load', startAutoScroll);
 /* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
