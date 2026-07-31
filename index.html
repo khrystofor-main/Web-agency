@@ -460,14 +460,13 @@ const TEMPLATES = [
 const tplTabs = Array.from(document.querySelectorAll('#tplTabs [role="tab"]'));
 const tplPreview = document.getElementById('tplPreview');
 
-/* Všech pět šablon se načte hned při otevření hubu a drží se v pěti iframe
-   nad sebou. Přepnutí tabu jen přehodí viditelnost — je okamžité a návštěvník
-   nevidí žádné načítání; každá šablona si navíc pamatuje svou pozici skrolu. */
+/* Pět iframe nad sebou, ale šablona se načte až při prvním zvolení tabu —
+   návštěvník tak jednou vidí, jak se web načítá. Další přepnutí už jen
+   přehodí viditelnost: žádné znovunačítání, pozice skrolu zůstává. */
 let activeIdx = 0;
 const tplFrames = TEMPLATES.map((t, i) => {
   const f = document.createElement('iframe');
   f.title = 'Náhled šablony: ' + t.name;
-  f.src = t.href;
   if (i !== 0) f.style.visibility = 'hidden';
   f.addEventListener('load', () => { if (i === activeIdx) startAutoScroll(); });
   tplPreview.insertBefore(f, document.getElementById('tplPreviewLink'));
@@ -486,6 +485,7 @@ function selectTemplate(i) {
   tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
   activeIdx = i;
   tplFrames.forEach((f, j) => { f.style.visibility = j === i ? '' : 'hidden'; });
+  if (!tplFrames[i].getAttribute('src')) tplFrames[i].src = t.href;   // první zvolení = jediné načtení
   startAutoScroll();
   document.getElementById('tplName').textContent = t.name;
   document.getElementById('tplPair').textContent = t.pair;
