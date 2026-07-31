@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bistro-vn-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Bistro Sài Gòn',
-    title: { cs:'Bistro Sài Gòn — vietnamská kuchyně', en:'Bistro Sài Gòn — Vietnamese cuisine' },
+    name: 'Bistro',
+    title: { cs:'Bistro — vietnamská kuchyně', en:'Bistro — Vietnamese cuisine' },
     description: {
       cs:'Ukázková šablona webu pro vietnamské bistro. Phở, bún bò nam bộ, bánh mì, vietnamská káva.',
       en:'Demo website template for a Vietnamese bistro. Phở, bún bò nam bộ, bánh mì, Vietnamese coffee.'
@@ -22,7 +22,7 @@ window.SITE = {
   contact: {
     phone: '+420 123 456 789',
     phoneHref: 'tel:+420123456789',
-    address: { line1:'Tržní 8', line2:'170 00 Praha 7', short:'Tržní 8, Praha 7' },
+    address: { line1:'Ukázková 123', line2:'170 00 Praha 7', short:'Ukázková 123, Praha 7' },
     mapsUrl: 'https://maps.google.com/?q=Praha+7',
     mapCoords: '50.0996,14.4368',
     mapZoom: 15

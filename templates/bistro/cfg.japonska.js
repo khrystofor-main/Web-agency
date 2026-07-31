@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bistro-jp-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Bistro Kome',
-    title: { cs:'Bistro Kome — japonská kuchyně', en:'Bistro Kome — Japanese cuisine' },
+    name: 'Bistro',
+    title: { cs:'Bistro — japonská kuchyně', en:'Bistro — Japanese cuisine' },
     description: {
       cs:'Ukázková šablona webu pro japonské bistro. Ramen, donburi, onigiri, matcha.',
       en:'Demo website template for a Japanese bistro. Ramen, donburi, onigiri, matcha.'
@@ -22,7 +22,7 @@ window.SITE = {
   contact: {
     phone: '+420 123 456 789',
     phoneHref: 'tel:+420123456789',
-    address: { line1:'Veveří 41', line2:'602 00 Brno', short:'Veveří 41, Brno' },
+    address: { line1:'Ukázková 123', line2:'602 00 Brno', short:'Ukázková 123, Brno' },
     mapsUrl: 'https://maps.google.com/?q=Brno',
     mapCoords: '49.2062,16.5992',
     mapZoom: 15

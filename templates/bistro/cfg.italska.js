@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bistro-it-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Bistro Basilico',
-    title: { cs:'Bistro Basilico — italská kuchyně', en:'Bistro Basilico — Italian cuisine' },
+    name: 'Bistro',
+    title: { cs:'Bistro — italská kuchyně', en:'Bistro — Italian cuisine' },
     description: {
       cs:'Ukázková šablona webu pro italské bistro. Čerstvé těstoviny, focaccia, tiramisu, espresso.',
       en:'Demo website template for an Italian bistro. Fresh pasta, focaccia, tiramisu, espresso.'
@@ -22,7 +22,7 @@ window.SITE = {
   contact: {
     phone: '+420 123 456 789',
     phoneHref: 'tel:+420123456789',
-    address: { line1:'Malinovského nám. 4', line2:'602 00 Brno', short:'Malinovského nám. 4, Brno' },
+    address: { line1:'Ukázková 123', line2:'602 00 Brno', short:'Ukázková 123, Brno' },
     mapsUrl: 'https://maps.google.com/?q=Brno',
     mapCoords: '49.1951,16.6132',
     mapZoom: 15

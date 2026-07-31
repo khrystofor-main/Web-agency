@@ -12,8 +12,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bistro-cs-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Bistro Na Rohu',
-    title: { cs:'Bistro Na Rohu — česká kuchyně', en:'Bistro Na Rohu — Czech cuisine' },
+    name: 'Bistro',
+    title: { cs:'Bistro — česká kuchyně', en:'Bistro — Czech cuisine' },
     description: {
       cs:'Ukázková šablona webu pro bistro s českou kuchyní. Polední menu, svíčková, guláš, domácí buchty.',
       en:'Demo website template for a Czech bistro. Daily lunch menu, svíčková, goulash, homemade pastries.'
@@ -24,7 +24,7 @@ window.SITE = {
   contact: {
     phone: '+420 123 456 789',
     phoneHref: 'tel:+420123456789',
-    address: { line1:'Nádražní 12', line2:'602 00 Brno', short:'Nádražní 12, Brno' },
+    address: { line1:'Ukázková 123', line2:'602 00 Brno', short:'Ukázková 123, Brno' },
     mapsUrl: 'https://maps.google.com/?q=Brno',
     mapCoords: '49.1937524,16.6070308',
     mapZoom: 15

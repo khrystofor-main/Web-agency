@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bistro-pb-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Bistro Kořen',
-    title: { cs:'Bistro Kořen — rostlinná kuchyně', en:'Bistro Kořen — plant-based kitchen' },
+    name: 'Bistro',
+    title: { cs:'Bistro — rostlinná kuchyně', en:'Bistro — plant-based kitchen' },
     description: {
       cs:'Ukázková šablona webu pro veganské bistro. Rostlinná kuchyně, sezónní zelenina, bowls, fermentace.',
       en:'Demo website template for a vegan bistro. Plant-based cooking, seasonal vegetables, bowls, ferments.'
@@ -22,7 +22,7 @@ window.SITE = {
   contact: {
     phone: '+420 123 456 789',
     phoneHref: 'tel:+420123456789',
-    address: { line1:'Sadová 19', line2:'110 00 Praha 1', short:'Sadová 19, Praha 1' },
+    address: { line1:'Ukázková 123', line2:'110 00 Praha 1', short:'Ukázková 123, Praha 1' },
     mapsUrl: 'https://maps.google.com/?q=Praha',
     mapCoords: '50.0874654,14.4212535',
     mapZoom: 15
