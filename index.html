@@ -504,6 +504,7 @@ function scrollPreviewTop() {
   if (reducedMotion.matches) { scrollPos = 0; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
   scrollPos = w.scrollY;
   returnToTop = true;   // dojezd obstará animační smyčka, autoscroll naváže bez prodlevy
+  waitUntil = 0;        // zrušit i případnou pauzu dole/nahoře — jinak by nahoře mlčky čekal
 }
 tplTabs.forEach(tab => tab.addEventListener('click', () => {
   const i = +tab.dataset.i;
@@ -526,14 +527,16 @@ let scrollRafId = null;
 let scrollPos = 0;      // vlastní float — scrollTo zaokrouhluje; sdílí ho autoscroll i kolečko
 let manualTarget = null; // cíl ručního skrolování koleckem; scrollPos se k němu měkce dotahuje
 let returnToTop = false; // měkký dojezd na začátek po opětovném kliku na aktivní tab
+let waitUntil = 0;       // pauza autoscrollu dole/nahoře (timestamp)
 function startAutoScroll() {
   cancelAnimationFrame(scrollRafId);
   const cw = tplFrames[activeIdx].contentWindow;
   scrollPos = (cw && cw.scrollY) || 0;
   manualTarget = null;
   returnToTop = false;
+  waitUntil = 0;
   if (reducedMotion.matches) return;
-  let lastT = 0, waitUntil = 0;
+  let lastT = 0;
   function step(t) {
     scrollRafId = requestAnimationFrame(step);
     if (!lastT) { lastT = t; return; }
@@ -550,7 +553,7 @@ function startAutoScroll() {
     }
     if (returnToTop) {
       scrollPos *= .88;   // měkký dojezd nahoru; autoscroll naváže hned dalším snímkem
-      if (scrollPos < 1) { scrollPos = 0; returnToTop = false; }
+      if (scrollPos < 1) { scrollPos = 0; returnToTop = false; waitUntil = 0; }
       w.scrollTo({ top: scrollPos, behavior: 'instant' });
       return;
     }
