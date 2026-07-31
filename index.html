@@ -477,9 +477,15 @@ function selectTemplate(i) {
   const t = TEMPLATES[i];
   tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
   if (tplFrame.getAttribute('src') !== t.href) {
-    /* nová šablona se načítá ve skrytém iframu; prolne se až po svém load */
     const back = tplFrames[0] === tplFrame ? tplFrames[1] : tplFrames[0];
-    back.src = t.href;
+    if (back.getAttribute('src') === t.href) {
+      /* šablona je v záložním iframu už načtená — prohodíme hned, bez reloadu */
+      if (back.contentWindow) back.contentWindow.scrollTo({ top: 0, behavior: 'instant' });
+      activateFrame(back);
+    } else {
+      /* nová šablona se načítá ve skrytém iframu; prolne se až po svém load */
+      back.src = t.href;
+    }
   }
   document.getElementById('tplName').textContent = t.name;
   document.getElementById('tplPair').textContent = t.pair;
@@ -555,8 +561,7 @@ tplPreview.addEventListener('wheel', (e) => {
     w.scrollTo({ top: scrollPos, behavior: 'instant' });
   }
 }, { passive: false });
-tplFrames.forEach(f => f.addEventListener('load', () => {
-  if (!f.getAttribute('src')) return;   // úvodní load prázdného iframu
+function activateFrame(f) {
   const other = tplFrames[0] === f ? tplFrames[1] : tplFrames[0];
   f.classList.add('on');
   f.removeAttribute('aria-hidden');
@@ -565,6 +570,10 @@ tplFrames.forEach(f => f.addEventListener('load', () => {
   tplFrame = f;
   manualTarget = null;
   startAutoScroll();
+}
+tplFrames.forEach(f => f.addEventListener('load', () => {
+  if (!f.getAttribute('src')) return;   // úvodní load prázdného iframu
+  activateFrame(f);
 }));
 /* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
 reducedMotion.addEventListener('change', () => {
