@@ -45,6 +45,34 @@ window.SITE = {
     captionMeta: 'BRNO'
   },
 
+  /* Šest fotek na výšku — okna v hero. */
+  gallery: [
+    { src:'../../photos/bistro/italska/06.webp',
+      alt:{cs:'Linguine s mušlemi a krevetami, sklenka vína',en:'Linguine with clams and prawns, a glass of wine'},
+      caption:{cs:'Linguine s mušlemi',en:'Linguine with clams'} },
+    { src:'../../photos/bistro/italska/04.webp',
+      alt:{cs:'Lasagne s bazalkou a rajčetem',en:'Lasagne with basil and tomato'},
+      caption:{cs:'Lasagne',en:'Lasagne'} },
+    { src:'../../photos/bistro/italska/05.webp',
+      alt:{cs:'Burrata s rajčaty a salátem, chleba v míse',en:'Burrata with tomatoes and salad, bread in a bowl'},
+      caption:{cs:'Burrata',en:'Burrata'} },
+    { src:'../../photos/bistro/italska/03.webp',
+      alt:{cs:'Stůl na terase: špagety s mušlemi, víno, Aperol',en:'A terrace table: spaghetti with clams, wine, Aperol'},
+      caption:{cs:'Oběd na terase',en:'Lunch on the terrace'} },
+    { src:'../../photos/bistro/italska/02.webp',
+      alt:{cs:'Těstoviny se sýrovou omáčkou a strouhankou',en:'Pasta with cheese sauce and breadcrumbs'},
+      caption:{cs:'Pasta dne',en:'Pasta of the day'} },
+    { src:'../../photos/bistro/italska/01.webp',
+      alt:{cs:'Mísy s mušlemi a polévkou z mořských plodů, pečivo',en:'Bowls of clams and seafood soup with bread'},
+      caption:{cs:'Z moře',en:'From the sea'} }
+  ],
+
+  photos: {
+    band1: '../../photos/bistro/italska/07.webp',
+    band2: '../../photos/bistro/italska/08.webp',
+    interier: '../../photos/bistro/italska/09.webp'
+  },
+
   menu: {
     intro: {
       cs:'Denní pasta je na tabuli u vchodu. Ceny jsou ilustrační.',

@@ -45,6 +45,31 @@ window.SITE = {
     captionMeta: 'PRAHA'
   },
 
+  /* Fotky do galerie v hero. Snímky 04 a 05 z dodané sady tu schválně
+     nejsou: na 04 je vidět obal konkrétní značky a na 05 leží v míse
+     losos — na webu bistra, které slibuje sto procent rostlin, by obojí
+     bylo trapné. Až budou náhrady, stačí je sem doplnit. */
+  gallery: [
+    { src:'../../photos/bistro/plant-based/01.webp',
+      alt:{cs:'Dvě misky s quinoou, avokádem, edamame a ředkví',en:'Two bowls with quinoa, avocado, edamame and radish'},
+      caption:{cs:'Miska podle sezóny',en:'A bowl for the season'} },
+    { src:'../../photos/bistro/plant-based/06.webp',
+      alt:{cs:'Mísa s cizrnou, edamame, olivami, fíky a plackou',en:'A bowl with chickpeas, edamame, olives, figs and flatbread'},
+      caption:{cs:'Cizrna a fíky',en:'Chickpeas and figs'} },
+    { src:'../../photos/bistro/plant-based/03.webp',
+      alt:{cs:'Miska s fazolemi, kadeřávkem, cuketovými nudlemi a kukuřicí',en:'A bowl with beans, kale, courgette noodles and corn'},
+      caption:{cs:'Všechno do jedné misky',en:'Everything in one bowl'} },
+    { src:'../../photos/bistro/plant-based/02.webp',
+      alt:{cs:'Špenátový koláč na zeleném talíři, česnek a pepř',en:'Spinach tart on a green plate, garlic and pepper'},
+      caption:{cs:'Zapečený špenát',en:'Baked spinach'} }
+  ],
+
+  photos: {
+    band1: '../../photos/bistro/plant-based/07.webp',
+    band2: '../../photos/bistro/plant-based/08.webp',
+    interier: '../../photos/bistro/plant-based/09.webp'
+  },
+
   menu: {
     intro: {
       cs:'Menu se mění se sezónou — všechno je rostlinné. Ceny jsou ilustrační.',

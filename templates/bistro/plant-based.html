@@ -127,44 +127,34 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .hero__cta:hover{transform:translateY(-2px);background:var(--ink)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-/* miska se zeleninou kreslená v CSS — místo fotky */
-.plate{
-  position:relative;aspect-ratio:1/1;max-height:66vh;width:100%;max-width:480px;margin:0 auto;
-  opacity:0;animation:fadeUp .65s .32s var(--ease) forwards;
+/* Listy: fotky mají tvar listu (dva protilehlé rohy zaoblené) a
+   střídavě se sypou dolů. Po najetí se list zakulatí docela. */
+.listy{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(min-width:900px){.listy{gap:24px}}
+.listy .g-item{
+  margin:0;position:relative;
+  opacity:0;transform:translateY(22px);
+  animation:fadeUp .7s var(--ease) forwards;
+  animation-delay:calc(.11s * var(--n) + .35s);
 }
-.plate__bowl{
-  position:absolute;inset:8%;border-radius:50%;
-  background:radial-gradient(circle at 40% 34%,color-mix(in srgb,var(--surface) 55%,#FFFFFF),var(--surface) 72%);
-  box-shadow:0 24px 50px rgba(31,42,34,.16),inset 0 0 0 14px var(--bg);
+/* druhý sloupec o kus níž — sad neroste v řadě */
+.listy .g-item:nth-child(even){margin-top:34px}
+.listy .g-frame{
+  display:block;overflow:hidden;background:var(--surface);
+  border-radius:0 78% 0 78%;
+  box-shadow:0 16px 34px rgba(31,42,34,.14);
+  transition:border-radius .5s var(--ease),transform .4s var(--ease),box-shadow .4s var(--ease);
 }
-/* čtvrtiny misky = čtyři složky bowlu */
-.plate__q{position:absolute;inset:20%;border-radius:50%;overflow:hidden}
-.plate__q i{position:absolute;width:50%;height:50%}
-.plate__q i:nth-child(1){left:0;top:0;background:radial-gradient(circle at 80% 80%,var(--sprout),#6F9E4F)}
-.plate__q i:nth-child(2){right:0;top:0;background:radial-gradient(circle at 20% 80%,#EBC069,#D9A441)}
-.plate__q i:nth-child(3){left:0;bottom:0;background:radial-gradient(circle at 80% 20%,#E3B7A0,#C98A6B)}
-.plate__q i:nth-child(4){right:0;bottom:0;background:radial-gradient(circle at 20% 20%,#9FC0A6,#5F8A6B)}
-/* semínka a bylinky navrch */
-.plate__seeds{
-  position:absolute;inset:20%;border-radius:50%;
-  background:
-    radial-gradient(circle at 34% 40%,rgba(31,42,34,.5) 0 2.2%,transparent 2.6%),
-    radial-gradient(circle at 62% 33%,rgba(31,42,34,.45) 0 1.8%,transparent 2.2%),
-    radial-gradient(circle at 55% 66%,rgba(31,42,34,.45) 0 2%,transparent 2.4%),
-    radial-gradient(circle at 40% 72%,rgba(255,255,255,.6) 0 3%,transparent 3.4%);
+.listy .g-item:nth-child(even) .g-frame{border-radius:78% 0 78% 0}
+.listy img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.listy .g-item:hover .g-frame{border-radius:50%;transform:translateY(-6px);box-shadow:0 22px 42px rgba(31,42,34,.2)}
+.listy .g-item:hover img{transform:scale(1.06)}
+.listy figcaption{
+  padding:12px 6px 0;text-align:center;
+  font-family:var(--serif);font-size:.92rem;color:var(--gray);transition:color .3s;
 }
-/* lístek vedle misky */
-.leaf{
-  position:absolute;right:2%;top:6%;width:26%;aspect-ratio:1/1.5;
-  border-radius:0 82% 0 82%;background:linear-gradient(150deg,var(--sprout),var(--accent));
-  transform:rotate(-18deg);opacity:.9;
-  animation:sway 6s ease-in-out infinite;
-}
-.leaf::after{content:"";position:absolute;left:14%;top:12%;width:2px;height:74%;background:rgba(255,255,255,.5);transform:rotate(18deg)}
-.leaf--small{left:3%;bottom:8%;top:auto;right:auto;width:17%;transform:rotate(24deg);animation-delay:1.6s;opacity:.75}
-@keyframes sway{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(-11deg)}}
-.leaf--small{animation-name:swaySmall}
-@keyframes swaySmall{0%,100%{transform:rotate(24deg)}50%{transform:rotate(17deg)}}
+.listy .g-item:hover figcaption{color:var(--accent)}
+
 .hero__meta{
   max-width:1160px;margin:32px auto 0;width:100%;display:flex;flex-wrap:wrap;gap:10px;padding:0 22px;
   opacity:0;animation:fadeUp .55s .86s var(--ease) forwards;
@@ -187,32 +177,26 @@ section{padding:86px 22px;max-width:1160px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA ============ */
-.tiles{display:grid;gap:22px;margin-top:42px}
-@media(min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
-.tile{border-radius:var(--r);overflow:hidden;background:var(--surface);transition:transform .3s var(--ease)}
-.tile:hover{transform:translateY(-5px)}
-.tile__art{aspect-ratio:4/3;position:relative}
-.tile:nth-child(1) .tile__art{ /* řádky záhonů */
-  background:
-    repeating-linear-gradient(100deg,rgba(31,42,34,.16) 0 3px,transparent 3px 22px),
-    linear-gradient(160deg,var(--sprout),#5C8A45);
+/* ============ ATMOSFÉRA — fotka interiéru ============ */
+.interier{position:relative;margin-top:42px;border-radius:var(--r);overflow:hidden}
+.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.interier__body{
+  position:absolute;left:0;right:0;bottom:0;padding:28px 22px 20px;
+  background:linear-gradient(180deg,transparent,rgba(12,17,13,.82));
+  color:#F2F6EF;display:grid;gap:8px 30px;
 }
-.tile:nth-child(2) .tile__art{ /* sklenice fermentu */
-  background:
-    radial-gradient(circle at 50% 62%,rgba(255,255,255,.55) 0 12%,transparent 13%),
-    repeating-radial-gradient(circle at 50% 62%,transparent 0 20px,rgba(255,255,255,.16) 20px 23px),
-    linear-gradient(160deg,#D9A441,#A9752A);
+@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:48px 30px 26px}}
+.interier__body b{font-family:var(--serif);font-size:1.05rem;display:block}
+.interier__body span{font-size:.85rem;color:rgba(242,246,239,.78)}
+
+/* široký pás přes celou šířku */
+.band{margin:0;position:relative;overflow:hidden}
+.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+@media(max-width:700px){.band img{aspect-ratio:16/10}}
+.band figcaption{
+  position:absolute;left:22px;bottom:22px;background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:.92rem;padding:9px 20px;border-radius:99px;
 }
-.tile:nth-child(3) .tile__art{ /* hliněné střepy */
-  background:
-    radial-gradient(circle at 28% 34%,var(--clay) 0 16%,transparent 17%),
-    radial-gradient(circle at 70% 60%,var(--clay) 0 22%,transparent 23%),
-    linear-gradient(160deg,#3E6B48,#25412C);
-}
-.tile__cap{padding:16px 20px 20px;font-family:var(--serif);font-size:1.05rem}
-.tile__cap .t{display:block}
-.tile__cap span{display:block;font-family:var(--sans);font-size:.86rem;color:var(--gray);margin-top:4px;line-height:1.7}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -286,9 +270,8 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.plate,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
+  .reveal,.menu-item,.listy .g-item,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
   .rule{transform:scaleX(1)}
-  .leaf{animation:none}
   html{scroll-behavior:auto}
 }
 </style>
@@ -330,14 +313,8 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
-      <!-- miska a listy: kreslené v CSS, žádná fotka -->
-      <div class="plate" aria-hidden="true">
-        <div class="plate__bowl"></div>
-        <div class="plate__q"><i></i><i></i><i></i><i></i></div>
-        <div class="plate__seeds"></div>
-        <div class="leaf"></div>
-        <div class="leaf leaf--small"></div>
-      </div>
+      <!-- fotky ve tvaru listu; obsah plní engine ze SITE.gallery -->
+      <div class="listy" id="galleryGrid"></div>
     </div>
   </header>
   <div class="hero__meta">
@@ -352,21 +329,20 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Sto procent rostlin" data-en="One hundred percent plants">Sto procent rostlin</h2>
     <p class="lead reveal" data-cs="Sezóna nám píše menu. Co nestihneme uvařit, fermentujeme na příště." data-en="The season writes our menu. What we cannot cook today, we ferment for later.">Sezóna nám píše menu. Co nestihneme uvařit, fermentujeme na příště.</p>
-    <div class="tiles">
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Od farmářů z okolí" data-en="From nearby farms">Od farmářů z okolí</span><span data-cs="Zelenina má za sebou míň kilometrů než vy" data-en="The vegetables travel less than you do">Zelenina má za sebou míň kilometrů než vy</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Vlastní fermenty" data-en="Our own ferments">Vlastní fermenty</span><span data-cs="Kimchi, kombucha, nakládaná mrkev" data-en="Kimchi, kombucha, pickled carrots">Kimchi, kombucha, nakládaná mrkev</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Nula odpadu" data-en="Zero waste">Nula odpadu</span><span data-cs="Slupky do vývaru, zbytky do kompostu" data-en="Peels into broth, scraps into compost">Slupky do vývaru, zbytky do kompostu</span></p>
+    <div class="interier reveal">
+      <img data-site-src="photos.interier" alt="" loading="lazy">
+      <div class="interier__body">
+        <div><b data-cs="Od farmářů z okolí" data-en="From nearby farms">Od farmářů z okolí</b><span data-cs="Zelenina má za sebou míň kilometrů než vy" data-en="The vegetables travel less than you do">Zelenina má za sebou míň kilometrů než vy</span></div>
+        <div><b data-cs="Vlastní fermenty" data-en="Our own ferments">Vlastní fermenty</b><span data-cs="Kimchi, kombucha, nakládaná mrkev" data-en="Kimchi, kombucha, pickled carrots">Kimchi, kombucha, nakládaná mrkev</span></div>
+        <div><b data-cs="Nula odpadu" data-en="Zero waste">Nula odpadu</b><span data-cs="Slupky do vývaru, zbytky do kompostu" data-en="Peels into broth, scraps into compost">Slupky do vývaru, zbytky do kompostu</span></div>
       </div>
     </div>
   </section>
+
+  <figure class="band reveal">
+    <img data-site-src="photos.band1" alt="" loading="lazy">
+    <figcaption data-cs="Sezóna nám píše menu" data-en="The season writes our menu">Sezóna nám píše menu</figcaption>
+  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -382,8 +358,12 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
+  <figure class="band reveal">
+    <img data-site-src="photos.band2" alt="" loading="lazy">
+    <figcaption data-cs="Sto procent rostlin" data-en="One hundred percent plants">Sto procent rostlin</figcaption>
+  </figure>
+
   <!-- VISIT -->
-  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Zastavte se" data-en="Drop by">Zastavte se</h2>

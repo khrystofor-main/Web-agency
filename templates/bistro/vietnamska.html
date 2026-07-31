@@ -103,7 +103,7 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO ============ */
 .hero{
-  position:relative;min-height:100svh;display:flex;align-items:center;
+  position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:calc(var(--nav-h) + 36px) 20px 36px;overflow:hidden;
 }
 /* bambusové svislé pruhy na pozadí hero */
@@ -113,7 +113,9 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   mask-image:linear-gradient(180deg,rgba(0,0,0,.85),transparent 78%);
 }
 .hero__grid{position:relative;z-index:1;max-width:1180px;margin:0 auto;width:100%;display:grid;gap:44px}
-@media(min-width:900px){.hero__grid{grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}}
+/* text sám, fotky jedou pod ním — zarovnáno se zbytkem stránky */
+.hero__grid{max-width:1180px}
+.hero__grid > div{max-width:52ch}
 .hero__kicker{
   display:inline-block;font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
   color:var(--deep);background:var(--lime);padding:6px 14px;border-radius:99px;margin-bottom:20px;
@@ -132,44 +134,36 @@ html[data-theme="dark"] .hero__kicker{color:#08272C}
 .hero__cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(228,87,46,.34)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-/* miska phở kreslená v CSS — místo fotky */
-.bowl{
-  position:relative;aspect-ratio:1/1;max-height:66vh;margin:0 auto;width:100%;max-width:460px;
-  opacity:0;animation:fadeUp .6s .3s var(--ease) forwards;
+/* nekonečný pás fotek — hlavní trik téhle šablony.
+   Kartičky jedou zprava doleva, po najetí myší se pás zastaví. */
+.strip{
+  margin:44px calc(50% - 50vw) 0;width:100vw;   /* přes celou šířku okna */
+  overflow:hidden;position:relative;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  opacity:0;animation:fadeUp .6s .5s var(--ease) forwards;
 }
-.bowl__dish{
-  position:absolute;inset:12% 6% 8%;border-radius:0 0 50% 50%/0 0 62% 62%;
-  background:linear-gradient(180deg,#12525C,#0E3B43);
-  box-shadow:0 22px 44px rgba(14,59,67,.28),inset 0 -14px 30px rgba(0,0,0,.25);
-  overflow:hidden;
+.strip__track{display:flex;gap:18px;width:max-content;animation:slide 46s linear infinite}
+.strip:hover .strip__track{animation-play-state:paused}
+@keyframes slide{to{transform:translateX(-50%)}}
+.strip .g-item{margin:0;flex:0 0 auto;width:210px;position:relative}
+/* každá druhá kartička o kus níž — pás pak nevypadá jako pravítko */
+.strip .g-item:nth-child(even){margin-top:26px}
+.strip .g-frame{
+  display:block;border-radius:var(--r);overflow:hidden;background:var(--surface);
+  box-shadow:0 12px 28px rgba(14,59,67,.16);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
 }
-.bowl__soup{
-  position:absolute;left:6%;right:6%;top:6%;height:22%;border-radius:50%;
-  background:radial-gradient(ellipse at 50% 40%,#D98B2B,#A8641C 70%);
-  box-shadow:inset 0 4px 12px rgba(0,0,0,.25);
+.strip img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.strip figcaption{
+  padding:10px 4px 0;font-family:var(--display);font-weight:600;font-size:.82rem;color:var(--gray);
+  transition:color .3s;
 }
-/* nudle a bylinky = pár tvarů, nic víc */
-.bowl__soup::after{
-  content:"";position:absolute;inset:14% 18%;border-radius:50%;
-  background:
-    repeating-linear-gradient(78deg,rgba(255,248,236,.75) 0 3px,transparent 3px 9px),
-    radial-gradient(circle at 70% 55%,var(--lime) 0 12%,transparent 13%),
-    radial-gradient(circle at 32% 62%,#E4572E 0 9%,transparent 10%);
-}
-/* dekorativní pásek na porcelánu — jen naznačený, ať nepůsobí jako plot */
-.bowl__band{position:absolute;left:0;right:0;top:38%;height:4%;background:repeating-linear-gradient(90deg,var(--lime) 0 9px,transparent 9px 24px);opacity:.32}
-.bowl__foot{position:absolute;left:38%;right:38%;bottom:2%;height:5%;border-radius:0 0 12px 12px;background:#0A2E34}
-/* pára */
-.steam{position:absolute;top:0;left:50%;width:120px;height:22%;transform:translateX(-50%)}
-.steam i{
-  position:absolute;bottom:0;width:5px;height:100%;border-radius:99px;
-  background:linear-gradient(180deg,transparent,rgba(167,201,87,.55));
-  animation:rise 3.4s ease-in-out infinite;
-}
-.steam i:nth-child(1){left:14%;animation-delay:0s}
-.steam i:nth-child(2){left:47%;animation-delay:.9s;height:88%}
-.steam i:nth-child(3){left:78%;animation-delay:1.7s;height:76%}
-@keyframes rise{0%{opacity:0;transform:translateY(14px) scaleY(.7)}45%{opacity:.9}100%{opacity:0;transform:translateY(-16px) scaleY(1.15)}}
+.strip .g-item:hover .g-frame{transform:translateY(-6px);box-shadow:0 18px 36px rgba(14,59,67,.24)}
+.strip .g-item:hover figcaption{color:var(--accent)}
+@media(min-width:900px){.strip .g-item{width:250px}}
+@media(max-width:520px){.strip .g-item{width:170px}}
+
 .hero__meta{
   position:relative;z-index:1;max-width:1180px;margin:34px auto 0;width:100%;display:flex;flex-wrap:wrap;gap:10px;
   opacity:0;animation:fadeUp .5s .8s var(--ease) forwards;
@@ -192,31 +186,26 @@ section{padding:84px 20px;max-width:1180px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — kreslené karty ============ */
-.tiles{display:grid;gap:20px;margin-top:40px}
-@media(min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
-.tile{border-radius:var(--r);overflow:hidden;background:var(--surface);border:1px solid var(--line);transition:transform .25s var(--ease),box-shadow .25s}
-.tile:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(14,59,67,.14)}
-.tile__art{aspect-ratio:4/3;position:relative}
-.tile:nth-child(1) .tile__art{
-  background:
-    radial-gradient(circle at 50% 55%,rgba(255,248,236,.9) 0 14%,transparent 15%),
-    repeating-radial-gradient(circle at 50% 55%,transparent 0 22px,rgba(255,248,236,.18) 22px 25px),
-    linear-gradient(150deg,#12525C,#0E3B43);
+/* ============ ATMOSFÉRA — fotka interiéru ============ */
+.interier{position:relative;margin-top:40px;border-radius:var(--r);overflow:hidden}
+.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.interier__body{
+  position:absolute;left:0;right:0;bottom:0;padding:28px 22px 20px;
+  background:linear-gradient(180deg,transparent,rgba(6,30,34,.86));
+  color:#FFF8EC;display:grid;gap:8px 28px;
 }
-.tile:nth-child(2) .tile__art{
-  background:
-    repeating-linear-gradient(64deg,rgba(255,248,236,.55) 0 4px,transparent 4px 13px),
-    linear-gradient(150deg,#E4572E,#A8341A);
+@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:48px 30px 26px}}
+.interier__body b{font-family:var(--display);font-weight:600;font-size:1rem;display:block}
+.interier__body span{font-size:.85rem;color:rgba(255,248,236,.76)}
+
+/* široký pás přes celou šířku */
+.band{margin:0;position:relative;overflow:hidden}
+.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+@media(max-width:700px){.band img{aspect-ratio:16/10}}
+.band figcaption{
+  position:absolute;left:22px;bottom:22px;background:var(--bg);color:var(--ink);
+  font-family:var(--display);font-weight:600;font-size:.84rem;padding:9px 18px;border-radius:99px;
 }
-.tile:nth-child(3) .tile__art{
-  background:
-    repeating-linear-gradient(90deg,rgba(14,59,67,.35) 0 4px,transparent 4px 30px),
-    linear-gradient(150deg,#A7C957,#6E9134);
-}
-.tile__cap{padding:16px 18px 18px;font-family:var(--display);font-weight:600;font-size:1rem}
-.tile__cap .t{display:block}
-.tile__cap span{display:block;font-family:var(--sans);font-weight:400;font-size:.85rem;color:var(--gray);margin-top:3px}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -291,9 +280,9 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.bowl,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
+  .reveal,.menu-item,.strip,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
   .rule{transform:scaleX(1)}
-  .steam{display:none}
+  .strip__track{animation:none}
   html{scroll-behavior:auto}
 }
 </style>
@@ -335,15 +324,11 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
-      <!-- miska phở: celý objekt je kreslený v CSS, žádná fotka -->
-      <div class="bowl" aria-hidden="true">
-        <div class="steam"><i></i><i></i><i></i></div>
-        <div class="bowl__dish">
-          <div class="bowl__soup"></div>
-          <div class="bowl__band"></div>
-        </div>
-        <div class="bowl__foot"></div>
-      </div>
+    </div>
+
+    <!-- nekonečný pás fotek; obsah plní engine, druhou půlku klonuje skript -->
+    <div class="strip">
+      <div class="strip__track" id="galleryGrid"></div>
     </div>
   </header>
   <div class="hero__meta">
@@ -358,21 +343,20 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Rychlé bistro, pomalá kuchyně" data-en="Fast bistro, slow kitchen">Rychlé bistro, pomalá kuchyně</h2>
     <p class="lead reveal" data-cs="Vaříme tak, jak se vaří doma v Sài Gònu — jen o pár tisíc kilometrů dál." data-en="We cook the way they cook at home in Sài Gòn — just a few thousand kilometres away.">Vaříme tak, jak se vaří doma v Sài Gònu — jen o pár tisíc kilometrů dál.</p>
-    <div class="tiles">
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Dvanáct hodin vývaru" data-en="Twelve-hour broth">Dvanáct hodin vývaru</span><span data-cs="Kosti, badyán, skořice, žádný glutamát" data-en="Bones, star anise, cinnamon, no MSG">Kosti, badyán, skořice, žádný glutamát</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Ostrost podle vás" data-en="Your heat level">Ostrost podle vás</span><span data-cs="Od nuly po tři chilli — řekněte u pultu" data-en="From zero to three chillies — say it at the counter">Od nuly po tři chilli — řekněte u pultu</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Bylinky každé ráno" data-en="Herbs every morning">Bylinky každé ráno</span><span data-cs="Koriandr, máta, thajská bazalka" data-en="Coriander, mint, Thai basil">Koriandr, máta, thajská bazalka</span></p>
+    <div class="interier reveal">
+      <img data-site-src="photos.interier" alt="" loading="lazy">
+      <div class="interier__body">
+        <div><b data-cs="Dvanáct hodin vývaru" data-en="Twelve-hour broth">Dvanáct hodin vývaru</b><span data-cs="Kosti, badyán, skořice, žádný glutamát" data-en="Bones, star anise, cinnamon, no MSG">Kosti, badyán, skořice, žádný glutamát</span></div>
+        <div><b data-cs="Ostrost podle vás" data-en="Your heat level">Ostrost podle vás</b><span data-cs="Od nuly po tři chilli — řekněte u pultu" data-en="From zero to three chillies — say it at the counter">Od nuly po tři chilli — řekněte u pultu</span></div>
+        <div><b data-cs="Bylinky každé ráno" data-en="Herbs every morning">Bylinky každé ráno</b><span data-cs="Koriandr, máta, thajská bazalka" data-en="Coriander, mint, Thai basil">Koriandr, máta, thajská bazalka</span></div>
       </div>
     </div>
   </section>
+
+  <figure class="band reveal">
+    <img data-site-src="photos.band1" alt="" loading="lazy">
+    <figcaption data-cs="Objednává se celý stůl najednou" data-en="You order for the whole table at once">Objednává se celý stůl najednou</figcaption>
+  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -388,8 +372,12 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
+  <figure class="band reveal">
+    <img data-site-src="photos.band2" alt="" loading="lazy">
+    <figcaption data-cs="U nás se jí rukama i hůlkami" data-en="Here you eat with hands and chopsticks alike">U nás se jí rukama i hůlkami</figcaption>
+  </figure>
+
   <!-- VISIT -->
-  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Přijďte na misku" data-en="Come for a bowl">Přijďte na misku</h2>
@@ -434,5 +422,18 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
 
 <script>window.TEMPLATE={letterClass:'ch',letterIndexVar:true,placeholderIcon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1.5 1-2 1-3"/><path d="M12 6c0-1.5 1-2 1-3"/><path d="M2 20h20"/></svg>'};</script>
 <script src="../assets/site.js"></script>
+<script>
+/* Pás jede dokola: druhá půlka je klon první, animace posune track
+   přesně o 50 % a smyčka je bez švu. */
+(function(){
+  var track = document.getElementById('galleryGrid');
+  if (!track || !track.children.length) return;
+  Array.prototype.slice.call(track.children).forEach(function (fig) {
+    var clone = fig.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  });
+})();
+</script>
 </body>
 </html>

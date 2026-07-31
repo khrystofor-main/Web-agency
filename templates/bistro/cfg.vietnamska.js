@@ -44,6 +44,34 @@ window.SITE = {
     captionMeta: 'PRAHA 7'
   },
 
+  /* Šest fotek na výšku — nekonečný pás v hero. */
+  gallery: [
+    { src:'../../photos/bistro/vietnamska/01.webp',
+      alt:{cs:'Bánh mì, miska s grilovaným masem a rýží, bylinky a klíčky',en:'Bánh mì, a bowl of grilled meat with rice, herbs and sprouts'},
+      caption:{cs:'Bánh mì a miska k tomu',en:'Bánh mì and a bowl to go with it'} },
+    { src:'../../photos/bistro/vietnamska/06.webp',
+      alt:{cs:'Rýže s grilovaným masem, okurkou a chilli',en:'Rice with grilled meat, cucumber and chilli'},
+      caption:{cs:'Rýže, maso, chilli',en:'Rice, meat, chilli'} },
+    { src:'../../photos/bistro/vietnamska/02.webp',
+      alt:{cs:'Smažené závitky na podlouhlém talíři s omáčkou',en:'Fried spring rolls on a long plate with dipping sauce'},
+      caption:{cs:'Nem rán s omáčkou',en:'Nem rán with dipping sauce'} },
+    { src:'../../photos/bistro/vietnamska/05.webp',
+      alt:{cs:'Salát v křupavé rýžové misce, ruce s hůlkami',en:'Salad in a crisp rice bowl, hands with chopsticks'},
+      caption:{cs:'Salát v křupavé misce',en:'Salad in a crisp bowl'} },
+    { src:'../../photos/bistro/vietnamska/04.webp',
+      alt:{cs:'Tři karafy s ledovými nápoji',en:'Three carafes of iced drinks'},
+      caption:{cs:'Všechno s ledem',en:'Everything over ice'} },
+    { src:'../../photos/bistro/vietnamska/03.webp',
+      alt:{cs:'Dřevěný stůl prostřený v šeru podniku',en:'A wooden table laid in the dim interior'},
+      caption:{cs:'Stůl pro celou rodinu',en:'A table for the whole family'} }
+  ],
+
+  photos: {
+    band1: '../../photos/bistro/vietnamska/07.webp',
+    band2: '../../photos/bistro/vietnamska/08.webp',
+    interier: '../../photos/bistro/vietnamska/09.webp'
+  },
+
   menu: {
     intro: {
       cs:'Ostrost si řekněte u pultu — od nuly po tři chilli. Ceny jsou ilustrační.',

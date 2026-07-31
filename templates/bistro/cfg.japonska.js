@@ -45,6 +45,34 @@ window.SITE = {
     captionMeta: 'BRNO'
   },
 
+  /* Šest fotek na výšku — mřížka v hero. */
+  gallery: [
+    { src:'../../photos/bistro/japonska/05.webp',
+      alt:{cs:'Miska ramenu s chilli nitěmi, vedle gyoza a vejce',en:'A bowl of ramen with chilli threads, gyoza and egg beside it'},
+      caption:{cs:'Ramen',en:'Ramen'} },
+    { src:'../../photos/bistro/japonska/01.webp',
+      alt:{cs:'Misky rýže s nori a litinová konvička',en:'Bowls of rice with nori and a cast-iron teapot'},
+      caption:{cs:'Rýže a čaj',en:'Rice and tea'} },
+    { src:'../../photos/bistro/japonska/06.webp',
+      alt:{cs:'Shora: karaage, gyoza a nudle v hliněné misce',en:'From above: karaage, gyoza and noodles in a clay bowl'},
+      caption:{cs:'Celý stůl',en:'The whole table'} },
+    { src:'../../photos/bistro/japonska/04.webp',
+      alt:{cs:'Hůlky zvedají plátek hovězího nad miskou',en:'Chopsticks lifting a slice of beef above a bowl'},
+      caption:{cs:'Sousto',en:'One bite'} },
+    { src:'../../photos/bistro/japonska/02.webp',
+      alt:{cs:'Podnos s několika miskami a vejci ajitama',en:'A tray with several bowls and ajitama eggs'},
+      caption:{cs:'Podnos',en:'The tray'} },
+    { src:'../../photos/bistro/japonska/03.webp',
+      alt:{cs:'Sushi na břidlicovém prkénku, konvička, výhled do zahrady',en:'Sushi on a slate board, teapot, a view into the garden'},
+      caption:{cs:'U okna',en:'By the window'} }
+  ],
+
+  photos: {
+    band1: '../../photos/bistro/japonska/07.webp',
+    band2: '../../photos/bistro/japonska/08.webp',
+    interier: '../../photos/bistro/japonska/09.webp'
+  },
+
   menu: {
     intro: {
       cs:'Rezervace nebereme — přijďte a počkejte si u čaje. Ceny jsou ilustrační.',

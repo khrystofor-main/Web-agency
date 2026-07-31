@@ -118,35 +118,34 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 }
 .hero__cta:hover{color:var(--accent);border-color:var(--accent)}
 
-/* hinomaru — rumělkový kruh na papíře; místo fotky */
-.maru{
-  position:relative;aspect-ratio:3/4;max-height:70vh;width:100%;background:var(--surface);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;animation:fade 1.2s .45s var(--ease) forwards;
+/* Mřížka „ma": tři sloupce, prostřední posunutý dolů. Fotky jsou
+   ztlumené a teprve po najetí se rozsvítí — klid je tu záměr. */
+.ma{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+@media(min-width:760px){.ma{grid-template-columns:repeat(3,1fr)}}
+.ma .g-item{
+  margin:0;position:relative;background:var(--bg);
+  opacity:0;animation:fade 1s var(--ease) forwards;
+  animation-delay:calc(.12s * var(--n) + .5s);
 }
-/* vlásečnicová mřížka na papíře */
-.maru::before{
-  content:"";position:absolute;inset:0;
-  background:
-    repeating-linear-gradient(90deg,color-mix(in srgb,var(--ink) 7%,transparent) 0 1px,transparent 1px 44px),
-    repeating-linear-gradient(0deg,color-mix(in srgb,var(--ink) 7%,transparent) 0 1px,transparent 1px 44px);
+/* prostřední sloupec o kus níž — mřížka pak dýchá */
+@media(min-width:760px){.ma .g-item:nth-child(3n+2){transform:translateY(26px)}}
+.ma .g-frame{display:block;overflow:hidden;background:var(--surface)}
+.ma img{
+  width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
+  filter:saturate(.62) contrast(1.02);
+  transition:filter .8s var(--ease),transform .8s var(--ease);
 }
-.maru__circle{
-  position:relative;width:52%;aspect-ratio:1/1;border-radius:50%;
-  background:radial-gradient(circle at 38% 34%,color-mix(in srgb,var(--accent) 85%,#fff),var(--accent) 72%);
-  box-shadow:0 22px 50px rgba(140,35,24,.22);
+.ma .g-item:hover img{filter:none;transform:scale(1.03)}
+/* popisek stojí svisle u pravého okraje snímku */
+.ma figcaption{
+  position:absolute;top:10px;right:-2px;writing-mode:vertical-rl;
+  font-family:var(--serif);font-size:.74rem;letter-spacing:.22em;
+  color:var(--gray);background:var(--bg);padding:8px 3px;
+  transition:color .5s;
 }
-/* svislý popisek u okraje — typický japonský vertikální sazba */
-.maru__vert{
-  position:absolute;top:8%;right:7%;writing-mode:vertical-rl;
-  font-family:var(--serif);font-size:.9rem;letter-spacing:.34em;color:var(--gray);
-}
-.maru__mark{
-  position:absolute;left:7%;bottom:7%;width:44px;height:44px;
-  border:1px solid var(--accent);color:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-size:1rem;
-}
+.ma .g-item:hover figcaption{color:var(--accent)}
+@media(max-width:520px){.ma figcaption{font-size:.68rem}}
+
 .hero__meta{
   max-width:1120px;margin:0 auto;width:100%;display:flex;flex-wrap:wrap;padding:0 26px 60px;
   border-top:1px solid var(--line);opacity:0;animation:fade .9s 1.15s var(--ease) forwards;
@@ -166,25 +165,26 @@ section{padding:96px 26px;max-width:1120px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA ============ */
-.tiles{display:grid;gap:1px;margin-top:52px;background:var(--line)}
-@media(min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
-.tile{background:var(--bg);padding:0}
-.tile__art{aspect-ratio:1/1;position:relative;background:var(--surface)}
-/* tři jednoduché značky: kruh, čára, čtverec — nic víc */
-.tile:nth-child(1) .tile__art::after{
-  content:"";position:absolute;inset:26%;border-radius:50%;border:1px solid var(--accent);
+/* ============ ATMOSFÉRA — fotka interiéru ============ */
+.interier{position:relative;margin-top:52px}
+.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.interier__body{
+  display:grid;gap:2px 40px;padding:26px 0 0;border-top:1px solid var(--line);margin-top:22px;
 }
-.tile:nth-child(2) .tile__art::after{
-  content:"";position:absolute;left:50%;top:22%;bottom:22%;width:1px;background:var(--accent);
-  box-shadow:-22px 0 0 var(--clay),22px 0 0 var(--clay);
+@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr)}}
+.interier__body b{font-family:var(--serif);font-weight:400;font-size:1rem;display:block;margin-bottom:4px}
+.interier__body span{font-size:.86rem;color:var(--gray)}
+.interier__body > div + div{margin-top:16px}
+@media(min-width:760px){.interier__body > div + div{margin-top:0}}
+
+/* široký pás přes celou šířku */
+.band{margin:0;position:relative;overflow:hidden}
+.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+@media(max-width:700px){.band img{aspect-ratio:16/10}}
+.band figcaption{
+  position:absolute;right:0;bottom:0;background:var(--bg);color:var(--gray);
+  font-family:var(--serif);font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;padding:10px 18px;
 }
-.tile:nth-child(3) .tile__art::after{
-  content:"";position:absolute;inset:28%;border:1px solid var(--clay);transform:rotate(45deg);
-}
-.tile__cap{padding:20px 4px 0;font-family:var(--serif);font-size:.98rem}
-.tile__cap .t{display:block}
-.tile__cap span{display:block;font-family:var(--sans);font-size:.84rem;color:var(--gray);margin-top:6px;line-height:1.8}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -256,7 +256,7 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.maru,.hero__sub,.hero__cta,.hero__meta,.hero__kicker,.hero h1 .ch{opacity:1;transform:none}
+  .reveal,.menu-item,.ma .g-item,.hero__sub,.hero__cta,.hero__meta,.hero__kicker,.hero h1 .ch{opacity:1;transform:none}
   .rule{transform:scaleX(1)}
   html{scroll-behavior:auto}
 }
@@ -299,12 +299,8 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </div>
-      <!-- hinomaru na papíře: kreslené v CSS, žádná fotka -->
-      <div class="maru" aria-hidden="true">
-        <div class="maru__circle"></div>
-        <div class="maru__vert">米 · RAMEN</div>
-        <div class="maru__mark">米</div>
-      </div>
+      <!-- mřížka fotek; obsah plní engine ze SITE.gallery -->
+      <div class="ma" id="galleryGrid"></div>
     </div>
   </header>
   <div class="hero__meta">
@@ -319,21 +315,20 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Jedna miska, žádný spěch" data-en="One bowl, no rush">Jedna miska, žádný spěch</h2>
     <p class="lead reveal" data-cs="Deset míst u pultu. Vidíte, jak se vaří, a slyšíte, jak se krájí." data-en="Ten seats at the counter. You see the cooking and hear the knife.">Deset míst u pultu. Vidíte, jak se vaří, a slyšíte, jak se krájí.</p>
-    <div class="tiles">
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Vývar 18 hodin" data-en="18-hour broth">Vývar 18 hodin</span><span data-cs="Tonkotsu začínáme vařit večer předem." data-en="Tonkotsu starts simmering the night before.">Tonkotsu začínáme vařit večer předem.</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Nudle denně" data-en="Noodles daily">Nudle denně</span><span data-cs="Táhneme je ráno, vaříme na tvrdo." data-en="Pulled in the morning, cooked firm.">Táhneme je ráno, vaříme na tvrdo.</span></p>
-      </div>
-      <div class="tile reveal">
-        <div class="tile__art"></div>
-        <p class="tile__cap"><span class="t" data-cs="Bez rezervací" data-en="No reservations">Bez rezervací</span><span data-cs="Přijďte a počkejte si u čaje." data-en="Come and wait over a cup of tea.">Přijďte a počkejte si u čaje.</span></p>
+    <div class="interier reveal">
+      <img data-site-src="photos.interier" alt="" loading="lazy">
+      <div class="interier__body">
+        <div><b data-cs="Vývar 18 hodin" data-en="18-hour broth">Vývar 18 hodin</b><span data-cs="Tonkotsu začínáme vařit večer předem." data-en="Tonkotsu starts simmering the night before.">Tonkotsu začínáme vařit večer předem.</span></div>
+        <div><b data-cs="Nudle denně" data-en="Noodles daily">Nudle denně</b><span data-cs="Táhneme je ráno, vaříme na tvrdo." data-en="Pulled in the morning, cooked firm.">Táhneme je ráno, vaříme na tvrdo.</span></div>
+        <div><b data-cs="Bez rezervací" data-en="No reservations">Bez rezervací</b><span data-cs="Přijďte a počkejte si u čaje." data-en="Come and wait over a cup of tea.">Přijďte a počkejte si u čaje.</span></div>
       </div>
     </div>
   </section>
+
+  <figure class="band reveal">
+    <img data-site-src="photos.band1" alt="" loading="lazy">
+    <figcaption data-cs="Deset míst u pultu" data-en="Ten seats at the counter">Deset míst u pultu</figcaption>
+  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -349,8 +344,12 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
     </div>
   </section>
 
+  <figure class="band reveal">
+    <img data-site-src="photos.band2" alt="" loading="lazy">
+    <figcaption data-cs="Jedna miska, žádný spěch" data-en="One bowl, no rush">Jedna miska, žádný spěch</figcaption>
+  </figure>
+
   <!-- VISIT -->
-  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Najdete nás tady" data-en="Find us here">Najdete nás tady</h2>
