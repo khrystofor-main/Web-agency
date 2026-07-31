@@ -175,26 +175,19 @@ section > .eyebrow{text-align:center}
 .tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .showcase-body{display:grid;gap:24px;grid-template-columns:1fr}
 @media(min-width:820px){.showcase-body{grid-template-columns:1fr 240px;align-items:start}}
-/* Dokud není načtená první šablona, je rámeček neviditelný (splývá s kartou) —
-   při načtení stránky tak neproblikne prázdný tmavý obdélník. */
 .preview{
   position:relative;aspect-ratio:16/10;overflow:hidden;
-  border:1px solid transparent;border-radius:12px;background:transparent;
-  transition:border-color .25s ease,background-color .25s ease;
+  border:1px solid var(--line);border-radius:12px;background:var(--line);
 }
-.preview.ready{border-color:var(--line);background:var(--line)}
-/* Dva iframy přes sebe: nová šablona se načte ve skrytém a teprve pak se
-   prolne přes starou — přepínání bez šedého mezistavu. Skryté jsou i při
-   prvním vykreslení, takže neproblikne nezmenšená stránka, než JS spočítá scale.
-   Iframe drží desktopovou šířku šablony, do rámečku se vejde přes scale (počítá JS).
-   Je o 16px širší než viditelných 1280 — svislý posuvník tak ořízne maska rámečku. */
+/* Pět iframe nad sebou — všechny načtené, vidět je jen aktivní (žádné probliknutí
+   při přepnutí tabu). Drží desktopovou šířku šablony, do rámečku se vejdou přes
+   scale (počítá JS). Jsou o 16px širší než viditelných 1280 — svislý posuvník
+   tak ořízne maska rámečku. */
 .preview iframe{
   position:absolute;top:0;left:0;
-  width:1296px;height:800px;border:0;
+  width:1296px;height:800px;border:0;display:block;
   transform-origin:0 0;pointer-events:none;
-  opacity:0;transition:opacity .25s ease;
 }
-.preview iframe.on{opacity:1}
 .preview-link{position:absolute;inset:0;border-radius:12px;transition:box-shadow .2s}
 .preview-link:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 100%,transparent)}
 .showcase-info h3{font-size:1.55rem;line-height:1.15;margin-bottom:6px}
@@ -341,8 +334,7 @@ footer{
 
     <div class="showcase-body">
       <div class="preview" id="tplPreview">
-        <iframe class="tpl-frame" title="Náhled šablony"></iframe>
-        <iframe class="tpl-frame" title="Náhled šablony" aria-hidden="true"></iframe>
+        <!-- iframes náhledů vkládá skript (všech pět najednou) -->
         <a class="preview-link" id="tplPreviewLink" href="site/index.html" aria-label="Otevřít šablonu"></a>
       </div>
       <aside class="showcase-info">
@@ -466,9 +458,21 @@ const TEMPLATES = [
 ];
 
 const tplTabs = Array.from(document.querySelectorAll('#tplTabs [role="tab"]'));
-const tplFrames = Array.from(document.querySelectorAll('.tpl-frame'));
 const tplPreview = document.getElementById('tplPreview');
-let tplFrame = tplFrames[0];   // právě viditelný (aktivní) iframe
+
+/* Všech pět šablon se načte hned při otevření hubu a drží se v pěti iframe
+   nad sebou. Přepnutí tabu jen přehodí viditelnost — je okamžité a návštěvník
+   nevidí žádné načítání; každá šablona si navíc pamatuje svou pozici skrolu. */
+let activeIdx = 0;
+const tplFrames = TEMPLATES.map((t, i) => {
+  const f = document.createElement('iframe');
+  f.title = 'Náhled šablony: ' + t.name;
+  f.src = t.href;
+  if (i !== 0) f.style.visibility = 'hidden';
+  f.addEventListener('load', () => { if (i === activeIdx) startAutoScroll(); });
+  tplPreview.insertBefore(f, document.getElementById('tplPreviewLink'));
+  return f;
+});
 
 /* iframe má pevných 1280×800 (desktopová šířka šablony) a do rámečku
    se zmenšuje přes scale — šablona tak v náhledu vypadá jako na monitoru */
@@ -480,17 +484,9 @@ function fitPreview() {
 function selectTemplate(i) {
   const t = TEMPLATES[i];
   tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
-  if (tplFrame.getAttribute('src') !== t.href) {
-    const back = tplFrames[0] === tplFrame ? tplFrames[1] : tplFrames[0];
-    if (back.getAttribute('src') === t.href) {
-      /* šablona je v záložním iframu už načtená — prohodíme hned, bez reloadu */
-      if (back.contentWindow) back.contentWindow.scrollTo({ top: 0, behavior: 'instant' });
-      activateFrame(back);
-    } else {
-      /* nová šablona se načítá ve skrytém iframu; prolne se až po svém load */
-      back.src = t.href;
-    }
-  }
+  activeIdx = i;
+  tplFrames.forEach((f, j) => { f.style.visibility = j === i ? '' : 'hidden'; });
+  startAutoScroll();
   document.getElementById('tplName').textContent = t.name;
   document.getElementById('tplPair').textContent = t.pair;
   document.getElementById('tplDesc').textContent = t.desc;
@@ -520,15 +516,16 @@ let scrollPos = 0;      // vlastní float — scrollTo zaokrouhluje; sdílí ho 
 let manualTarget = null; // cíl ručního skrolování koleckem; scrollPos se k němu měkce dotahuje
 function startAutoScroll() {
   cancelAnimationFrame(scrollRafId);
-  const cw = tplFrame.contentWindow;
+  const cw = tplFrames[activeIdx].contentWindow;
   scrollPos = (cw && cw.scrollY) || 0;
+  manualTarget = null;
   if (reducedMotion.matches) return;
   let lastT = 0, waitUntil = 0;
   function step(t) {
     scrollRafId = requestAnimationFrame(step);
     if (!lastT) { lastT = t; return; }
     const dt = (t - lastT) / 1000; lastT = t;
-    const w = tplFrame.contentWindow;
+    const w = tplFrames[activeIdx].contentWindow;
     if (!w || !w.document.documentElement) return;
     if (pausedByHover) {
       /* ruční režim: pozice měkce dojíždí k cíli koleckem — plynulé skrolování */
@@ -555,7 +552,7 @@ tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; manualT
 /* kolečko nad náhledem skroluje přímo šablonu; hub stojí (preventDefault) */
 tplPreview.addEventListener('wheel', (e) => {
   e.preventDefault();
-  const w = tplFrame.contentWindow;
+  const w = tplFrames[activeIdx].contentWindow;
   if (!w || !w.document.documentElement) return;
   const max = w.document.documentElement.scrollHeight - w.innerHeight;
   manualTarget = Math.min(Math.max((manualTarget === null ? scrollPos : manualTarget) + e.deltaY, 0), max);
@@ -565,21 +562,6 @@ tplPreview.addEventListener('wheel', (e) => {
     w.scrollTo({ top: scrollPos, behavior: 'instant' });
   }
 }, { passive: false });
-function activateFrame(f) {
-  tplPreview.classList.add('ready');
-  const other = tplFrames[0] === f ? tplFrames[1] : tplFrames[0];
-  f.classList.add('on');
-  f.removeAttribute('aria-hidden');
-  other.classList.remove('on');
-  other.setAttribute('aria-hidden', 'true');
-  tplFrame = f;
-  manualTarget = null;
-  startAutoScroll();
-}
-tplFrames.forEach(f => f.addEventListener('load', () => {
-  if (!f.getAttribute('src')) return;   // úvodní load prázdného iframu
-  activateFrame(f);
-}));
 /* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
 reducedMotion.addEventListener('change', () => {
   if (reducedMotion.matches) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
