@@ -28,7 +28,7 @@ složky).
   | česká | text uprostřed nahoře, pod ním nástěnka se špendlíky přes celou šířku |
   | vietnamská | text vlevo, pod ním nekonečný pás fotek přes celé okno |
   | japonská | pás fotek nahoře, text až pod ním u pravého okraje |
-  | italská | text vlevo nahoře, řada oken s oblouky po spodní hraně (tvar L) |
+  | italská | text vlevo, mřížka oken s oblouky vpravo (prostřední sloupec výš) |
   | rostlinná | text uprostřed, listy po obou stranách |
 - `interior: [{ src, alt, caption }]` → **listovací galerie interiéru**
   v sekci „Atmosféra“. Ovládá se šipkami, tečkami, tažením i šipkami na
