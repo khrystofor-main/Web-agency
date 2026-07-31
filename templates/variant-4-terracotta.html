@@ -140,7 +140,7 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   border-radius:var(--arch);transform:translate(14px,14px);
 }
 .hero__photo .frame{overflow:hidden;border-radius:var(--arch);position:relative}
-.hero__photo img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.hero__photo img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
 .scroll-hint{
   position:absolute;bottom:20px;left:0;right:0;text-align:center;
   font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brown-soft);
@@ -444,7 +444,7 @@ footer .tiny{margin-top:22px;font-size:.72rem;color:rgba(241,228,208,.4)}
 })();
 </script>
 <script>
-/* parallax hero fotky: cíl sleduje scrollY, aktuální hodnota se k němu po
+/* zoom hero fotky při scrollu: cíl sleduje scrollY, aktuální hodnota se k němu po
    snímcích dotahuje — pohyb je pak měkčí než přímé mapování na scroll
    (stejné chování jako u varianty Warm Paper) */
 (function(){
@@ -454,7 +454,7 @@ footer .tiny{margin-top:22px;font-size:.72rem;color:rgba(241,228,208,.4)}
   function frame(){
     current += (target - current) * 0.25;
     if (Math.abs(target - current) < 0.1) current = target;
-    if (current < innerHeight) img.style.transform = 'translateY(' + current * .35 + 'px) scale(' + (1 + current * .0002) + ')';
+    if (current < innerHeight) img.style.transform = 'scale(' + (1 + current * .0003) + ')';
     if (current !== target) rafId = requestAnimationFrame(frame); else rafId = null;
   }
   addEventListener('scroll', function(){
