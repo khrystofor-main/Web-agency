@@ -15,6 +15,9 @@ konkrétního podniku je vždy v jednom souboru `cfg.*.js`.
 Číslování odpovídá tabům na kartě „Šablony pro bistro“ v rozcestníku
 (`../../index.html`). Demo obsah je ilustrační — žádný skutečný podnik.
 
+Zásady pro tvorbu dalších šablon jsou v
+[`../../TEMPLATE-PRINCIPLES.md`](../../TEMPLATE-PRINCIPLES.md).
+
 ## Fotky
 
 Všechny cesty k fotkám jsou v `cfg.*.js`, do HTML se kvůli nim nesahá.

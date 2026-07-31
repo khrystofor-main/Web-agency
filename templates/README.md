@@ -19,7 +19,11 @@ i konfiguraci ale sdílí se zbytkem, jen na ně odkazuje o adresář výš.
 Pro bistra je vedle toho samostatná sada pěti šablon podle kuchyně
 (česká, vietnamská, japonská, italská, rostlinná) ve složce
 [`bistro/`](bistro/README.md). Sdílí stejný engine, jen má vlastní konfigurace
-a zatím žádné fotky — vizuál je kreslený v CSS.
+a vlastní sadu fotek ve `../photos/bistro/`.
+
+Zásady, podle kterých šablony vznikají — čím se má nová šablona lišit, co
+patří do konfigurace a co do HTML, co všechno se před vypuštěním zkouší —
+jsou v [`../TEMPLATE-PRINCIPLES.md`](../TEMPLATE-PRINCIPLES.md).
 
 Demo obsah = obecná „Kavárna“. Je to jen ukázková náplň: pro nový podnik se
 přepíše `assets/site.config.js` a šablona zůstane beze změny.
