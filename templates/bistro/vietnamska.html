@@ -186,26 +186,51 @@ section{padding:84px 20px;max-width:1180px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — fotka interiéru ============ */
-.interier{position:relative;margin-top:40px;border-radius:var(--r);overflow:hidden}
-.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.interier__body{
-  position:absolute;left:0;right:0;bottom:0;padding:28px 22px 20px;
-  background:linear-gradient(180deg,transparent,rgba(6,30,34,.86));
-  color:#FFF8EC;display:grid;gap:8px 28px;
-}
-@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:48px 30px 26px}}
-.interier__body b{font-family:var(--display);font-weight:600;font-size:1rem;display:block}
-.interier__body span{font-size:.85rem;color:rgba(255,248,236,.76)}
+/* ============ ATMOSFÉRA — tři teze na kartách ============ */
+.facts{display:grid;gap:14px;margin-top:36px}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts > div{background:var(--surface);border-radius:var(--r);padding:20px 22px}
+.facts b{font-family:var(--display);font-weight:600;font-size:1rem;display:block;margin-bottom:2px}
+.facts span{font-size:.85rem;color:var(--gray)}
 
-/* široký pás přes celou šířku */
-.band{margin:0;position:relative;overflow:hidden}
-.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
-@media(max-width:700px){.band img{aspect-ratio:16/10}}
-.band figcaption{
+/* ============ GALERIE INTERIÉRU — listovací, měkké rohy ============ */
+.carousel{position:relative;margin-top:36px}
+.carousel__viewport{
+  overflow:hidden;border-radius:var(--r);background:var(--surface);
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.carousel__track{display:flex;transition:transform .45s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
   position:absolute;left:22px;bottom:22px;background:var(--bg);color:var(--ink);
   font-family:var(--display);font-weight:600;font-size:.84rem;padding:9px 18px;border-radius:99px;
 }
+.carousel__counter{
+  position:absolute;top:18px;right:18px;z-index:3;border-radius:99px;
+  background:var(--deep);color:#FFF8EC;font-size:.78rem;font-weight:600;padding:6px 14px;
+}
+html[data-theme="dark"] .carousel__counter{background:var(--lime);color:#08272C}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:0;background:var(--bg);color:var(--ink);cursor:pointer;
+  box-shadow:0 8px 20px rgba(14,59,67,.18);transition:background .2s,color .2s,opacity .2s;
+}
+.carousel__btn:hover{background:var(--lime);color:#08272C}
+.carousel__btn:disabled{opacity:.3;cursor:default}
+.carousel__btn:disabled:hover{background:var(--bg);color:var(--ink)}
+.carousel__btn--prev{left:14px}
+.carousel__btn--next{right:14px}
+.carousel__dots{display:flex;gap:8px;margin-top:16px;justify-content:center}
+.carousel__dot{
+  width:9px;height:9px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:var(--line);transition:background .2s,transform .2s;
+}
+.carousel__dot.active{background:var(--accent);transform:scale(1.3)}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -224,25 +249,26 @@ html[data-theme="dark"] .menu-cat.active{background:var(--lime);color:#08272C;bo
 .menu-group{margin-bottom:40px}
 .menu-group h3{font-size:clamp(1.4rem,3.4vw,1.95rem);margin-bottom:14px}
 .menu-note{border-radius:var(--r);padding:12px 18px;font-size:.9rem;color:var(--gray);margin:0 0 22px;max-width:64ch;background:var(--surface)}
-.menu-items{display:grid;gap:16px}
-@media(min-width:640px){.menu-items{grid-template-columns:1fr 1fr}}
+/* Karta jídla: velká fotka nahoře, pod ní název a cena. */
+.menu-items{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .menu-item{
   border:1px solid var(--line);border-radius:var(--r);background:var(--bg);
-  padding:14px 18px 14px 14px;display:flex;gap:14px;align-items:center;
+  display:flex;flex-direction:column;overflow:hidden;
   opacity:0;transform:translateY(16px);
   transition:opacity .45s var(--ease),transform .45s var(--ease),border-color .2s,box-shadow .2s;
 }
 .menu-item.in{opacity:1;transform:none}
 .menu-item:hover{border-color:var(--lime);box-shadow:0 10px 24px rgba(14,59,67,.10)}
-.menu-item__ph{flex:0 0 62px;height:62px;border-radius:14px;overflow:hidden;background:var(--surface)}
-.menu-item__ph img{width:100%;height:100%;object-fit:cover}
-/* bez fotky: kolečko s ikonou misky a limetkovým kruhem */
+.menu-item__ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease)}
+.menu-item:hover .menu-item__ph img{transform:scale(1.05)}
+/* bez fotky: limetkový kruh s ikonou misky */
 .menu-item__ph--empty{
   display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
-  background:radial-gradient(circle at 50% 50%,rgba(167,201,87,.28) 0 42%,transparent 43%),var(--surface);
+  background:radial-gradient(circle at 50% 50%,rgba(167,201,87,.28) 0 26%,transparent 27%),var(--surface);
 }
-.menu-item__ph--empty svg{width:26px;height:26px}
-.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.menu-item__ph--empty svg{width:44px;height:44px}
+.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 18px 16px}
 .menu-item__body b{font-family:var(--display);font-weight:600;font-size:.98rem;line-height:1.35}
 .menu-item__price{flex:0 0 auto;font-family:var(--display);font-weight:800;color:var(--accent);font-size:.96rem;white-space:nowrap}
 .allergens{font-size:.82rem;color:var(--gray);line-height:1.9;margin-top:8px}
@@ -343,20 +369,27 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Rychlé bistro, pomalá kuchyně" data-en="Fast bistro, slow kitchen">Rychlé bistro, pomalá kuchyně</h2>
     <p class="lead reveal" data-cs="Vaříme tak, jak se vaří doma v Sài Gònu — jen o pár tisíc kilometrů dál." data-en="We cook the way they cook at home in Sài Gòn — just a few thousand kilometres away.">Vaříme tak, jak se vaří doma v Sài Gònu — jen o pár tisíc kilometrů dál.</p>
-    <div class="interier reveal">
-      <img data-site-src="photos.interier" alt="" loading="lazy">
-      <div class="interier__body">
-        <div><b data-cs="Dvanáct hodin vývaru" data-en="Twelve-hour broth">Dvanáct hodin vývaru</b><span data-cs="Kosti, badyán, skořice, žádný glutamát" data-en="Bones, star anise, cinnamon, no MSG">Kosti, badyán, skořice, žádný glutamát</span></div>
-        <div><b data-cs="Ostrost podle vás" data-en="Your heat level">Ostrost podle vás</b><span data-cs="Od nuly po tři chilli — řekněte u pultu" data-en="From zero to three chillies — say it at the counter">Od nuly po tři chilli — řekněte u pultu</span></div>
-        <div><b data-cs="Bylinky každé ráno" data-en="Herbs every morning">Bylinky každé ráno</b><span data-cs="Koriandr, máta, thajská bazalka" data-en="Coriander, mint, Thai basil">Koriandr, máta, thajská bazalka</span></div>
+    <div class="facts reveal">
+      <div><b data-cs="Dvanáct hodin vývaru" data-en="Twelve-hour broth">Dvanáct hodin vývaru</b><span data-cs="Kosti, badyán, skořice, žádný glutamát" data-en="Bones, star anise, cinnamon, no MSG">Kosti, badyán, skořice, žádný glutamát</span></div>
+      <div><b data-cs="Ostrost podle vás" data-en="Your heat level">Ostrost podle vás</b><span data-cs="Od nuly po tři chilli — řekněte u pultu" data-en="From zero to three chillies — say it at the counter">Od nuly po tři chilli — řekněte u pultu</span></div>
+      <div><b data-cs="Bylinky každé ráno" data-en="Herbs every morning">Bylinky každé ráno</b><span data-cs="Koriandr, máta, thajská bazalka" data-en="Coriander, mint, Thai basil">Koriandr, máta, thajská bazalka</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
+      <div class="carousel__dots" id="carDots"></div>
     </div>
   </section>
-
-  <figure class="band reveal">
-    <img data-site-src="photos.band1" alt="" loading="lazy">
-    <figcaption data-cs="Objednává se celý stůl najednou" data-en="You order for the whole table at once">Objednává se celý stůl najednou</figcaption>
-  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -372,12 +405,8 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
-  <figure class="band reveal">
-    <img data-site-src="photos.band2" alt="" loading="lazy">
-    <figcaption data-cs="U nás se jí rukama i hůlkami" data-en="Here you eat with hands and chopsticks alike">U nás se jí rukama i hůlkami</figcaption>
-  </figure>
-
   <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Přijďte na misku" data-en="Come for a bowl">Přijďte na misku</h2>

@@ -64,11 +64,14 @@ window.SITE = {
       caption:{cs:'Zapečený špenát',en:'Baked spinach'} }
   ],
 
-  photos: {
-    band1: '../../photos/bistro/plant-based/07.webp',
-    band2: '../../photos/bistro/plant-based/08.webp',
-    interier: '../../photos/bistro/plant-based/09.webp'
-  },
+  /* Listovací galerie interiéru v sekci „Atmosféra".
+     Soubory leží v photos/bistro/plant-based/interier/ — další přidáte tak,
+     že snímek nahrajete pod dalším číslem a doplníte sem řádek. */
+  interior: [
+    { src:'../../photos/bistro/plant-based/interier/01.webp',
+      alt:{cs:'Interiér bistra',en:'Bistro interior'},
+      caption:{cs:'U nás uvnitř',en:'Inside our place'} }
+  ],
 
   menu: {
     intro: {

@@ -66,11 +66,14 @@ window.SITE = {
       caption:{cs:'Stůl pro celou rodinu',en:'A table for the whole family'} }
   ],
 
-  photos: {
-    band1: '../../photos/bistro/vietnamska/07.webp',
-    band2: '../../photos/bistro/vietnamska/08.webp',
-    interier: '../../photos/bistro/vietnamska/09.webp'
-  },
+  /* Listovací galerie interiéru v sekci „Atmosféra".
+     Soubory leží v photos/bistro/vietnamska/interier/ — další přidáte tak,
+     že snímek nahrajete pod dalším číslem a doplníte sem řádek. */
+  interior: [
+    { src:'../../photos/bistro/vietnamska/interier/01.webp',
+      alt:{cs:'Interiér bistra s dlouhými stoly',en:'Bistro interior with long tables'},
+      caption:{cs:'U pultu',en:'At the counter'} }
+  ],
 
   menu: {
     intro: {

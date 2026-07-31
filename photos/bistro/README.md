@@ -1,37 +1,48 @@
 # Fotky pro šablony bistra
 
-Fotky jsou nahrané a zapojené. Tenhle soubor zůstává jako popis toho,
-kam který snímek patří — až budete něco vyměňovat.
+Každá kuchyně má vlastní složku (`ceska/`, `vietnamska/`, `japonska/`,
+`italska/`, `plant-based/`) a v ní tři skupiny snímků.
 
-## Jak se čísla používají
+## Jak se čísla a složky používají
 
-| Soubory | Kde se objeví |
+| Kde leží | Kde se objeví |
 |---|---|
-| `01`–`06` (na výšku) | galerie v hero; každá šablona ji zobrazuje jinak |
-| `07`, `08` (na šířku) | dva pásy přes celou šířku stránky |
-| `09` (na šířku) | fotka interiéru v sekci „Atmosféra" |
+| `01`–`06` (na výšku) | mřížka fotek jídel v hero; každá šablona ji zobrazuje jinak |
+| `interier/01`, `02`, … (na šířku) | listovací galerie v sekci „Atmosféra" |
+| `menu/*.webp` (na šířku) | fotka u jednotlivé položky jídelního lístku |
+| `07`, `08` | **momentálně se nepoužívají** — patřily k pásům, které jsme ze šablon odstranili |
 
-Pořadí v galerii se řídí polem `gallery` v `templates/bistro/cfg.*.js`,
-ne názvem souboru — snímky jsou tam seřazené tak, aby vedle sebe neseděly
-dva podobné záběry. Popisky a `alt` texty jsou psané podle toho, co na
-fotce opravdu je.
+Pořadí snímků řídí konfigurace v `templates/bistro/cfg.*.js`
+(`gallery` = hero, `interior` = galerie), ne názvy souborů.
 
-## Když budete fotky měnit
+## Kam nahrávat fotky interiéru
 
-Zachovejte formát: `.webp`, na výšku 1400×1800 a méně, na šířku 1920 px
-po delší straně, do ~300 kB. Novou fotku nahrajte pod stejným číslem
-a doplňte jí popisek v konfiguraci.
+Do `<kuchyne>/interier/`. Zatím je tam jen `01.webp`; další přidávejte
+pod dalšími čísly (`02.webp`, `03.webp`, …) a ke každé doplňte řádek do
+pole `interior` v příslušném configu — jinak ji galerie nezobrazí:
+
+```js
+{ src:'../../photos/bistro/ceska/interier/02.webp',
+  alt:{cs:'…',en:'…'},
+  caption:{cs:'…',en:'…'} }
+```
+
+Formát: `.webp`, na šířku, poměr 16:9, delší strana do 1920 px, do ~300 kB.
+Ideální jsou čtyři až šest záběrů: celek sálu, detail stolu, pult nebo
+kuchyň a večerní světlo.
+
+## Fotky jídel do menu
+
+Do `<kuchyne>/menu/`, návod je v README uvnitř každé té složky.
+Dokud fotka chybí, engine kreslí zástupný vzor ve stylu šablony.
 
 ## Co v sadě chybí
 
 Ve složce `plant-based/` se **nepoužívají snímky `04` a `05`**:
 na `04` je vidět obal konkrétní obchodní značky a na `05` leží v míse
 losos — na webu bistra, které slibuje sto procent rostlin, by obojí
-působilo špatně. Galerie tam proto jede na čtyřech fotkách. Až budou
-náhrady, stačí je doplnit do `gallery` v `cfg.plant-based.js`.
+působilo špatně. Mřížka v hero tam proto jede na čtyřech fotkách.
 
 Ve složce `ceska/` je obsah spíš mezinárodní než český (`04` je snídaňový
-stůl s hranolky a vejci benedikt, `07` a `08` jsou prkénka se sýry a
-kalamáry). Pro ukázkovou šablonu to projde, pro skutečné bistro
-s českou kuchyní by chtěly vyměnit.
-
+stůl s hranolky a vejci benedikt). Pro ukázkovou šablonu to projde, pro
+skutečné bistro s českou kuchyní by chtěl vyměnit.

@@ -67,11 +67,14 @@ window.SITE = {
       caption:{cs:'U okna',en:'By the window'} }
   ],
 
-  photos: {
-    band1: '../../photos/bistro/japonska/07.webp',
-    band2: '../../photos/bistro/japonska/08.webp',
-    interier: '../../photos/bistro/japonska/09.webp'
-  },
+  /* Listovací galerie interiéru v sekci „Atmosféra".
+     Soubory leží v photos/bistro/japonska/interier/ — další přidáte tak,
+     že snímek nahrajete pod dalším číslem a doplníte sem řádek. */
+  interior: [
+    { src:'../../photos/bistro/japonska/interier/01.webp',
+      alt:{cs:'Interiér bistra u pultu',en:'Bistro interior at the counter'},
+      caption:{cs:'Deset míst u pultu',en:'Ten seats at the counter'} }
+  ],
 
   menu: {
     intro: {

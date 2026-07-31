@@ -67,11 +67,14 @@ window.SITE = {
       caption:{cs:'Z moře',en:'From the sea'} }
   ],
 
-  photos: {
-    band1: '../../photos/bistro/italska/07.webp',
-    band2: '../../photos/bistro/italska/08.webp',
-    interier: '../../photos/bistro/italska/09.webp'
-  },
+  /* Listovací galerie interiéru v sekci „Atmosféra".
+     Soubory leží v photos/bistro/italska/interier/ — další přidáte tak,
+     že snímek nahrajete pod dalším číslem a doplníte sem řádek. */
+  interior: [
+    { src:'../../photos/bistro/italska/interier/01.webp',
+      alt:{cs:'Interiér trattorie',en:'Trattoria interior'},
+      caption:{cs:'U nás v sále',en:'Inside the dining room'} }
+  ],
 
   menu: {
     intro: {

@@ -200,33 +200,54 @@ section{padding:80px 20px;max-width:1180px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — fotka interiéru pod smaltovým rámem ============ */
-.interier{
-  position:relative;margin-top:38px;border:2px solid var(--line-strong);
-  background:var(--board);overflow:hidden;
-}
-.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-/* text sedí na ztmaveném spodku fotky — snímky interiérů jsou tmavé samy o sobě */
-.interier__body{
-  position:absolute;left:0;right:0;bottom:0;padding:26px 22px 20px;
-  background:linear-gradient(180deg,transparent,rgba(0,0,0,.78));
-  color:#EFE9DC;display:grid;gap:6px 30px;
-}
-@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:44px 30px 26px}}
-.interier__body b{font-family:var(--serif);font-size:1.02rem;display:block}
-.interier__body span{font-size:.85rem;color:rgba(239,233,220,.74)}
-.interier__body .it + .it{margin-top:12px}
-@media(min-width:760px){.interier__body .it + .it{margin-top:0}}
+/* ============ ATMOSFÉRA — tři teze na smaltových cedulkách ============ */
+.facts{display:grid;gap:0;margin-top:34px;border:2px solid var(--line-strong)}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts .it{padding:20px 22px;background:var(--surface)}
+.facts .it + .it{border-top:2px solid var(--line-strong)}
+@media(min-width:760px){.facts .it + .it{border-top:0;border-left:2px solid var(--line-strong)}}
+.facts b{font-family:var(--serif);font-size:1.02rem;display:block;margin-bottom:2px}
+.facts span{font-size:.86rem;color:var(--gray)}
 
-/* široký pás přes celou šířku — fotka jídla na stole */
-.band{margin:0;position:relative;overflow:hidden;border-top:2px solid var(--line-strong);border-bottom:2px solid var(--line-strong)}
-.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
-@media(max-width:700px){.band img{aspect-ratio:16/10}}
-.band figcaption{
+/* ============ GALERIE INTERIÉRU — listovací, ve smaltovém rámu ============ */
+.carousel{position:relative;margin-top:34px}
+.carousel__viewport{
+  overflow:hidden;border:2px solid var(--line-strong);background:var(--surface);
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.carousel__track{display:flex;transition:transform .45s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
   position:absolute;left:0;bottom:0;background:var(--bg);color:var(--ink);
-  font-family:var(--serif);font-size:.86rem;padding:9px 18px;
+  font-family:var(--serif);font-size:.86rem;padding:9px 18px;max-width:78%;
   border-top:2px solid var(--line-strong);border-right:2px solid var(--line-strong);
 }
+/* počitadlo jako smaltová cedulka v rohu */
+.carousel__counter{
+  position:absolute;top:0;right:0;z-index:3;background:var(--ink);color:var(--on-ink);
+  font-family:var(--serif);font-size:.78rem;letter-spacing:.1em;padding:7px 13px;
+}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--line-strong);background:var(--bg);color:var(--ink);
+  cursor:pointer;transition:background .2s,color .2s,opacity .2s;
+}
+.carousel__btn:hover{background:var(--ink);color:var(--on-ink)}
+.carousel__btn:disabled{opacity:.28;cursor:default}
+.carousel__btn:disabled:hover{background:var(--bg);color:var(--ink)}
+.carousel__btn--prev{left:14px}
+.carousel__btn--next{right:14px}
+.carousel__dots{display:flex;gap:8px;margin-top:16px}
+.carousel__dot{
+  width:26px;height:6px;border:0;padding:0;cursor:pointer;
+  background:var(--line);transition:background .2s;
+}
+.carousel__dot.active{background:var(--gold)}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -247,27 +268,30 @@ section{padding:80px 20px;max-width:1180px;margin:0 auto}
 .menu-group{margin-bottom:38px}
 .menu-group h3{font-size:clamp(1.4rem,3.4vw,1.9rem);margin-bottom:14px}
 .menu-note{border-left:4px solid var(--gold);padding:9px 16px;font-size:.9rem;color:var(--gray);margin:0 0 22px;max-width:64ch;background:var(--surface)}
-.menu-items{display:grid;gap:16px}
-@media(min-width:640px){.menu-items{grid-template-columns:1fr 1fr}}
-/* Bez fotek: karta jídla je smaltová cedulka — vzor kreslí CSS. */
+/* Karta jídla: velká fotka nahoře, pod ní název a cena. */
+.menu-items{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .menu-item{
-  border:2px solid var(--line);padding:0 0 14px;display:flex;gap:14px;align-items:stretch;
-  background:var(--bg);
+  border:2px solid var(--line);display:flex;flex-direction:column;
+  background:var(--bg);overflow:hidden;
   opacity:0;transform:translateY(16px);
   transition:opacity .45s var(--ease),transform .45s var(--ease),border-color .2s;
 }
 .menu-item.in{opacity:1;transform:none}
 .menu-item:hover{border-color:var(--line-strong)}
-.menu-item__ph{flex:0 0 74px;align-self:stretch;background:var(--surface);border-right:2px solid var(--line)}
-.menu-item__ph img{width:100%;height:100%;object-fit:cover}
+.menu-item__ph{position:relative;aspect-ratio:4/3;background:var(--surface);border-bottom:2px solid var(--line)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease)}
+.menu-item:hover .menu-item__ph img{transform:scale(1.04)}
 .menu-item__ph--empty{
   display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
   background:
     repeating-linear-gradient(45deg,rgba(43,39,36,.06) 0 6px,transparent 6px 12px),
     var(--surface);
 }
-.menu-item__ph--empty svg{width:26px;height:26px}
-.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 16px 0 0}
+.menu-item__ph--empty svg{width:44px;height:44px}
+.menu-item__body{
+  flex:1;display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;padding:14px 16px 16px;
+}
 .menu-item__body b{font-family:var(--serif);font-weight:600;font-size:1rem;line-height:1.35}
 .menu-item__price{flex:0 0 auto;font-family:var(--serif);font-weight:700;color:var(--accent);font-size:.98rem;white-space:nowrap}
 .allergens{font-size:.82rem;color:var(--gray);line-height:1.9;margin-top:8px}
@@ -365,20 +389,27 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Poctivě a bez okolků" data-en="Honest, no fuss">Poctivě a bez okolků</h2>
     <p class="lead reveal" data-cs="Tři věci, na kterých si zakládáme — a které poznáte hned od dveří." data-en="Three things we stand on — noticeable from the doorway.">Tři věci, na kterých si zakládáme — a které poznáte hned od dveří.</p>
-    <div class="interier reveal">
-      <img data-site-src="photos.interier" alt="" loading="lazy">
-      <div class="interier__body">
-        <div class="it"><b data-cs="Denní tabule" data-en="Daily board">Denní tabule</b><span data-cs="Menu píšeme každé ráno křídou" data-en="Written in chalk every morning">Menu píšeme každé ráno křídou</span></div>
-        <div class="it"><b data-cs="Z trhu za rohem" data-en="From the market">Z trhu za rohem</b><span data-cs="Maso i zelenina od místních" data-en="Meat and vegetables from local farms">Maso i zelenina od místních</span></div>
-        <div class="it"><b data-cs="Buchty po babičce" data-en="Grandma's buns">Buchty po babičce</b><span data-cs="Pečeme ráno, dokud jsou" data-en="Baked in the morning, while they last">Pečeme ráno, dokud jsou</span></div>
+    <div class="facts reveal">
+      <div class="it"><b data-cs="Denní tabule" data-en="Daily board">Denní tabule</b><span data-cs="Menu píšeme každé ráno křídou" data-en="Written in chalk every morning">Menu píšeme každé ráno křídou</span></div>
+      <div class="it"><b data-cs="Z trhu za rohem" data-en="From the market">Z trhu za rohem</b><span data-cs="Maso i zelenina od místních" data-en="Meat and vegetables from local farms">Maso i zelenina od místních</span></div>
+      <div class="it"><b data-cs="Buchty po babičce" data-en="Grandma's buns">Buchty po babičce</b><span data-cs="Pečeme ráno, dokud jsou" data-en="Baked in the morning, while they last">Pečeme ráno, dokud jsou</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
+      <div class="carousel__dots" id="carDots"></div>
     </div>
   </section>
-
-  <figure class="band reveal">
-    <img data-site-src="photos.band1" alt="" loading="lazy">
-    <figcaption data-cs="Prostřeno pro celý stůl" data-en="Laid out for the whole table">Prostřeno pro celý stůl</figcaption>
-  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -394,12 +425,8 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
-  <figure class="band reveal">
-    <img data-site-src="photos.band2" alt="" loading="lazy">
-    <figcaption data-cs="Když si dáte k pivu něco k zakousnutí" data-en="Something to go with the beer">Když si dáte k pivu něco k zakousnutí</figcaption>
-  </figure>
-
   <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Stavte se na oběd" data-en="Drop in for lunch">Stavte se na oběd</h2>

@@ -165,26 +165,54 @@ section{padding:96px 26px;max-width:1120px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — fotka interiéru ============ */
-.interier{position:relative;margin-top:52px}
-.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.interier__body{
-  display:grid;gap:2px 40px;padding:26px 0 0;border-top:1px solid var(--line);margin-top:22px;
-}
-@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr)}}
-.interier__body b{font-family:var(--serif);font-weight:400;font-size:1rem;display:block;margin-bottom:4px}
-.interier__body span{font-size:.86rem;color:var(--gray)}
-.interier__body > div + div{margin-top:16px}
-@media(min-width:760px){.interier__body > div + div{margin-top:0}}
+/* ============ ATMOSFÉRA — tři teze na vlásečnici ============ */
+.facts{display:grid;gap:2px 40px;padding:26px 0 0;border-top:1px solid var(--line);margin-top:44px}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts b{font-family:var(--serif);font-weight:400;font-size:1rem;display:block;margin-bottom:4px}
+.facts span{font-size:.86rem;color:var(--gray)}
+.facts > div + div{margin-top:16px}
+@media(min-width:760px){.facts > div + div{margin-top:0}}
 
-/* široký pás přes celou šířku */
-.band{margin:0;position:relative;overflow:hidden}
-.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
-@media(max-width:700px){.band img{aspect-ratio:16/10}}
-.band figcaption{
-  position:absolute;right:0;bottom:0;background:var(--bg);color:var(--gray);
-  font-family:var(--serif);font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;padding:10px 18px;
+/* ============ GALERIE INTERIÉRU ============
+   Ovládání nesedí na fotce — je pod ní na vlásečnici, aby snímek
+   zůstal čistý. Žádné kolečko, žádný stín. */
+.carousel{position:relative;margin-top:52px}
+.carousel__viewport{
+  overflow:hidden;background:var(--surface);
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
 }
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+.carousel__track{display:flex;transition:transform .55s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
+  position:absolute;right:0;bottom:0;background:var(--bg);color:var(--gray);
+  font-family:var(--serif);font-size:.76rem;letter-spacing:.2em;padding:10px 18px;
+}
+/* číslo snímku jako svislý sloupec u horního okraje */
+.carousel__counter{
+  position:absolute;top:0;left:0;z-index:3;background:var(--bg);color:var(--gray);
+  font-family:var(--sans);font-size:.74rem;letter-spacing:.2em;padding:9px 16px;
+}
+/* šipky bez rámu a bez stínu — jen znak na světlém podkladu */
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:40px;height:52px;display:flex;align-items:center;justify-content:center;
+  border:0;background:color-mix(in srgb,var(--bg) 72%,transparent);color:var(--ink);
+  cursor:pointer;transition:background .3s,opacity .3s;
+}
+.carousel__btn:hover{background:var(--bg)}
+.carousel__btn:disabled{opacity:.22;cursor:default}
+.carousel__btn--prev{left:0}
+.carousel__btn--next{right:0}
+.carousel__dots{display:flex;gap:10px;margin-top:24px;justify-content:center}
+.carousel__dot{
+  width:22px;height:1px;border:0;padding:0;cursor:pointer;
+  background:var(--line);transition:background .3s;
+}
+.carousel__dot.active{background:var(--ink)}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -204,23 +232,26 @@ section{padding:96px 26px;max-width:1120px;margin:0 auto}
 .menu-group{margin-bottom:52px}
 .menu-group h3{font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:18px}
 .menu-note{font-size:.86rem;color:var(--gray);margin:0 0 26px;max-width:60ch;padding-left:16px;border-left:1px solid var(--accent)}
-/* Bez fotek: položka je řádek s tečkovaným vodičem, obrázková destička je úzká. */
-.menu-items{display:grid;gap:0}
-@media(min-width:760px){.menu-items{grid-template-columns:1fr 1fr;column-gap:56px}}
+/* Karta jídla: fotka nahoře, pod ní název a cena na vlásečnici. */
+.menu-items{display:grid;gap:36px 30px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .menu-item{
-  display:flex;gap:16px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);
+  display:flex;flex-direction:column;
   opacity:0;transform:translateY(12px);
   transition:opacity .6s var(--ease),transform .6s var(--ease);
 }
 .menu-item.in{opacity:1;transform:none}
-.menu-item__ph{flex:0 0 44px;height:44px;overflow:hidden;background:var(--surface)}
-.menu-item__ph img{width:100%;height:100%;object-fit:cover}
+.menu-item__ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.72);transition:filter .5s var(--ease)}
+.menu-item:hover .menu-item__ph img{filter:none}
 .menu-item__ph--empty{
   display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
   background:var(--surface);border:1px solid var(--line);
 }
-.menu-item__ph--empty svg{width:20px;height:20px}
-.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.menu-item__ph--empty svg{width:40px;height:40px}
+.menu-item__body{
+  flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:14px 0 0;border-top:1px solid var(--line);margin-top:14px;
+}
 .menu-item__body b{font-family:var(--serif);font-weight:400;font-size:.98rem;line-height:1.5}
 .menu-item__price{flex:0 0 auto;font-family:var(--sans);font-weight:400;color:var(--accent);font-size:.88rem;letter-spacing:.06em;white-space:nowrap}
 .allergens{font-size:.8rem;color:var(--gray);line-height:2;margin-top:10px}
@@ -315,20 +346,27 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Jedna miska, žádný spěch" data-en="One bowl, no rush">Jedna miska, žádný spěch</h2>
     <p class="lead reveal" data-cs="Deset míst u pultu. Vidíte, jak se vaří, a slyšíte, jak se krájí." data-en="Ten seats at the counter. You see the cooking and hear the knife.">Deset míst u pultu. Vidíte, jak se vaří, a slyšíte, jak se krájí.</p>
-    <div class="interier reveal">
-      <img data-site-src="photos.interier" alt="" loading="lazy">
-      <div class="interier__body">
-        <div><b data-cs="Vývar 18 hodin" data-en="18-hour broth">Vývar 18 hodin</b><span data-cs="Tonkotsu začínáme vařit večer předem." data-en="Tonkotsu starts simmering the night before.">Tonkotsu začínáme vařit večer předem.</span></div>
-        <div><b data-cs="Nudle denně" data-en="Noodles daily">Nudle denně</b><span data-cs="Táhneme je ráno, vaříme na tvrdo." data-en="Pulled in the morning, cooked firm.">Táhneme je ráno, vaříme na tvrdo.</span></div>
-        <div><b data-cs="Bez rezervací" data-en="No reservations">Bez rezervací</b><span data-cs="Přijďte a počkejte si u čaje." data-en="Come and wait over a cup of tea.">Přijďte a počkejte si u čaje.</span></div>
+    <div class="facts reveal">
+      <div><b data-cs="Vývar 18 hodin" data-en="18-hour broth">Vývar 18 hodin</b><span data-cs="Tonkotsu začínáme vařit večer předem." data-en="Tonkotsu starts simmering the night before.">Tonkotsu začínáme vařit večer předem.</span></div>
+      <div><b data-cs="Nudle denně" data-en="Noodles daily">Nudle denně</b><span data-cs="Táhneme je ráno, vaříme na tvrdo." data-en="Pulled in the morning, cooked firm.">Táhneme je ráno, vaříme na tvrdo.</span></div>
+      <div><b data-cs="Bez rezervací" data-en="No reservations">Bez rezervací</b><span data-cs="Přijďte a počkejte si u čaje." data-en="Come and wait over a cup of tea.">Přijďte a počkejte si u čaje.</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
+      <div class="carousel__dots" id="carDots"></div>
     </div>
   </section>
-
-  <figure class="band reveal">
-    <img data-site-src="photos.band1" alt="" loading="lazy">
-    <figcaption data-cs="Deset míst u pultu" data-en="Ten seats at the counter">Deset míst u pultu</figcaption>
-  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -344,12 +382,8 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
     </div>
   </section>
 
-  <figure class="band reveal">
-    <img data-site-src="photos.band2" alt="" loading="lazy">
-    <figcaption data-cs="Jedna miska, žádný spěch" data-en="One bowl, no rush">Jedna miska, žádný spěch</figcaption>
-  </figure>
-
   <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Najdete nás tady" data-en="Find us here">Najdete nás tady</h2>

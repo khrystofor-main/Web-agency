@@ -175,26 +175,53 @@ section{padding:86px 22px;max-width:1160px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .55s var(--ease),transform .55s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — fotka interiéru ============ */
-.interier{position:relative;margin-top:42px;border-radius:6px;overflow:hidden;border:3px double var(--basil)}
-.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.interier__body{
-  position:absolute;left:0;right:0;bottom:0;padding:28px 22px 20px;
-  background:linear-gradient(180deg,transparent,rgba(13,18,12,.84));
-  color:#FBF6EC;display:grid;gap:8px 30px;
-}
-@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:48px 30px 26px}}
-.interier__body b{font-family:var(--serif);font-size:1rem;display:block}
-.interier__body span{font-size:.85rem;color:rgba(251,246,236,.76)}
+/* ============ ATMOSFÉRA — tři teze mezi bazalkovými linkami ============ */
+.facts{display:grid;gap:0;margin-top:38px;border-top:3px double var(--basil);border-bottom:3px double var(--basil)}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts > div{padding:20px 22px}
+.facts > div + div{border-top:1px solid var(--line)}
+@media(min-width:760px){.facts > div + div{border-top:0;border-left:1px solid var(--line)}}
+.facts b{font-family:var(--serif);font-size:1rem;display:block;margin-bottom:3px}
+.facts span{font-size:.85rem;color:var(--gray)}
 
-/* široký pás přes celou šířku */
-.band{margin:0;position:relative;overflow:hidden}
-.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
-@media(max-width:700px){.band img{aspect-ratio:16/10}}
-.band figcaption{
+/* ============ GALERIE INTERIÉRU — snímek v okně s dvojitou rámcí ============ */
+.carousel{position:relative;margin-top:38px}
+.carousel__viewport{
+  overflow:hidden;border-radius:6px;border:3px double var(--basil);background:var(--surface);
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.carousel__track{display:flex;transition:transform .45s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
   position:absolute;left:22px;bottom:22px;background:var(--bg);color:var(--ink);
   font-family:var(--serif);font-style:italic;font-size:.86rem;padding:8px 18px;border-radius:4px;
 }
+.carousel__counter{
+  position:absolute;top:18px;right:18px;z-index:3;border-radius:4px;
+  background:var(--basil);color:var(--on-ink);
+  font-family:var(--serif);font-size:.8rem;padding:6px 13px;
+}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--basil);background:var(--bg);color:var(--basil);cursor:pointer;
+  transition:background .2s,color .2s,opacity .2s;
+}
+.carousel__btn:hover{background:var(--basil);color:var(--on-ink)}
+.carousel__btn:disabled{opacity:.3;cursor:default}
+.carousel__btn:disabled:hover{background:var(--bg);color:var(--basil)}
+.carousel__btn--prev{left:16px}
+.carousel__btn--next{right:16px}
+.carousel__dots{display:flex;gap:9px;margin-top:16px;justify-content:center}
+.carousel__dot{
+  width:8px;height:8px;border-radius:50%;border:1px solid var(--basil);padding:0;cursor:pointer;
+  background:transparent;transition:background .2s;
+}
+.carousel__dot.active{background:var(--basil)}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -212,24 +239,29 @@ section{padding:86px 22px;max-width:1160px;margin:0 auto}
 .menu-group{margin-bottom:42px}
 .menu-group h3{font-size:clamp(1.35rem,3.3vw,1.85rem);margin-bottom:14px}
 .menu-note{font-family:var(--serif);font-style:italic;font-size:.92rem;color:var(--gray);margin:0 0 24px;max-width:62ch;padding:10px 16px;background:var(--surface);border-radius:4px}
-/* Bez fotek: jídelní lístek jako v trattorii — tečkovaný vodič k ceně. */
-.menu-items{display:grid;gap:0}
-@media(min-width:760px){.menu-items{grid-template-columns:1fr 1fr;column-gap:52px}}
+/* Karta jídla: fotka v oblouku, pod ní název a cena na tečkovaném vodiči. */
+.menu-items{display:grid;gap:26px 24px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .menu-item{
-  display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px dotted var(--line-strong);
+  display:flex;flex-direction:column;
   opacity:0;transform:translateY(14px);
   transition:opacity .5s var(--ease),transform .5s var(--ease);
 }
 .menu-item.in{opacity:1;transform:none}
-.menu-item__ph{flex:0 0 48px;height:48px;border-radius:50%;overflow:hidden;background:var(--surface)}
-.menu-item__ph img{width:100%;height:100%;object-fit:cover}
+.menu-item__ph{
+  position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface);
+  border-radius:50% 50% 6px 6px / 18% 18% 6px 6px;border:1px solid var(--line);
+}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover;transition:transform .45s var(--ease)}
+.menu-item:hover .menu-item__ph img{transform:scale(1.05)}
 .menu-item__ph--empty{
   display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
-  background:radial-gradient(circle at 50% 50%,var(--surface) 0 60%,rgba(224,196,140,.5) 61%);
-  border:1px solid var(--line);
+  background:radial-gradient(circle at 50% 46%,var(--surface) 0 46%,rgba(224,196,140,.45) 47%);
 }
-.menu-item__ph--empty svg{width:22px;height:22px}
-.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.menu-item__ph--empty svg{width:40px;height:40px}
+.menu-item__body{
+  flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:12px 0 0;border-bottom:1px dotted var(--line-strong);padding-bottom:12px;
+}
 .menu-item__body b{font-family:var(--serif);font-weight:400;font-size:.98rem;line-height:1.4}
 .menu-item__price{flex:0 0 auto;font-family:var(--serif);font-weight:700;color:var(--accent);font-size:.94rem;white-space:nowrap}
 .allergens{font-size:.82rem;color:var(--gray);line-height:1.95;margin-top:10px}
@@ -326,20 +358,27 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Il bistro" data-en="Il bistro">Il bistro</p>
     <h2 class="h2 reveal" data-cs="Nic zmrazeného" data-en="Nothing frozen">Nic zmrazeného</h2>
     <p class="lead reveal" data-cs="Pět druhů past denně, omáčky z rána a víno, které se dá pít i ve všední den." data-en="Five pastas a day, sauces made in the morning, and wine you can drink on a Tuesday.">Pět druhů past denně, omáčky z rána a víno, které se dá pít i ve všední den.</p>
-    <div class="interier reveal">
-      <img data-site-src="photos.interier" alt="" loading="lazy">
-      <div class="interier__body">
-        <div><b data-cs="Těstoviny z rána" data-en="Pasta from the morning">Těstoviny z rána</b><span data-cs="Válíme je denně, vaříme al dente" data-en="Rolled daily, cooked al dente">Válíme je denně, vaříme al dente</span></div>
-        <div><b data-cs="Olivový olej z Puglie" data-en="Olive oil from Puglia">Olivový olej z Puglie</b><span data-cs="Od jednoho pěstitele, každý rok nový" data-en="From a single grower, new every year">Od jednoho pěstitele, každý rok nový</span></div>
-        <div><b data-cs="Víno na sklenku" data-en="Wine by the glass">Víno na sklenku</b><span data-cs="Osm otevřených lahví, žádná pompa" data-en="Eight open bottles, no fuss">Osm otevřených lahví, žádná pompa</span></div>
+    <div class="facts reveal">
+      <div><b data-cs="Těstoviny z rána" data-en="Pasta from the morning">Těstoviny z rána</b><span data-cs="Válíme je denně, vaříme al dente" data-en="Rolled daily, cooked al dente">Válíme je denně, vaříme al dente</span></div>
+      <div><b data-cs="Olivový olej z Puglie" data-en="Olive oil from Puglia">Olivový olej z Puglie</b><span data-cs="Od jednoho pěstitele, každý rok nový" data-en="From a single grower, new every year">Od jednoho pěstitele, každý rok nový</span></div>
+      <div><b data-cs="Víno na sklenku" data-en="Wine by the glass">Víno na sklenku</b><span data-cs="Osm otevřených lahví, žádná pompa" data-en="Eight open bottles, no fuss">Osm otevřených lahví, žádná pompa</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
+      <div class="carousel__dots" id="carDots"></div>
     </div>
   </section>
-
-  <figure class="band reveal">
-    <img data-site-src="photos.band1" alt="" loading="lazy">
-    <figcaption data-cs="Pasta e pizza, jak to má být" data-en="Pasta e pizza, the way it should be">Pasta e pizza, jak to má být</figcaption>
-  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -355,12 +394,8 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
-  <figure class="band reveal">
-    <img data-site-src="photos.band2" alt="" loading="lazy">
-    <figcaption data-cs="Večer u nás začíná sklenkou" data-en="Evening here starts with a glass">Večer u nás začíná sklenkou</figcaption>
-  </figure>
-
   <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="La visita" data-en="La visita">La visita</p>
     <h2 class="h2 reveal" data-cs="Přijďte na večeři" data-en="Come for dinner">Přijďte na večeři</h2>

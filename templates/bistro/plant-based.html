@@ -177,26 +177,52 @@ section{padding:86px 22px;max-width:1160px;margin:0 auto}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ ATMOSFÉRA — fotka interiéru ============ */
-.interier{position:relative;margin-top:42px;border-radius:var(--r);overflow:hidden}
-.interier img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.interier__body{
-  position:absolute;left:0;right:0;bottom:0;padding:28px 22px 20px;
-  background:linear-gradient(180deg,transparent,rgba(12,17,13,.82));
-  color:#F2F6EF;display:grid;gap:8px 30px;
-}
-@media(min-width:760px){.interier__body{grid-template-columns:repeat(3,1fr);padding:48px 30px 26px}}
-.interier__body b{font-family:var(--serif);font-size:1.05rem;display:block}
-.interier__body span{font-size:.85rem;color:rgba(242,246,239,.78)}
+/* ============ ATMOSFÉRA — tři teze na měkkých kartách ============ */
+.facts{display:grid;gap:14px;margin-top:38px}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts > div{background:var(--surface);border-radius:var(--r);padding:22px 24px}
+.facts b{font-family:var(--serif);font-size:1.05rem;display:block;margin-bottom:3px}
+.facts span{font-size:.85rem;color:var(--gray)}
 
-/* široký pás přes celou šířku */
-.band{margin:0;position:relative;overflow:hidden}
-.band img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
-@media(max-width:700px){.band img{aspect-ratio:16/10}}
-.band figcaption{
+/* ============ GALERIE INTERIÉRU — snímek ve tvaru listu ============ */
+.carousel{position:relative;margin-top:38px}
+.carousel__viewport{
+  overflow:hidden;border-radius:0 var(--leaf,84px) 0 var(--leaf,84px);background:var(--surface);
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+  transition:border-radius .6s var(--ease);
+}
+.carousel:hover .carousel__viewport{border-radius:var(--r)}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:3px solid var(--sprout);outline-offset:4px}
+.carousel__track{display:flex;transition:transform .45s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
   position:absolute;left:22px;bottom:22px;background:var(--bg);color:var(--ink);
   font-family:var(--serif);font-size:.92rem;padding:9px 20px;border-radius:99px;
 }
+.carousel__counter{
+  position:absolute;top:20px;left:20px;z-index:3;border-radius:99px;
+  background:var(--bg);color:var(--gray);font-size:.78rem;font-weight:700;padding:6px 14px;
+}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:0;background:var(--bg);color:var(--ink);cursor:pointer;
+  box-shadow:0 6px 18px rgba(31,42,34,.14);transition:background .2s,color .2s,opacity .2s;
+}
+.carousel__btn:hover{background:var(--sprout);color:#1F2A22}
+.carousel__btn:disabled{opacity:.3;cursor:default}
+.carousel__btn:disabled:hover{background:var(--bg);color:var(--ink)}
+.carousel__btn--prev{left:16px}
+.carousel__btn--next{right:16px}
+.carousel__dots{display:flex;gap:8px;margin-top:18px;justify-content:center}
+.carousel__dot{
+  width:10px;height:10px;border:0;padding:0;cursor:pointer;
+  border-radius:0 60% 0 60%;background:var(--line);transition:background .2s,transform .2s;
+}
+.carousel__dot.active{background:var(--accent);transform:scale(1.25)}
 
 /* ============ MENU ============ */
 .menu-cats{
@@ -214,25 +240,29 @@ section{padding:86px 22px;max-width:1160px;margin:0 auto}
 .menu-group{margin-bottom:42px}
 .menu-group h3{font-size:clamp(1.45rem,3.4vw,2rem);margin-bottom:14px}
 .menu-note{border-radius:var(--r);padding:14px 20px;font-size:.9rem;color:var(--gray);margin:0 0 24px;max-width:64ch;background:var(--surface)}
-.menu-items{display:grid;gap:14px}
-@media(min-width:640px){.menu-items{grid-template-columns:1fr 1fr}}
+/* Karta jídla: fotka ve tvaru listu, pod ní název a cena. */
+.menu-items{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .menu-item{
-  border-radius:var(--r);background:var(--surface);padding:14px 20px 14px 14px;
-  display:flex;gap:14px;align-items:center;
+  border-radius:var(--r);background:var(--surface);padding:14px 14px 6px;
+  display:flex;flex-direction:column;
   opacity:0;transform:translateY(16px);
   transition:opacity .5s var(--ease),transform .5s var(--ease),background .2s;
 }
 .menu-item.in{opacity:1;transform:none}
 .menu-item:hover{background:color-mix(in srgb,var(--sprout) 18%,var(--surface))}
-.menu-item__ph{flex:0 0 58px;height:58px;border-radius:50%;overflow:hidden;background:var(--bg)}
+.menu-item__ph{
+  position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--bg);
+  border-radius:0 62px 0 62px;transition:border-radius .5s var(--ease);
+}
+.menu-item:hover .menu-item__ph{border-radius:var(--r)}
 .menu-item__ph img{width:100%;height:100%;object-fit:cover}
-/* bez fotky: lístek v kolečku, žádný šedý obdélník */
+/* bez fotky: lístek uprostřed světlé plochy */
 .menu-item__ph--empty{
   display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
-  background:radial-gradient(circle at 50% 50%,rgba(143,191,106,.3) 0 46%,var(--bg) 47%);
+  background:radial-gradient(circle at 50% 50%,rgba(143,191,106,.3) 0 24%,var(--bg) 25%);
 }
-.menu-item__ph--empty svg{width:24px;height:24px}
-.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.menu-item__ph--empty svg{width:42px;height:42px}
+.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 6px 12px}
 .menu-item__body b{font-family:var(--sans);font-weight:700;font-size:.96rem;line-height:1.4}
 .menu-item__price{flex:0 0 auto;font-family:var(--serif);color:var(--accent);font-size:1rem;white-space:nowrap}
 .allergens{font-size:.82rem;color:var(--gray);line-height:1.95;margin-top:10px}
@@ -329,20 +359,27 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
     <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
     <h2 class="h2 reveal" data-cs="Sto procent rostlin" data-en="One hundred percent plants">Sto procent rostlin</h2>
     <p class="lead reveal" data-cs="Sezóna nám píše menu. Co nestihneme uvařit, fermentujeme na příště." data-en="The season writes our menu. What we cannot cook today, we ferment for later.">Sezóna nám píše menu. Co nestihneme uvařit, fermentujeme na příště.</p>
-    <div class="interier reveal">
-      <img data-site-src="photos.interier" alt="" loading="lazy">
-      <div class="interier__body">
-        <div><b data-cs="Od farmářů z okolí" data-en="From nearby farms">Od farmářů z okolí</b><span data-cs="Zelenina má za sebou míň kilometrů než vy" data-en="The vegetables travel less than you do">Zelenina má za sebou míň kilometrů než vy</span></div>
-        <div><b data-cs="Vlastní fermenty" data-en="Our own ferments">Vlastní fermenty</b><span data-cs="Kimchi, kombucha, nakládaná mrkev" data-en="Kimchi, kombucha, pickled carrots">Kimchi, kombucha, nakládaná mrkev</span></div>
-        <div><b data-cs="Nula odpadu" data-en="Zero waste">Nula odpadu</b><span data-cs="Slupky do vývaru, zbytky do kompostu" data-en="Peels into broth, scraps into compost">Slupky do vývaru, zbytky do kompostu</span></div>
+    <div class="facts reveal">
+      <div><b data-cs="Od farmářů z okolí" data-en="From nearby farms">Od farmářů z okolí</b><span data-cs="Zelenina má za sebou míň kilometrů než vy" data-en="The vegetables travel less than you do">Zelenina má za sebou míň kilometrů než vy</span></div>
+      <div><b data-cs="Vlastní fermenty" data-en="Our own ferments">Vlastní fermenty</b><span data-cs="Kimchi, kombucha, nakládaná mrkev" data-en="Kimchi, kombucha, pickled carrots">Kimchi, kombucha, nakládaná mrkev</span></div>
+      <div><b data-cs="Nula odpadu" data-en="Zero waste">Nula odpadu</b><span data-cs="Slupky do vývaru, zbytky do kompostu" data-en="Peels into broth, scraps into compost">Slupky do vývaru, zbytky do kompostu</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
+      <div class="carousel__dots" id="carDots"></div>
     </div>
   </section>
-
-  <figure class="band reveal">
-    <img data-site-src="photos.band1" alt="" loading="lazy">
-    <figcaption data-cs="Sezóna nám píše menu" data-en="The season writes our menu">Sezóna nám píše menu</figcaption>
-  </figure>
 
   <!-- MENU -->
   <div class="rule-wrap"><div class="rule"></div></div>
@@ -358,12 +395,8 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
     </div>
   </section>
 
-  <figure class="band reveal">
-    <img data-site-src="photos.band2" alt="" loading="lazy">
-    <figcaption data-cs="Sto procent rostlin" data-en="One hundred percent plants">Sto procent rostlin</figcaption>
-  </figure>
-
   <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
   <section id="navsteva">
     <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
     <h2 class="h2 reveal" data-cs="Zastavte se" data-en="Drop by">Zastavte se</h2>

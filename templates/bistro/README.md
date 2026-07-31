@@ -15,23 +15,23 @@ konkrétního podniku je vždy v jednom souboru `cfg.*.js`.
 Číslování odpovídá tabům na kartě „Šablony pro bistro“ v rozcestníku
 (`../../index.html`). Demo obsah je ilustrační — žádný skutečný podnik.
 
-## Fotky: zatím žádné
+## Fotky
 
-Tahle sada je záměrně **bez fotografií**. Hero, sekce „Atmosféra“ i zástupné
-destičky u položek menu jsou kreslené čistě v CSS (gradienty, vzory, tvary),
-takže šablona vypadá hotově i bez fotobanky a funguje offline.
+Všechny cesty k fotkám jsou v `cfg.*.js`, do HTML se kvůli nim nesahá.
+Soubory leží v `../../photos/bistro/<kuchyne>/` (podrobnosti v README té
+složky).
 
-Až budou fotky konkrétního podniku, doplní se do `cfg.*.js` a engine je
-vykreslí sám — HTML se nemusí sahat, jen se odkomentuje/přidá:
-
-- `hero.image` + `hero.imageAlt` → hero fotka (v HTML doplňte
-  `<img data-site-src="hero.image" data-site-alt="hero.imageAlt">` místo
-  kresleného objektu, případně jako pozadí)
-- `gallery: [{ src, alt, caption }]` → karusel; pak do HTML přidejte blok
-  `#carViewport` / `#carTrack` / `#carDots` podle
-  `../variant-1-swiss.html`
-- `menu.photoBase`, `menu.photoExt` a `photo` u položek → fotky jídel;
-  `.menu-item__ph--empty` se sám přestane používat
+- `gallery: [{ src, alt, caption }]` → mřížka fotek jídel v hero. Každá
+  šablona ji zobrazuje po svém: nástěnka se špendlíky (česká), nekonečný
+  pás (vietnamská), sloupce s vlásečnicemi (japonská), okna s oblouky
+  (italská), tvary listů (rostlinná).
+- `interior: [{ src, alt, caption }]` → **listovací galerie interiéru**
+  v sekci „Atmosféra“. Ovládá se šipkami, tečkami, tažením i šipkami na
+  klávesnici a sama se posouvá; při najetí myší se zastaví. Když je pole
+  prázdné, engine celou sekci skryje.
+- `photo` u položky menu → fotka jídla. Karta má fotku nahoře a pod ní
+  název s cenou; dokud fotka chybí, kreslí se na jejím místě zástupný vzor
+  (`.menu-item__ph--empty`) laděný do stylu šablony.
 
 ## Nový web za pár kroků
 
@@ -52,7 +52,7 @@ atributů je v `../README.md`.
 
 Rozdíly proti kavárenské sadě:
 
-- žádný fotogalerijní karusel (místo něj sekce „Atmosféra“ se třemi
-  kreslenými dlaždicemi přímo v HTML dané šablony),
+- dvě sady fotek místo jedné — `gallery` (mřížka jídel v hero) a
+  `interior` (listovací galerie v sekci „Atmosféra“),
 - žádné GSAP — všechny animace jsou CSS, aby náhledy na rozcestníku
   zůstaly lehké.

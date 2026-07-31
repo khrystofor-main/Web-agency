@@ -1,8 +1,9 @@
 /* ============================================================
    BISTRO — česká kuchyně. Ukázkový obsah (žádný konkrétní podnik).
-   Fotky se v této sadě šablon nepoužívají: karty jídel kreslí
-   zástupný vzor v CSS. Až budou fotky, stačí doplnit `hero.image`,
-   `gallery` a `photo` u položek — engine je vykreslí sám.
+   Fotky: `gallery` = nástěnka v hero, `interior` = listovací galerie
+   interiéru. Položky menu zatím fotku nemají a engine jim kreslí
+   zástupný vzor; až budou snímky v photos/bistro/ceska/menu/, stačí
+   u položky doplnit `photo:'../../photos/bistro/ceska/menu/nazev.webp'`.
    ============================================================ */
 window.SITE = {
 
@@ -69,12 +70,14 @@ window.SITE = {
       caption:{cs:'Večer u stolu',en:'Evening at the table'} }
   ],
 
-  /* Široké fotky mimo galerii: dva pásy a interiér. */
-  photos: {
-    band1: '../../photos/bistro/ceska/07.webp',
-    band2: '../../photos/bistro/ceska/08.webp',
-    interier: '../../photos/bistro/ceska/09.webp'
-  },
+  /* Listovací galerie interiéru v sekci „Atmosféra".
+     Soubory leží v photos/bistro/ceska/interier/ — další přidáte tak,
+     že snímek nahrajete pod dalším číslem a doplníte sem řádek. */
+  interior: [
+    { src:'../../photos/bistro/ceska/interier/01.webp',
+      alt:{cs:'Interiér bistra',en:'Bistro interior'},
+      caption:{cs:'U nás v lokále',en:'Inside the bistro'} }
+  ],
 
   menu: {
     intro: {

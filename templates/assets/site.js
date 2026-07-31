@@ -147,8 +147,18 @@
   /* ---------- galerie ---------- */
   function buildGallery() {
     var track = $('carTrack');
-    if (!track || !S.gallery) return;
-    track.innerHTML = S.gallery.map(function (g) {
+    /* Bistro šablony mají v hero vlastní mřížku fotek jídel (`gallery`),
+       a listovací galerii interiéru zvlášť (`interior`). Kavárenské
+       varianty klíč `interior` nemají a jedou dál z `gallery`. */
+    var items = S.interior || S.gallery;
+    if (!track) return;
+    if (!items || !items.length) {
+      /* prázdná galerie = sekce se vůbec nezobrazí, ať nezůstane díra */
+      var sec = track.closest('section');
+      if (sec) sec.hidden = true;
+      return;
+    }
+    track.innerHTML = items.map(function (g) {
       return '<figure class="carousel__slide"><img src="' + esc(g.src) + '" alt="' + esc(t(g.alt, DEFAULT_LANG)) + '" loading="lazy">' +
         (g.caption ? '<figcaption ' + langAttrs(g.caption) + '>' + esc(t(g.caption, DEFAULT_LANG)) + '</figcaption>' : '') +
         '</figure>';
