@@ -491,10 +491,11 @@ window.addEventListener('resize', fitPreview);
 /* Náhled se sám pomalu posouvá dolů, aby bylo vidět víc než jen hero.
    Skroluje se skutečné okno iframe (stejný origin), takže se spouštějí
    i scroll animace šablon. Dole chvíli počká a vrátí se na začátek. */
+const reducedMotion = matchMedia('(prefers-reduced-motion:reduce)');
 let scrollRafId = null;
 function startAutoScroll() {
   cancelAnimationFrame(scrollRafId);
-  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  if (reducedMotion.matches) return;
   let pos = 0, lastT = 0, waitUntil = 0;   // pos je vlastní float — scrollTo zaokrouhluje
   function step(t) {
     scrollRafId = requestAnimationFrame(step);
@@ -515,6 +516,11 @@ let pausedByHover = false;
 tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
 tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; });
 tplFrame.addEventListener('load', startAutoScroll);
+/* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
+reducedMotion.addEventListener('change', () => {
+  if (reducedMotion.matches) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
+  else startAutoScroll();
+});
 
 selectTemplate(0);
 
