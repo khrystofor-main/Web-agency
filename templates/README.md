@@ -16,7 +16,7 @@ souboru** — `assets/site.config.js`. HTML šablon se nemusí sahat.
 Warm Paper leží mimo tuhle složku (`../site/`), protože vznikl první — engine
 i konfiguraci ale sdílí se zbytkem, jen na ně odkazuje o adresář výš.
 
-Demo obsah = PF Café, Brno. Je to jen ukázková náplň: pro nový podnik se
+Demo obsah = obecná „Kavárna“. Je to jen ukázková náplň: pro nový podnik se
 přepíše `assets/site.config.js` a šablona zůstane beze změny.
 
 ## Struktura
@@ -111,7 +111,7 @@ python -m http.server 8000
 | `data-site="contact.phone"` | text prvku z konfigurace |
 | `data-site-href` / `-src` / `-alt` | odpovídající atribut |
 | `data-site-letters="brand.name"` | rozseká text na `<span>` písmena (animace hero) |
-| `data-site-split="brand.name"` | „PF Café“ → `PF <span>Café</span>` (dvoubarevné logo) |
+| `data-site-split="brand.name"` | „Naše Kavárna“ → `Naše <span>Kavárna</span>` (dvoubarevné logo) |
 | `data-site-map` | `src` vložené mapy z `contact.mapCoords` |
 | `data-site-if="rating"` | prvek se skryje, když je hodnota prázdná |
 | `data-cs` / `data-en` | statická copy patřící k designu šablony, ne k podniku |
