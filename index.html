@@ -179,12 +179,18 @@ section > .eyebrow{text-align:center}
   position:relative;aspect-ratio:16/10;overflow:hidden;
   border:1px solid var(--line);border-radius:12px;background:var(--line);
 }
-/* iframe drží desktopovou šířku šablony, do rámečku se vejde přes scale (počítá JS).
+/* Dva iframy přes sebe: nová šablona se načte ve skrytém a teprve pak se
+   prolne přes starou — přepínání bez šedého mezistavu. Skryté jsou i při
+   prvním vykreslení, takže neproblikne nezmenšená stránka, než JS spočítá scale.
+   Iframe drží desktopovou šířku šablony, do rámečku se vejde přes scale (počítá JS).
    Je o 16px širší než viditelných 1280 — svislý posuvník tak ořízne maska rámečku. */
 .preview iframe{
-  width:1296px;height:800px;border:0;display:block;
+  position:absolute;top:0;left:0;
+  width:1296px;height:800px;border:0;
   transform-origin:0 0;pointer-events:none;
+  opacity:0;transition:opacity .25s ease;
 }
+.preview iframe.on{opacity:1}
 .preview-link{position:absolute;inset:0;border-radius:12px;transition:box-shadow .2s}
 .preview-link:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 100%,transparent)}
 .showcase-info h3{font-size:1.55rem;line-height:1.15;margin-bottom:6px}
@@ -331,7 +337,8 @@ footer{
 
     <div class="showcase-body">
       <div class="preview" id="tplPreview">
-        <iframe id="tplFrame" title="Náhled šablony" loading="lazy"></iframe>
+        <iframe class="tpl-frame" title="Náhled šablony"></iframe>
+        <iframe class="tpl-frame" title="Náhled šablony" aria-hidden="true"></iframe>
         <a class="preview-link" id="tplPreviewLink" href="site/index.html" aria-label="Otevřít šablonu"></a>
       </div>
       <aside class="showcase-info">
@@ -455,19 +462,25 @@ const TEMPLATES = [
 ];
 
 const tplTabs = Array.from(document.querySelectorAll('#tplTabs [role="tab"]'));
-const tplFrame = document.getElementById('tplFrame');
+const tplFrames = Array.from(document.querySelectorAll('.tpl-frame'));
 const tplPreview = document.getElementById('tplPreview');
+let tplFrame = tplFrames[0];   // právě viditelný (aktivní) iframe
 
 /* iframe má pevných 1280×800 (desktopová šířka šablony) a do rámečku
    se zmenšuje přes scale — šablona tak v náhledu vypadá jako na monitoru */
 function fitPreview() {
-  tplFrame.style.transform = 'scale(' + tplPreview.clientWidth / 1280 + ')';
+  const s = 'scale(' + tplPreview.clientWidth / 1280 + ')';
+  tplFrames.forEach(f => { f.style.transform = s; });
 }
 
 function selectTemplate(i) {
   const t = TEMPLATES[i];
   tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
-  if (tplFrame.getAttribute('src') !== t.href) tplFrame.src = t.href;
+  if (tplFrame.getAttribute('src') !== t.href) {
+    /* nová šablona se načítá ve skrytém iframu; prolne se až po svém load */
+    const back = tplFrames[0] === tplFrame ? tplFrames[1] : tplFrames[0];
+    back.src = t.href;
+  }
   document.getElementById('tplName').textContent = t.name;
   document.getElementById('tplPair').textContent = t.pair;
   document.getElementById('tplDesc').textContent = t.desc;
@@ -542,7 +555,17 @@ tplPreview.addEventListener('wheel', (e) => {
     w.scrollTo({ top: scrollPos, behavior: 'instant' });
   }
 }, { passive: false });
-tplFrame.addEventListener('load', startAutoScroll);
+tplFrames.forEach(f => f.addEventListener('load', () => {
+  if (!f.getAttribute('src')) return;   // úvodní load prázdného iframu
+  const other = tplFrames[0] === f ? tplFrames[1] : tplFrames[0];
+  f.classList.add('on');
+  f.removeAttribute('aria-hidden');
+  other.classList.remove('on');
+  other.setAttribute('aria-hidden', 'true');
+  tplFrame = f;
+  manualTarget = null;
+  startAutoScroll();
+}));
 /* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
 reducedMotion.addEventListener('change', () => {
   if (reducedMotion.matches) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
