@@ -497,7 +497,18 @@ function selectTemplate(i) {
   fitPreview();
 }
 
-tplTabs.forEach(tab => tab.addEventListener('click', () => selectTemplate(+tab.dataset.i)));
+/* opětovný klik na už aktivní tab sroluje náhled zpátky na začátek */
+function scrollPreviewTop() {
+  const w = tplFrames[activeIdx].contentWindow;
+  if (!w) return;
+  cancelAnimationFrame(scrollRafId); scrollRafId = null;   // ať smyčka nebojuje s plynulým dojezdem
+  w.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+  setTimeout(startAutoScroll, 1000);
+}
+tplTabs.forEach(tab => tab.addEventListener('click', () => {
+  const i = +tab.dataset.i;
+  if (i === activeIdx) scrollPreviewTop(); else selectTemplate(i);
+}));
 document.getElementById('tplTabs').addEventListener('keydown', (e) => {
   if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
   const cur = tplTabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
