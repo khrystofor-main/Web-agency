@@ -42,8 +42,8 @@ složky).
 
 1. Vyberte šablonu a zkopírujte ji spolu s `cfg.*.js` a složkou
    `../assets/` do nového projektu.
-2. Vyplňte `cfg.*.js`: název, kontakty, otevírací dobu, hero text, menu,
-   alergeny. Struktura a komentáře jsou v `../assets/site.config.example.js`.
+2. Vyplňte `cfg.*.js`: název, kontakty, otevírací dobu, hero text, menu.
+   Struktura a komentáře jsou v `../assets/site.config.example.js`.
 3. Přejmenujte zvolenou šablonu na `index.html` a opravte cesty ke skriptům
    (`../assets/…` → `assets/…`).
 4. Otevřete v prohlížeči a projděte všechny sekce, oba jazyky a obě témata.
@@ -51,12 +51,16 @@ složky).
 ## Co šablony umí
 
 Všechno, co umí sada pro kavárnu — přepínač CZ/EN, noční téma podle času
-v Česku s ručním přepínačem, záložky kategorií menu, alergeny, vloženou mapu,
+v Česku s ručním přepínačem, záložky kategorií menu, vloženou mapu,
 reveal animace a `prefers-reduced-motion`. Popis enginu a seznam datových
 atributů je v `../README.md`.
 
 Rozdíly proti kavárenské sadě:
 
+- **žádná sekce „Alergeny“** — v šablonách pro bistro zatím není. Data
+  (`menu.allergens`) v configech zůstávají; kdo je chce zobrazit, vrátí do
+  `#nabidka` blok `<div class="menu-group"><h3>Alergeny</h3><p class="allergens"
+  id="allergenList"></p></div>`, engine ho naplní sám,
 - dvě sady fotek místo jedné — `gallery` (mřížka jídel v hero) a
   `interior` (listovací galerie v sekci „Atmosféra“),
 - žádné GSAP — všechny animace jsou CSS, aby náhledy na rozcestníku
