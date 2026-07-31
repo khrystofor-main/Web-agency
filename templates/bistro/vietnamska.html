@@ -147,11 +147,13 @@ html[data-theme="dark"] .hero__kicker{color:#08272C}
   mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
   opacity:0;animation:fadeUp .6s .5s var(--ease) forwards;
 }
-/* Mezery dělá margin jednotlivých kartiček, ne `gap`: posun o -50 %
-   pak sedne přesně na délku jedné sady a smyčka nikde neposkočí.
-   (S `gap` chybí ve výpočtu jedna mezera a pás se po projetí trhne.) */
+/* Pás se posouvá přesně o délku jedné sady fotek (`--strip-set`, počítá ji
+   skript na konci stránky) a pak skočí zpátky na nulu — švy nejsou vidět,
+   protože v tu chvíli stojí na stejném místě další kopie téže sady.
+   Mezery dělá `margin` kartiček, ne `gap`: ten by do délky sady jednu
+   mezeru nezapočítal a pás by po projetí poskočil. */
 .strip__track{display:flex;width:max-content;animation:slide 46s linear infinite}
-@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(calc(-1 * var(--strip-set,50%)))}}
 .strip .g-item{margin:0 18px 0 0;flex:0 0 auto;width:210px;position:relative}
 /* každá druhá kartička o kus níž — pás pak nevypadá jako pravítko */
 .strip .g-item:nth-child(even){margin-top:26px}
@@ -463,18 +465,52 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
 (function(){
   var track = document.getElementById('galleryGrid');
   if (!track || !track.children.length) return;
-  Array.prototype.slice.call(track.children).forEach(function (fig) {
-    var clone = fig.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    track.appendChild(clone);
-  });
-  /* Pás musí mít všechny fotky načtené předem. `loading="lazy"` se řídí
-     pozicí v rozvržení, ne posunem animace — kartičky stojící za pravým
-     okrajem okna by se tak nenačetly nikdy a druhá půlka smyčky by přijela
-     prázdná. */
+  var base = Array.prototype.slice.call(track.children);
+
+  function setWidth() {
+    var w = 0;
+    base.forEach(function (fig) {
+      w += fig.getBoundingClientRect().width + parseFloat(getComputedStyle(fig).marginRight);
+    });
+    return w;
+  }
+
+  function addCopy() {
+    base.forEach(function (fig) {
+      var clone = fig.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      /* `loading="lazy"` se řídí pozicí v rozvržení, ne posunem animace —
+         kartičky stojící za pravým okrajem okna by se nenačetly nikdy
+         a další kolo smyčky by přijelo prázdné. */
+      Array.prototype.forEach.call(clone.querySelectorAll('img'), function (img) {
+        img.loading = 'eager';
+      });
+      track.appendChild(clone);
+    });
+  }
+
+  function fill() {
+    var one = setWidth();
+    if (!one) return;
+    /* Po odjetí jedné sady musí zbytek pásu pořád pokrývat celé okno,
+       jinak se vpravo objeví prázdno. Kopií proto musí být tolik, aby
+       (počet − 1) × délka sady byla aspoň široká jako okno. */
+    var need = Math.max(2, Math.ceil(window.innerWidth / one) + 1);
+    while (track.children.length / base.length < need) addCopy();
+    track.style.setProperty('--strip-set', one + 'px');
+  }
+
   Array.prototype.forEach.call(track.querySelectorAll('img'), function (img) {
     img.loading = 'eager';
-    if (!img.complete) img.src = img.src;
+  });
+  fill();
+  /* fotky mohou dorazit až po prvním měření a šířka kartiček se mění
+     s breakpointy — po obojím délku sady přepočítáme */
+  window.addEventListener('load', fill);
+  var t;
+  window.addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(fill, 150);
   });
 })();
 </script>
