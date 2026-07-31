@@ -8,7 +8,7 @@ Každá kuchyně má vlastní složku (`ceska/`, `vietnamska/`, `japonska/`,
 | Kde leží | Kde se objeví |
 |---|---|
 | `01`–`06` (na výšku) | mřížka fotek jídel v hero; každá šablona ji zobrazuje jinak |
-| `interier/01`, `02`, … (na šířku) | listovací galerie v sekci „Atmosféra" |
+| `interier/01`–`05` (na šířku) | listovací galerie v sekci „Atmosféra" |
 | `menu/*.webp` (na šířku) | fotka u jednotlivé položky jídelního lístku |
 | `07`, `08` | **momentálně se nepoužívají** — patřily k pásům, které jsme ze šablon odstranili |
 
@@ -17,9 +17,10 @@ Pořadí snímků řídí konfigurace v `templates/bistro/cfg.*.js`
 
 ## Kam nahrávat fotky interiéru
 
-Do `<kuchyne>/interier/`. Zatím je tam jen `01.webp`; další přidávejte
-pod dalšími čísly (`02.webp`, `03.webp`, …) a ke každé doplňte řádek do
-pole `interior` v příslušném configu — jinak ji galerie nezobrazí:
+Do `<kuchyne>/interier/`. Teď je v každé složce pět snímků (`01`–`05`);
+`02`–`05` jsou zatím ve všech šablonách stejné, protože jde o demo.
+Další přidávejte pod dalšími čísly a ke každé doplňte řádek do pole
+`interior` v příslušném configu — jinak ji galerie nezobrazí:
 
 ```js
 { src:'../../photos/bistro/ceska/interier/02.webp',

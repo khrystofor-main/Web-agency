@@ -110,8 +110,11 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   opacity:.9;
   mask-image:linear-gradient(180deg,#000 0 60%,transparent);
 }
-.hero__grid{position:relative;z-index:1;max-width:1160px;margin:0 auto;width:100%;display:grid;gap:44px}
-@media(min-width:900px){.hero__grid{grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}}
+/* Text sedí vlevo nahoře, řada oken se táhne po spodní hraně přes celou
+   šířku — dohromady to drží tvar písmene L, ne dva sloupce vedle sebe. */
+.hero__grid{position:relative;z-index:1;max-width:1240px;margin:0 auto;width:100%;display:grid;gap:44px}
+.hero__head{max-width:48ch}
+@media(min-width:900px){.hero__grid{gap:52px}.hero__head{max-width:34ch}}
 .hero__kicker{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--accent);margin-bottom:16px}
 .hero h1{font-size:clamp(2.6rem,7.5vw,4.8rem)}
 .hero h1 .ch{display:inline-block;opacity:0;transform:translateY(24px);animation:riseIn .6s var(--ease) forwards;animation-delay:calc(.05s * var(--i) + .12s)}
@@ -127,16 +130,17 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* Okna: každá fotka je v oblouku jako okno trattorie, rám je dvojitý
    a při najetí se posune — jako by okenice povolila. */
-.okna{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(min-width:900px){.okna{grid-template-columns:repeat(3,1fr);gap:18px}}
+.okna{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+/* na šířce jedna řada šesti oken — fasáda pod markýzou */
+@media(min-width:900px){.okna{grid-template-columns:repeat(6,1fr);gap:14px}}
 .okna .g-item{
   margin:0;position:relative;
   opacity:0;transform:translateY(20px);
   animation:fadeUp .6s var(--ease) forwards;
   animation-delay:calc(.1s * var(--n) + .35s);
 }
-/* prostřední sloupec výš — jako okna nad vchodem */
-@media(min-width:900px){.okna .g-item:nth-child(3n+2){margin-top:-22px}}
+/* každé druhé okno výš — fasáda pak není pravítko */
+@media(min-width:900px){.okna .g-item:nth-child(even){margin-top:-26px}}
 .okna .g-frame{
   display:block;overflow:hidden;
   border-radius:50% 50% 6px 6px/26% 26% 6px 6px;
@@ -333,7 +337,7 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
   <!-- HERO -->
   <header class="hero">
     <div class="hero__grid">
-      <div>
+      <div class="hero__head">
         <p class="hero__kicker" data-site="hero.kicker"></p>
         <h1 data-site-letters="brand.name"></h1>
         <p class="hero__sub" data-site="hero.sub"></p>

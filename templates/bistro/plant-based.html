@@ -109,8 +109,17 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   border-radius:50%;z-index:0;pointer-events:none;
   background:radial-gradient(circle,rgba(143,191,106,.26),transparent 68%);
 }
-.hero__grid{position:relative;z-index:1;max-width:1160px;margin:0 auto;width:100%;display:grid;gap:44px}
-@media(min-width:900px){.hero__grid{grid-template-columns:1.02fr .98fr;gap:60px;align-items:center}}
+/* Mýtina: text stojí uprostřed a listy rostou po obou stranách.
+   Na široké obrazovce se `.listy` promění v `display:contents`, takže
+   jednotlivé fotky sedají přímo do mřížky hero — dva listy vlevo,
+   text uprostřed, dva vpravo. */
+.hero__grid{position:relative;z-index:1;max-width:1240px;margin:0 auto;width:100%;display:grid;gap:44px}
+.hero__head{max-width:46ch}
+@media(min-width:960px){
+  .hero__grid{grid-template-columns:.8fr 1.25fr .8fr;grid-template-rows:auto auto;gap:30px 46px;align-items:center}
+  .hero__head{grid-column:2;grid-row:1 / span 2;text-align:center;justify-self:center;max-width:40ch}
+  .hero__sub{margin-left:auto;margin-right:auto}
+}
 .hero__kicker{
   display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:var(--accent);background:var(--surface);padding:7px 16px;border-radius:99px;margin-bottom:20px;
@@ -130,15 +139,24 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 /* Listy: fotky mají tvar listu (dva protilehlé rohy zaoblené) a
    střídavě se sypou dolů. Po najetí se list zakulatí docela. */
 .listy{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(min-width:900px){.listy{gap:24px}}
+@media(min-width:960px){
+  /* obal zmizí z rozvržení a fotky se rozdělí kolem textu;
+     šablona počítá se čtyřmi snímky — pátý a další doplní další řádek */
+  .listy{display:contents}
+  .listy .g-item:nth-child(1){grid-column:1;grid-row:1}
+  .listy .g-item:nth-child(2){grid-column:1;grid-row:2}
+  .listy .g-item:nth-child(3){grid-column:3;grid-row:1}
+  .listy .g-item:nth-child(4){grid-column:3;grid-row:2}
+}
 .listy .g-item{
   margin:0;position:relative;
   opacity:0;transform:translateY(22px);
   animation:fadeUp .7s var(--ease) forwards;
   animation-delay:calc(.11s * var(--n) + .35s);
 }
-/* druhý sloupec o kus níž — sad neroste v řadě */
+/* každý druhý list o kus níž — sad neroste v řadě */
 .listy .g-item:nth-child(even){margin-top:34px}
+@media(min-width:960px){.listy .g-item:nth-child(even){margin-top:0}.listy .g-item:nth-child(n+3){margin-top:22px}}
 .listy .g-frame{
   display:block;overflow:hidden;background:var(--surface);
   border-radius:0 78% 0 78%;
@@ -147,6 +165,8 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 }
 .listy .g-item:nth-child(even) .g-frame{border-radius:78% 0 78% 0}
 .listy img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+/* v rozvržení kolem textu jsou listy čtvercové, jinak by hero přerostlo obrazovku */
+@media(min-width:960px){.listy img{aspect-ratio:1}}
 .listy .g-item:hover .g-frame{border-radius:50%;transform:translateY(-6px);box-shadow:0 22px 42px rgba(31,42,34,.2)}
 .listy .g-item:hover img{transform:scale(1.06)}
 .listy figcaption{
@@ -334,7 +354,7 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
   <!-- HERO -->
   <header class="hero">
     <div class="hero__grid">
-      <div>
+      <div class="hero__head">
         <p class="hero__kicker" data-site="hero.kicker"></p>
         <h1 data-site-letters="brand.name"></h1>
         <p class="hero__sub" data-site="hero.sub"></p>

@@ -22,9 +22,14 @@ Soubory leží v `../../photos/bistro/<kuchyne>/` (podrobnosti v README té
 složky).
 
 - `gallery: [{ src, alt, caption }]` → mřížka fotek jídel v hero. Každá
-  šablona ji zobrazuje po svém: nástěnka se špendlíky (česká), nekonečný
-  pás (vietnamská), sloupce s vlásečnicemi (japonská), okna s oblouky
-  (italská), tvary listů (rostlinná).
+  šablona má jiné rozvržení i jiné umístění textu:
+  | Šablona | Hero |
+  |---|---|
+  | česká | text uprostřed nahoře, pod ním nástěnka se špendlíky přes celou šířku |
+  | vietnamská | text vlevo, pod ním nekonečný pás fotek přes celé okno |
+  | japonská | pás fotek nahoře, text až pod ním u pravého okraje |
+  | italská | text vlevo nahoře, řada oken s oblouky po spodní hraně (tvar L) |
+  | rostlinná | text uprostřed, listy po obou stranách |
 - `interior: [{ src, alt, caption }]` → **listovací galerie interiéru**
   v sekci „Atmosféra“. Ovládá se šipkami, tečkami, tažením i šipkami na
   klávesnici a sama se posouvá; při najetí myší se zastaví. Když je pole

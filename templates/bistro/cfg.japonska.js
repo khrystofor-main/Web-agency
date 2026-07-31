@@ -73,7 +73,19 @@ window.SITE = {
   interior: [
     { src:'../../photos/bistro/japonska/interier/01.webp',
       alt:{cs:'Interiér bistra u pultu',en:'Bistro interior at the counter'},
-      caption:{cs:'Deset míst u pultu',en:'Ten seats at the counter'} }
+      caption:{cs:'Deset míst u pultu',en:'Ten seats at the counter'} },
+    { src:'../../photos/bistro/japonska/interier/02.webp',
+      alt:{cs:'Prostorný sál s řadami stolů a palmami',en:'Spacious room with rows of tables and palms'},
+      caption:{cs:'Sál',en:'The room'} },
+    { src:'../../photos/bistro/japonska/interier/03.webp',
+      alt:{cs:'Kulatý stůl u okna do dvora',en:'Round table by the courtyard window'},
+      caption:{cs:'U okna',en:'By the window'} },
+    { src:'../../photos/bistro/japonska/interier/04.webp',
+      alt:{cs:'Dřevěný pult s vysokými stoličkami',en:'Wooden counter with high stools'},
+      caption:{cs:'Pult',en:'The counter'} },
+    { src:'../../photos/bistro/japonska/interier/05.webp',
+      alt:{cs:'Pohled do sálu přes dřevěný pult',en:'View into the room across the wooden counter'},
+      caption:{cs:'Přes dřevo',en:'Across the wood'} }
   ],
 
   menu: {

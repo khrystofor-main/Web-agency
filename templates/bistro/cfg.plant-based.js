@@ -70,7 +70,19 @@ window.SITE = {
   interior: [
     { src:'../../photos/bistro/plant-based/interier/01.webp',
       alt:{cs:'Interiér bistra',en:'Bistro interior'},
-      caption:{cs:'U nás uvnitř',en:'Inside our place'} }
+      caption:{cs:'U nás uvnitř',en:'Inside our place'} },
+    { src:'../../photos/bistro/plant-based/interier/02.webp',
+      alt:{cs:'Prostorný sál s řadami stolů a palmami',en:'Spacious room with rows of tables and palms'},
+      caption:{cs:'Hodně místa, hodně zeleně',en:'Plenty of room, plenty of green'} },
+    { src:'../../photos/bistro/plant-based/interier/03.webp',
+      alt:{cs:'Kulatý stůl u okna do dvora',en:'Round table by the courtyard window'},
+      caption:{cs:'U okna do dvora',en:'By the courtyard window'} },
+    { src:'../../photos/bistro/plant-based/interier/04.webp',
+      alt:{cs:'Dřevěný pult s vysokými stoličkami',en:'Wooden counter with high stools'},
+      caption:{cs:'U pultu',en:'At the counter'} },
+    { src:'../../photos/bistro/plant-based/interier/05.webp',
+      alt:{cs:'Pohled do sálu přes dřevěný pult',en:'View into the room across the wooden counter'},
+      caption:{cs:'Přes pult',en:'Across the counter'} }
   ],
 
   menu: {

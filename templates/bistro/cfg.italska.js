@@ -73,7 +73,19 @@ window.SITE = {
   interior: [
     { src:'../../photos/bistro/italska/interier/01.webp',
       alt:{cs:'Interiér trattorie',en:'Trattoria interior'},
-      caption:{cs:'U nás v sále',en:'Inside the dining room'} }
+      caption:{cs:'U nás v sále',en:'Inside the dining room'} },
+    { src:'../../photos/bistro/italska/interier/02.webp',
+      alt:{cs:'Prostorný sál s řadami stolů a palmami',en:'Spacious room with rows of tables and palms'},
+      caption:{cs:'Sala grande',en:'The big room'} },
+    { src:'../../photos/bistro/italska/interier/03.webp',
+      alt:{cs:'Kulatý stůl u okna do dvora',en:'Round table by the courtyard window'},
+      caption:{cs:'Stůl u okna',en:'Table by the window'} },
+    { src:'../../photos/bistro/italska/interier/04.webp',
+      alt:{cs:'Dřevěný barový pult s vysokými stoličkami',en:'Wooden bar counter with high stools'},
+      caption:{cs:'Il banco',en:'The counter'} },
+    { src:'../../photos/bistro/italska/interier/05.webp',
+      alt:{cs:'Pohled do sálu přes dřevěný pult',en:'View into the room across the wooden counter'},
+      caption:{cs:'Přes pult',en:'Across the counter'} }
   ],
 
   menu: {

@@ -135,18 +135,24 @@ html[data-theme="dark"] .hero__kicker{color:#08272C}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
 /* nekonečný pás fotek — hlavní trik téhle šablony.
-   Kartičky jedou zprava doleva, po najetí myší se pás zastaví. */
+   Kartičky jedou zprava doleva pořád dokola a nezastavují se ani při
+   najetí myší; zvedne se jen ta kartička, nad kterou kurzor je. */
 .strip{
-  margin:44px calc(50% - 50vw) 0;width:100vw;   /* přes celou šířku okna */
-  overflow:hidden;position:relative;
+  margin:24px calc(50% - 50vw) 0;width:100vw;   /* přes celou šířku okna */
+  /* svisle nic neořezáváme, aby zvednutá kartička nepřišla o horní okraj;
+     vodorovné přetečení řeší `clip` jen na ose X */
+  overflow-x:clip;overflow-y:visible;position:relative;
+  padding:26px 0 18px;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
   opacity:0;animation:fadeUp .6s .5s var(--ease) forwards;
 }
-.strip__track{display:flex;gap:18px;width:max-content;animation:slide 46s linear infinite}
-.strip:hover .strip__track{animation-play-state:paused}
-@keyframes slide{to{transform:translateX(-50%)}}
-.strip .g-item{margin:0;flex:0 0 auto;width:210px;position:relative}
+/* Mezery dělá margin jednotlivých kartiček, ne `gap`: posun o -50 %
+   pak sedne přesně na délku jedné sady a smyčka nikde neposkočí.
+   (S `gap` chybí ve výpočtu jedna mezera a pás se po projetí trhne.) */
+.strip__track{display:flex;width:max-content;animation:slide 46s linear infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.strip .g-item{margin:0 18px 0 0;flex:0 0 auto;width:210px;position:relative}
 /* každá druhá kartička o kus níž — pás pak nevypadá jako pravítko */
 .strip .g-item:nth-child(even){margin-top:26px}
 .strip .g-frame{

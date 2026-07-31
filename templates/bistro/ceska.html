@@ -114,17 +114,19 @@ nav .links a:hover{color:var(--accent)}
 html[data-theme="dark"] .theme-btn .i-moon{display:none}
 html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
-/* ============ HERO ============ */
-.hero{min-height:100svh;display:flex;align-items:center;padding:calc(var(--nav-h) + 40px) 20px 40px}
-.hero__grid{max-width:1180px;margin:0 auto;width:100%;display:grid;gap:40px}
-@media(min-width:900px){.hero__grid{grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}}
+/* ============ HERO ============
+   Vývěsní štít: text uprostřed nahoře jako na ceduli nad vchodem,
+   pod ním nástěnka fotek přes celou šířku. */
+.hero{min-height:100svh;display:flex;align-items:center;padding:calc(var(--nav-h) + 36px) 20px 30px}
+.hero__grid{max-width:1240px;margin:0 auto;width:100%;display:grid;gap:38px;justify-items:center}
+.hero__head{text-align:center;max-width:44ch}
 .hero__kicker{font-size:.76rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
 .hero h1{font-size:clamp(2.9rem,8.5vw,5.4rem);letter-spacing:-.01em}
 .hero h1 .ch{display:inline-block;opacity:0;transform:translateY(28px);animation:riseIn .55s var(--ease) forwards;animation-delay:calc(.045s * var(--i) + .1s)}
 @keyframes riseIn{to{opacity:1;transform:none}}
-.hero__rule{width:120px;height:4px;background:var(--gold);margin:22px 0 20px;transform-origin:left;animation:grow .6s .5s var(--ease) both}
+.hero__rule{width:120px;height:4px;background:var(--gold);margin:22px auto 20px;transform-origin:center;animation:grow .6s .5s var(--ease) both}
 @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.hero__sub{color:var(--gray);font-size:clamp(1rem,2.3vw,1.14rem);max-width:44ch;opacity:0;animation:fadeUp .5s .6s var(--ease) forwards}
+.hero__sub{color:var(--gray);font-size:clamp(1rem,2.3vw,1.14rem);margin:0 auto;opacity:0;animation:fadeUp .5s .6s var(--ease) forwards}
 .hero__cta{
   display:inline-flex;align-items:center;gap:11px;margin-top:28px;padding:14px 26px;
   background:var(--ink);color:var(--on-ink);text-decoration:none;
@@ -138,11 +140,11 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
    celý „obrázek" hero je teď šest snímků z kuchyně */
 .wall{
   display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;
-  padding:6px 4px;
+  padding:6px 4px;width:100%;
 }
-/* na širokém displeji tři sloupce — nástěnka je pak kompaktní a hero
-   se nenatahuje na dvě obrazovky */
-@media(min-width:900px){.wall{grid-template-columns:repeat(3,1fr);gap:22px 14px}}
+/* na širokém displeji jde nástěnka do jedné řady přes celou šířku hero —
+   šest snímků vedle sebe jako fotky přišpendlené nad výčepem */
+@media(min-width:900px){.wall{grid-template-columns:repeat(6,1fr);gap:0 14px}}
 .wall .g-item{
   margin:0;position:relative;
   opacity:0;transform:translateY(18px);
@@ -362,7 +364,7 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
   <!-- HERO -->
   <header class="hero">
     <div class="hero__grid">
-      <div>
+      <div class="hero__head">
         <p class="hero__kicker" data-site="hero.kicker"></p>
         <h1 data-site-letters="brand.name"></h1>
         <div class="hero__rule"></div>
