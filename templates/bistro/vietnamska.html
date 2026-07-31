@@ -468,6 +468,14 @@ footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
     clone.setAttribute('aria-hidden', 'true');
     track.appendChild(clone);
   });
+  /* Pás musí mít všechny fotky načtené předem. `loading="lazy"` se řídí
+     pozicí v rozvržení, ne posunem animace — kartičky stojící za pravým
+     okrajem okna by se tak nenačetly nikdy a druhá půlka smyčky by přijela
+     prázdná. */
+  Array.prototype.forEach.call(track.querySelectorAll('img'), function (img) {
+    img.loading = 'eager';
+    if (!img.complete) img.src = img.src;
+  });
 })();
 </script>
 </body>
