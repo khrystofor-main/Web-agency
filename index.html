@@ -508,9 +508,11 @@ function startAutoScroll() {
     if (!w || !w.document.documentElement || pausedByHover) return;
     if (t < waitUntil) return;
     const max = w.document.documentElement.scrollHeight - w.innerHeight;
-    if (scrollPos >= max) { scrollPos = 0; waitUntil = t + 1500; w.scrollTo(0, 0); return; }
+    /* behavior:'instant' přebije scroll-behavior:smooth šablon — jinak by každý
+       snímek spouštěl novou plynulou animaci a náhled by se zasekával */
+    if (scrollPos >= max) { scrollPos = 0; waitUntil = t + 1500; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
     scrollPos = Math.min(scrollPos + 80 * dt, max);
-    w.scrollTo(0, scrollPos);
+    w.scrollTo({ top: scrollPos, behavior: 'instant' });
     if (scrollPos >= max) waitUntil = t + 2500;   // dole chvíli postát
   }
   scrollRafId = requestAnimationFrame(step);
@@ -525,7 +527,7 @@ tplPreview.addEventListener('wheel', (e) => {
   if (!w || !w.document.documentElement) return;
   const max = w.document.documentElement.scrollHeight - w.innerHeight;
   scrollPos = Math.min(Math.max(scrollPos + e.deltaY, 0), max);
-  w.scrollTo(0, scrollPos);
+  w.scrollTo({ top: scrollPos, behavior: 'instant' });
 }, { passive: false });
 tplFrame.addEventListener('load', startAutoScroll);
 /* přepne-li návštěvník omezení animací za běhu, reagujeme hned */
