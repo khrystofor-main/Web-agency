@@ -151,26 +151,48 @@ section > .eyebrow{text-align:center}
 }
 .hero .cta:hover{transform:translateY(-2px);background:var(--accent)}
 
-/* ---------- Šablony ---------- */
-.grid{display:grid;gap:20px;grid-template-columns:1fr}
-@media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
-.card{
-  display:block;text-decoration:none;color:inherit;
+/* ---------- Šablony — vitrína s taby ---------- */
+.showcase{
   background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:26px;transition:border-color .2s,transform .2s,box-shadow .2s,background-color .3s;
+  padding:26px;transition:background-color .3s,border-color .3s;
 }
-.card:hover{border-color:var(--line-strong);transform:translateY(-3px);box-shadow:var(--shadow)}
-.card .num{
-  font-family:'Fraunces',serif;font-size:.85rem;color:var(--muted);
-  display:flex;justify-content:space-between;gap:10px;margin-bottom:16px;
+.showcase-cat{
+  font-family:'Fraunces',serif;font-size:1.35rem;font-weight:600;
+  letter-spacing:-.01em;margin-bottom:18px;
 }
-.card h3{font-size:1.55rem;line-height:1.15;margin-bottom:6px}
-.card .pair{font-size:.82rem;color:var(--muted);margin-bottom:12px}
-.card p.desc{font-size:.88rem;color:var(--muted);margin-bottom:18px;min-height:3.4em}
+.tabs{
+  display:flex;gap:10px;margin-bottom:22px;
+  overflow-x:auto;padding-bottom:6px;   /* na mobilu se řada tabů posouvá */
+  -webkit-overflow-scrolling:touch;
+}
+.tabs button{
+  flex:none;padding:9px 18px;border:1px solid var(--line);border-radius:99px;
+  background:transparent;color:var(--ink);font:inherit;font-size:.85rem;font-weight:500;
+  cursor:pointer;transition:border-color .2s,background .2s,color .2s;
+  white-space:nowrap;
+}
+.tabs button:hover{border-color:var(--line-strong)}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.showcase-body{display:grid;gap:24px;grid-template-columns:1fr}
+@media(min-width:820px){.showcase-body{grid-template-columns:1fr 240px;align-items:start}}
+.preview{
+  position:relative;aspect-ratio:16/10;overflow:hidden;
+  border:1px solid var(--line);border-radius:12px;background:var(--line);
+}
+/* iframe drží desktopovou šířku šablony, do rámečku se vejde přes scale (počítá JS) */
+.preview iframe{
+  width:1280px;height:800px;border:0;display:block;
+  transform-origin:0 0;pointer-events:none;
+}
+.preview-link{position:absolute;inset:0;border-radius:12px;transition:box-shadow .2s}
+.preview-link:hover{box-shadow:inset 0 0 0 2px var(--accent)}
+.showcase-info h3{font-size:1.55rem;line-height:1.15;margin-bottom:6px}
+.showcase-info .pair{font-size:.82rem;color:var(--muted);margin-bottom:12px}
+.showcase-info .desc{font-size:.88rem;color:var(--muted);margin-bottom:18px}
 .swatches{display:flex;gap:8px}
 .sw{width:30px;height:30px;border-radius:8px;border:1px solid var(--sw-ring)}
-.open{display:inline-block;margin-top:18px;font-size:.85rem;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:2px}
-.card:hover .open{border-color:var(--ink)}
+.open{display:inline-block;margin-top:18px;font-size:.85rem;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:2px;text-decoration:none;transition:border-color .2s}
+.open:hover{border-color:var(--ink)}
 
 /* ---------- Cena ---------- */
 .price{
@@ -295,78 +317,30 @@ footer{
   <p class="eyebrow">Ukázky práce</p>
   <h2 class="section-title">Moje šablony</h2>
 
-  <div class="grid">
+  <div class="showcase">
+    <p class="showcase-cat">Šablony pro kavárnu</p>
 
-    <a class="card" href="site/">
-      <div class="num"><span>Šablona 1</span></div>
-      <h3>Warm Paper</h3>
-      <p class="pair">Playfair Display + Inter</p>
-      <p class="desc">Teplý papírový podklad, zelená a terakota. Fotka přes celou obrazovku, boční menu kategorií, měkké nájezdy.</p>
-      <div class="swatches">
-        <span class="sw" style="background:#F6F1E7"></span>
-        <span class="sw" style="background:#33523E"></span>
-        <span class="sw" style="background:#22382B"></span>
-        <span class="sw" style="background:#C8742C"></span>
+    <div class="tabs" role="tablist" aria-label="Výběr šablony" id="tplTabs">
+      <button type="button" role="tab" data-i="0" aria-selected="true">Šablona 1</button>
+      <button type="button" role="tab" data-i="1" aria-selected="false">Šablona 2</button>
+      <button type="button" role="tab" data-i="2" aria-selected="false">Šablona 3</button>
+      <button type="button" role="tab" data-i="3" aria-selected="false">Šablona 4</button>
+      <button type="button" role="tab" data-i="4" aria-selected="false">Šablona 5</button>
+    </div>
+
+    <div class="showcase-body">
+      <div class="preview" id="tplPreview">
+        <iframe id="tplFrame" title="Náhled šablony" loading="lazy" scrolling="no"></iframe>
+        <a class="preview-link" id="tplPreviewLink" href="site/" aria-label="Otevřít šablonu"></a>
       </div>
-      <span class="open">Otevřít →</span>
-    </a>
-
-    <a class="card" href="templates/variant-1-swiss.html">
-      <div class="num"><span>Šablona 2</span></div>
-      <h3>Swiss Minimal</h3>
-      <p class="pair">Space Grotesk + Inter</p>
-      <p class="desc">Bílé pozadí, černý grotesk, jeden červený akcent, jemné linky. Rychlé čisté animace, přísná mřížka.</p>
-      <div class="swatches">
-        <span class="sw" style="background:#FFFFFF"></span>
-        <span class="sw" style="background:#0A0A0A"></span>
-        <span class="sw" style="background:#6B6B6B"></span>
-        <span class="sw" style="background:#E8442E"></span>
-      </div>
-      <span class="open">Otevřít →</span>
-    </a>
-
-    <a class="card" href="templates/variant-2-editorial.html">
-      <div class="num"><span>Šablona 3</span></div>
-      <h3>Editorial</h3>
-      <p class="pair">Fraunces + Newsreader</p>
-      <p class="desc">Novinová hlavička, obří čísla sekcí, asymetrická mřížka, iniciála. Scroll-parallax a clip-reveal na GSAP.</p>
-      <div class="swatches">
-        <span class="sw" style="background:#F7F3EC"></span>
-        <span class="sw" style="background:#1C1A17"></span>
-        <span class="sw" style="background:#B33A2B"></span>
-        <span class="sw" style="background:#6E675E"></span>
-      </div>
-      <span class="open">Otevřít →</span>
-    </a>
-
-    <a class="card" href="templates/variant-4-terracotta.html">
-      <div class="num"><span>Šablona 4</span></div>
-      <h3>Terracotta</h3>
-      <p class="pair">Marcellus + Work Sans</p>
-      <p class="desc">Středomoří: písek, terakota, oliva. Fotky v obloucích, sluneční přechody, pomalé teplé animace.</p>
-      <div class="swatches">
-        <span class="sw" style="background:#F1E4D0"></span>
-        <span class="sw" style="background:#C65F3F"></span>
-        <span class="sw" style="background:#6B7048"></span>
-        <span class="sw" style="background:#3E2C22"></span>
-      </div>
-      <span class="open">Otevřít →</span>
-    </a>
-
-    <a class="card" href="templates/variant-5-corporate-luxury.html">
-      <div class="num"><span>Šablona 5</span></div>
-      <h3>Corporate Luxury</h3>
-      <p class="pair">Playfair Display + Lato</p>
-      <p class="desc">Elegantní a profesionální. Tmavá námořnická modř, zlaté akcenty, minimalistický design pro prémiovou atmosféru.</p>
-      <div class="swatches">
-        <span class="sw" style="background:#F5F4F1"></span>
-        <span class="sw" style="background:#0F2C47"></span>
-        <span class="sw" style="background:#C9A961"></span>
-        <span class="sw" style="background:#E8E8E8"></span>
-      </div>
-      <span class="open">Otevřít →</span>
-    </a>
-
+      <aside class="showcase-info">
+        <h3 id="tplName">Warm Paper</h3>
+        <p class="pair" id="tplPair"></p>
+        <p class="desc" id="tplDesc"></p>
+        <div class="swatches" id="tplSwatches"></div>
+        <a class="open" id="tplOpen" href="site/">Otevřít →</a>
+      </aside>
+    </div>
   </div>
 </section>
 
@@ -459,6 +433,60 @@ form.addEventListener('submit', (e) => {
   const text = encodeURIComponent(body.value.trim());
   window.location.href = 'mailto:oleksandrkhrystofor@gmail.com?subject=' + subject + '&body=' + text;
 });
+
+/* Vitrína šablon: taby přepínají živý náhled (iframe) + info panel */
+const TEMPLATES = [
+  { href:'site/', name:'Warm Paper', pair:'Playfair Display + Inter',
+    desc:'Teplý papírový podklad, zelená a terakota. Fotka přes celou obrazovku, boční menu kategorií, měkké nájezdy.',
+    colors:['#F6F1E7','#33523E','#22382B','#C8742C'] },
+  { href:'templates/variant-1-swiss.html', name:'Swiss Minimal', pair:'Space Grotesk + Inter',
+    desc:'Bílé pozadí, černý grotesk, jeden červený akcent, jemné linky. Rychlé čisté animace, přísná mřížka.',
+    colors:['#FFFFFF','#0A0A0A','#6B6B6B','#E8442E'] },
+  { href:'templates/variant-2-editorial.html', name:'Editorial', pair:'Fraunces + Newsreader',
+    desc:'Novinová hlavička, obří čísla sekcí, asymetrická mřížka, iniciála. Scroll-parallax a clip-reveal na GSAP.',
+    colors:['#F7F3EC','#1C1A17','#B33A2B','#6E675E'] },
+  { href:'templates/variant-4-terracotta.html', name:'Terracotta', pair:'Marcellus + Work Sans',
+    desc:'Středomoří: písek, terakota, oliva. Fotky v obloucích, sluneční přechody, pomalé teplé animace.',
+    colors:['#F1E4D0','#C65F3F','#6B7048','#3E2C22'] },
+  { href:'templates/variant-5-corporate-luxury.html', name:'Corporate Luxury', pair:'Playfair Display + Lato',
+    desc:'Elegantní a profesionální. Tmavá námořnická modř, zlaté akcenty, minimalistický design pro prémiovou atmosféru.',
+    colors:['#F5F4F1','#0F2C47','#C9A961','#E8E8E8'] }
+];
+
+const tplTabs = Array.from(document.querySelectorAll('#tplTabs [role="tab"]'));
+const tplFrame = document.getElementById('tplFrame');
+const tplPreview = document.getElementById('tplPreview');
+
+/* iframe má pevných 1280×800 (desktopová šířka šablony) a do rámečku
+   se zmenšuje přes scale — šablona tak v náhledu vypadá jako na monitoru */
+function fitPreview() {
+  tplFrame.style.transform = 'scale(' + tplPreview.clientWidth / 1280 + ')';
+}
+
+function selectTemplate(i) {
+  const t = TEMPLATES[i];
+  tplTabs.forEach((tab, j) => tab.setAttribute('aria-selected', j === i ? 'true' : 'false'));
+  if (tplFrame.getAttribute('src') !== t.href) tplFrame.src = t.href;
+  document.getElementById('tplName').textContent = t.name;
+  document.getElementById('tplPair').textContent = t.pair;
+  document.getElementById('tplDesc').textContent = t.desc;
+  document.getElementById('tplSwatches').innerHTML =
+    t.colors.map(c => '<span class="sw" style="background:' + c + '"></span>').join('');
+  document.getElementById('tplOpen').href = t.href;
+  document.getElementById('tplPreviewLink').href = t.href;
+  fitPreview();
+}
+
+tplTabs.forEach(tab => tab.addEventListener('click', () => selectTemplate(+tab.dataset.i)));
+document.getElementById('tplTabs').addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const cur = tplTabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+  const next = (cur + (e.key === 'ArrowRight' ? 1 : -1) + TEMPLATES.length) % TEMPLATES.length;
+  selectTemplate(next);
+  tplTabs[next].focus();
+});
+window.addEventListener('resize', fitPreview);
+selectTemplate(0);
 
 /* Klik na portrét: zatřesení + bublina */
 const photo = document.getElementById('photo');
