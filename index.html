@@ -179,13 +179,14 @@ section > .eyebrow{text-align:center}
   position:relative;aspect-ratio:16/10;overflow:hidden;
   border:1px solid var(--line);border-radius:12px;background:var(--line);
 }
-/* iframe drží desktopovou šířku šablony, do rámečku se vejde přes scale (počítá JS) */
+/* iframe drží desktopovou šířku šablony, do rámečku se vejde přes scale (počítá JS).
+   Je o 16px širší než viditelných 1280 — svislý posuvník tak ořízne maska rámečku. */
 .preview iframe{
-  width:1280px;height:800px;border:0;display:block;
+  width:1296px;height:800px;border:0;display:block;
   transform-origin:0 0;pointer-events:none;
 }
 .preview-link{position:absolute;inset:0;border-radius:12px;transition:box-shadow .2s}
-.preview-link:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 75%,transparent)}
+.preview-link:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 100%,transparent)}
 .showcase-info h3{font-size:1.55rem;line-height:1.15;margin-bottom:6px}
 .showcase-info .pair{font-size:.82rem;color:var(--muted);margin-bottom:12px}
 .showcase-info .desc{font-size:.88rem;color:var(--muted);margin-bottom:18px}
@@ -330,7 +331,7 @@ footer{
 
     <div class="showcase-body">
       <div class="preview" id="tplPreview">
-        <iframe id="tplFrame" title="Náhled šablony" loading="lazy" scrolling="no"></iframe>
+        <iframe id="tplFrame" title="Náhled šablony" loading="lazy"></iframe>
         <a class="preview-link" id="tplPreviewLink" href="site/index.html" aria-label="Otevřít šablonu"></a>
       </div>
       <aside class="showcase-info">
@@ -486,6 +487,35 @@ document.getElementById('tplTabs').addEventListener('keydown', (e) => {
   tplTabs[next].focus();
 });
 window.addEventListener('resize', fitPreview);
+
+/* Náhled se sám pomalu posouvá dolů, aby bylo vidět víc než jen hero.
+   Skroluje se skutečné okno iframe (stejný origin), takže se spouštějí
+   i scroll animace šablon. Dole chvíli počká a vrátí se na začátek. */
+let scrollRafId = null;
+function startAutoScroll() {
+  cancelAnimationFrame(scrollRafId);
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  let pos = 0, lastT = 0, waitUntil = 0;   // pos je vlastní float — scrollTo zaokrouhluje
+  function step(t) {
+    scrollRafId = requestAnimationFrame(step);
+    if (!lastT) { lastT = t; return; }
+    const dt = (t - lastT) / 1000; lastT = t;
+    const w = tplFrame.contentWindow;
+    if (!w || !w.document.documentElement || pausedByHover) return;
+    if (t < waitUntil) return;
+    const max = w.document.documentElement.scrollHeight - w.innerHeight;
+    if (pos >= max) { pos = 0; waitUntil = t + 1500; w.scrollTo(0, 0); return; }
+    pos = Math.min(pos + 40 * dt, max);
+    w.scrollTo(0, pos);
+    if (pos >= max) waitUntil = t + 2500;   // dole chvíli postát
+  }
+  scrollRafId = requestAnimationFrame(step);
+}
+let pausedByHover = false;
+tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
+tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; });
+tplFrame.addEventListener('load', startAutoScroll);
+
 selectTemplate(0);
 
 /* Klik na portrét: zatřesení + bublina */
