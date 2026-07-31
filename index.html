@@ -175,10 +175,14 @@ section > .eyebrow{text-align:center}
 .tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .showcase-body{display:grid;gap:24px;grid-template-columns:1fr}
 @media(min-width:820px){.showcase-body{grid-template-columns:1fr 240px;align-items:start}}
+/* Dokud není načtená první šablona, je rámeček neviditelný (splývá s kartou) —
+   při načtení stránky tak neproblikne prázdný tmavý obdélník. */
 .preview{
   position:relative;aspect-ratio:16/10;overflow:hidden;
-  border:1px solid var(--line);border-radius:12px;background:var(--line);
+  border:1px solid transparent;border-radius:12px;background:transparent;
+  transition:border-color .25s ease,background-color .25s ease;
 }
+.preview.ready{border-color:var(--line);background:var(--line)}
 /* Dva iframy přes sebe: nová šablona se načte ve skrytém a teprve pak se
    prolne přes starou — přepínání bez šedého mezistavu. Skryté jsou i při
    prvním vykreslení, takže neproblikne nezmenšená stránka, než JS spočítá scale.
@@ -562,6 +566,7 @@ tplPreview.addEventListener('wheel', (e) => {
   }
 }, { passive: false });
 function activateFrame(f) {
+  tplPreview.classList.add('ready');
   const other = tplFrames[0] === f ? tplFrames[1] : tplFrames[0];
   f.classList.add('on');
   f.removeAttribute('aria-hidden');
