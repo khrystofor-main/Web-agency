@@ -101,30 +101,25 @@ html[data-theme="dark"] .theme-btn .i-moon{display:none}
 html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO ============
-   Tanky stojí podél zdi: dole pás svislých fotek přes celou šířku,
-   nad ním holý beton a v něm deska s textem. Fotky drží u země místo
-   toho, aby křičely přes celé okno — jako tanky v sále pod stropem. */
-.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden}
-.hero__inner{
-  flex:1;display:flex;align-items:center;
-  padding:calc(var(--nav-h) + 34px) 22px 36px;
-}
-@media(min-width:1000px){.hero__inner{padding-left:46px}}
-/* pás fotek: vždycky jedna řada sloupů, nikdy se nezalomí */
+   Tanky: fotky stojí vedle sebe jako svislé sloupy přes celé okno,
+   od kraje ke kraji a od shora dolů. Text leží přes ně dole vlevo
+   v plné, neprůhledné desce — jako cedule přišroubovaná na tank. */
+.hero{position:relative;min-height:100svh;overflow:hidden}
 .tanks{
-  display:flex;gap:2px;
-  height:clamp(190px,30vh,310px);
-  border-top:3px solid var(--ink);
+  position:absolute;inset:0;display:grid;
+  grid-template-columns:repeat(2,1fr);gap:2px;
   /* spára mezi sloupy je vždy tmavá — v nočním tématu je `--ink` světlý,
      takže by z ní byly svítící pruhy */
   background:var(--raised-bg);
 }
-.tanks .g-item{flex:1 1 0;min-width:0;position:relative;overflow:hidden;background:var(--surface)}
-/* na užším okně se pás nezalomí, jen ukáže méně sloupů */
-@media(max-width:619px){.tanks .g-item:nth-child(n+4){display:none}}
-@media(min-width:620px) and (max-width:999px){.tanks .g-item:nth-child(n+5){display:none}}
-/* každý druhý sloup je o kus nižší, aby řada nevypadala jako tabulka */
-@media(min-width:1000px){.tanks .g-item:nth-child(even){margin-top:24px}}
+@media(min-width:620px){.tanks{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1000px){.tanks{grid-template-columns:repeat(6,1fr)}}
+.tanks .g-item{position:relative;overflow:hidden;background:var(--surface)}
+/* sloupce nemají stejnou výšku — každý druhý je zapuštěný, aby řada
+   nevypadala jako tabulka */
+@media(min-width:1000px){
+  .tanks .g-item:nth-child(even){transform:translateY(4%)}
+}
 .tanks .g-frame{display:block;width:100%;height:100%}
 .tanks img{
   width:100%;height:100%;object-fit:cover;
@@ -148,12 +143,18 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   padding:5px 10px;
 }
 @media(max-width:620px){.tanks figcaption{display:none}}
-/* deska s textem — cedule přišroubovaná na betonu */
+/* deska s textem přes fotky */
 .hero__plate{
-  max-width:min(640px,92vw);
+  position:relative;z-index:2;
+  max-width:min(640px,92vw);margin:0 18px;
   background:var(--bg);border:3px solid var(--ink);
   padding:32px 30px 30px;
 }
+.hero__inner{
+  position:relative;z-index:2;min-height:100svh;
+  display:flex;align-items:flex-end;padding:calc(var(--nav-h) + 30px) 0 46px;
+}
+@media(min-width:1000px){.hero__plate{margin:0 0 0 46px}}
 .hero__kicker{
   font-family:var(--head);font-size:.74rem;letter-spacing:.28em;text-transform:uppercase;
   color:var(--accent);margin-bottom:14px;
@@ -207,10 +208,7 @@ section{padding:88px 22px;max-width:1180px;margin:0 auto}
 
 /* ============ GALERIE INTERIÉRU ============
    Rám z oceli: tlustý černý okraj, ovládání v rohu jako přepínače. */
-.carousel{position:relative;margin-top:46px}
-/* rám obepíná jen okno s fotkou; tečky leží pod ním na podkladu stránky,
-   aby pod galerií nevznikl plný pruh (v nočním tématu by navíc svítil) */
-.carousel__frame{position:relative;border:3px solid var(--ink)}
+.carousel{position:relative;margin-top:46px;border:3px solid var(--ink)}
 .carousel__viewport{overflow:hidden;background:var(--surface);cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .carousel__viewport.dragging{cursor:grabbing}
 .carousel__viewport:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
@@ -240,7 +238,9 @@ section{padding:88px 22px;max-width:1180px;margin:0 auto}
 .carousel__btn:disabled{opacity:.3;cursor:default}
 .carousel__btn--prev{left:0}
 .carousel__btn--next{right:0}
-.carousel__dots{display:flex;gap:6px;margin-top:16px;justify-content:center}
+/* Řádek teček nemá vlastní podklad — plná plocha `--ink` by v nočním
+   tématu (kde je `--ink` světlý) svítila pod fotkou jako bílý pruh. */
+.carousel__dots{display:flex;gap:6px;padding:12px;justify-content:center}
 .carousel__dot{width:26px;height:4px;border:0;padding:0;cursor:pointer;background:var(--line-strong);transition:background .25s}
 .carousel__dot.active{background:var(--accent)}
 
@@ -343,6 +343,8 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
 
   <!-- HERO -->
   <header class="hero">
+    <!-- svislé sloupy fotek přes celé okno; obsah plní engine ze SITE.gallery -->
+    <div class="tanks" id="galleryGrid"></div>
     <div class="hero__inner">
       <div class="hero__plate">
         <p class="hero__kicker" data-site="hero.kicker"></p>
@@ -351,8 +353,6 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
         <a class="hero__cta" href="#nabidka" data-site="hero.cta"></a>
       </div>
     </div>
-    <!-- pás svislých sloupů podél zdi; obsah plní engine ze SITE.gallery -->
-    <div class="tanks" id="galleryGrid"></div>
   </header>
   <div class="hero__meta">
     <div data-site-if="rating"><b>★ <span data-site="rating.score"></span></b><span><span data-site="rating.count"></span> <span data-cs="recenzí" data-en="reviews">recenzí</span></span></div>
@@ -373,17 +373,15 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
 
     <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
     <div class="carousel reveal">
-      <div class="carousel__frame">
-        <div class="carousel__counter" id="carCounter">1 / 1</div>
-        <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-        </button>
-        <div class="carousel__viewport" id="carViewport">
-          <div class="carousel__track" id="carTrack"></div>
-        </div>
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
       <div class="carousel__dots" id="carDots"></div>
     </div>

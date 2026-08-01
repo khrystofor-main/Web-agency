@@ -94,24 +94,9 @@ html[data-theme="dark"] .theme-btn .i-moon{display:none}
 html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO ============
-   Kužel světla: v hero není žádná fotka, jen tma a jeden pruh světla
-   shora. Text stojí uprostřed v mosazném rámečku a nic mu nekonkuruje —
-   fotky patří do galerie níž. */
+   Prázdná tma: žádné fotky, jen pozadí webu a text uprostřed
+   v mosazném rámečku. Ticho před prvním drinkem. */
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-/* světlo dopadá shora doprostřed pultu a ztrácí se do rohů */
-.hero::before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 54% 42% at 50% 4%,rgba(196,162,101,.22),transparent 68%),
-    radial-gradient(ellipse 86% 52% at 50% 104%,rgba(91,31,40,.24),transparent 74%),
-    linear-gradient(180deg,#211C18,var(--bg) 58%);
-  opacity:0;animation:fade 1.8s .1s var(--ease) forwards;
-}
-/* vinětace, která světlo uzavře do rohů */
-.hero::after{
-  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 20%,color-mix(in srgb,var(--bg) 86%,transparent) 100%);
-}
 .hero__box{
   position:relative;z-index:2;text-align:center;
   padding:54px clamp(24px,6vw,72px);margin:0 20px;
@@ -269,7 +254,7 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch,.hero::before{opacity:1;transform:none}
+  .reveal,.menu-item,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch{opacity:1;transform:none}
   .rule{transform:scaleX(1)}
   html{scroll-behavior:auto}
 }
@@ -302,7 +287,9 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
 
   <!-- HERO -->
   <header class="hero">
-    <!-- V hero záměrně nejsou fotky. Všechny snímky jsou v galerii níž. -->
+    <!-- Hero je záměrně bez fotek: jen pozadí webu a rámeček s textem.
+         Fotky ze SITE.gallery se tu nevykreslují (engine nemá kam),
+         listovací galerie v sekci „Bar“ je používá dál. -->
     <div class="hero__box">
       <p class="hero__kicker" data-site="hero.kicker"></p>
       <h1 data-site-letters="brand.name"></h1>

@@ -11,7 +11,7 @@ window.SITE = {
 
   brand: {
     name: 'Moje rumovna',
-    title: { cs:'Moje rumovna — stojáková výčepna', en:'My rum bar — a standing bar' },
+    title: { cs:'Moje rumovna — rumovna', en:'Moje rumovna — a standing bar' },
     description: {
       cs:'Ukázková šablona webu pro rumovnu. Dlouhý pult, police lahví, chlebíčky do noci.',
       en:'Demo website template for a standing bar. A long counter, a shelf of bottles, sandwiches till late.'

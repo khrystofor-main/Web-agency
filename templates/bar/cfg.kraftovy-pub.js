@@ -11,7 +11,7 @@ window.SITE = {
 
   brand: {
     name: 'Můj pub',
-    title: { cs:'Můj pub — kraftová pivnice', en:'My pub — craft taproom' },
+    title: { cs:'Můj pub — kraftová pivnice', en:'Můj pub — craft taproom' },
     description: {
       cs:'Ukázková šablona webu pro kraftovou pivnici. Dvanáct pip, tank na sále, plnění s sebou.',
       en:'Demo website template for a craft taproom. Twelve taps, a tank in the room, growlers to go.'

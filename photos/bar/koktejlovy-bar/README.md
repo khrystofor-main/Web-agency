@@ -1,15 +1,18 @@
 # Fotky — Půlnoc (koktejlový bar)
 
-## Hero: prolínající se pozadí (6 fotek)
+## Hero: bez fotek
 
-Soubory: `01.webp` až `06.webp` v této složce.
+Hero téhle šablony je záměrně prázdný — jen pozadí webu a text uprostřed
+v tenkém mosazném rámečku. **Do hero se žádná fotka nedodává.**
+
+## Zásoba fotek (6 kusů, zatím se nikde nevykreslují)
+
+Soubory: `01.webp` až `06.webp` v této složce. Zůstávají v configu pro
+případ, že by si někdo hero s fotkami vrátil.
 
 **Formát:** `.webp`, na šířku, poměr **16:9**, delší strana do 1920 px,
-do ~300 kB.
-
-Fotky drží celé pozadí hero a pomalu se prolínají. Text leží uprostřed
-v tenkém mosazném rámečku. Šablona je od začátku tmavá („soumrak"),
-takže fotky musí fungovat při nízkém jasu — `brightness(.42)`.
+do ~300 kB. Šablona je od začátku tmavá („soumrak“), takže fotky musí
+fungovat při nízkém jasu.
 
 **Motivy (podle cfg.koktejlovy-bar.js):**
 

@@ -112,20 +112,24 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .rack .g-item{
   position:relative;margin:0;flex:0 0 auto;
   width:clamp(140px,17vw,224px);
-  opacity:0;animation:lay .9s var(--ease) forwards;
-  animation-delay:calc(.13s * var(--n) + .2s);
   transform-origin:center bottom;
+  /* Plán fotky neurčuje `z-index` (ten se animovat nedá a přeskakuje),
+     ale hloubka v prostoru — `.rack` má perspektivu, takže translateZ
+     fotku plynule prosune dopředu i dozadu. `--d` je hloubka v pixelech
+     bez jednotky; hodnoty rozdává skript dole.
+     Přiblížení by fotku perspektivou zvětšilo, proto ji zpátky zmenšíme
+     v přesně opačném poměru — velikost v regálu tak zůstává stejná. */
+  --d:0;
+  transform:translateZ(calc(var(--d) * 1px)) scale(calc((900 - var(--d)) / 900));
+  transition:rotate .5s var(--ease),translate .5s var(--ease),transform .55s var(--ease);
 }
+/* nástup: nadechne se rámeček, aby transform na .g-item zůstal volný pro hloubku */
+.rack .g-frame{opacity:0;animation:lay .9s var(--ease) forwards;animation-delay:calc(.13s * var(--n) + .2s)}
 /* překryv a náklon: liché doleva, sudé doprava */
 .rack .g-item + .g-item{margin-left:clamp(-56px,-3.4vw,-26px)}
 .rack .g-item:nth-child(odd){rotate:-3.5deg}
-.rack .g-item:nth-child(even){rotate:2.5deg;translate:0 clamp(10px,1.6vw,26px) 0}
-/* Láhev se pod myší nesmí „přeskočit“ dopředu. `z-index` se přepíná
-   skokem, proto o pořadí rozhoduje třetí hodnota `translate` — hloubka.
-   V 3D prostoru regálu (perspective + preserve-3d) se dá animovat,
-   takže se fotka plynule vysune před sousedy a stejně plynule zpátky. */
-.rack .g-item:hover{rotate:0deg;translate:0 -10px 70px}
-.rack .g-item{transition:rotate .5s var(--ease),translate .5s var(--ease)}
+.rack .g-item:nth-child(even){rotate:2.5deg;translate:0 clamp(10px,1.6vw,26px)}
+.rack .g-item:hover{rotate:0deg;translate:0 -10px}
 /* na mobilu se regál složí do dvou řad a přestane se překrývat */
 @media(max-width:760px){
   .rack{flex-wrap:wrap;gap:12px}
@@ -294,7 +298,9 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.rack .g-item,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch{opacity:1;transform:none}
+  .reveal,.menu-item,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch{opacity:1;transform:none}
+  /* transform na .g-item drží hloubku regálu, nulovat ho nesmíme */
+  .rack .g-frame{opacity:1;transform:none}
   .rule{transform:scaleX(1)}
   html{scroll-behavior:auto}
 }
@@ -433,5 +439,47 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
 
 <script>window.TEMPLATE={letterClass:'ch',letterIndexVar:true,placeholderIcon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 3h6v6a3 3 0 01-3 3 3 3 0 01-3-3zM12 12v9M9 21h6"/></svg>'};</script>
 <script src="../assets/site.js"></script>
+<script>
+/* Paměť regálu — jediná věc, kterou umí jen tahle šablona, takže nepatří
+   do sdíleného enginu (assets/site.js) a bydlí tady.
+
+   Fotka, na kterou host najel, se plynule prosune dopředu a **zůstane tam**
+   i po odjetí myši. Plán neurčuje `z-index` (skáče a animovat se nedá),
+   ale hloubka: pořadí se přepočítá na malé `translateZ`, které se díky
+   `transition` přesune hladce. Krok je jen pár pixelů, aby se fotky
+   perspektivou viditelně nezvětšovaly. */
+(function () {
+  var STEP = 4;                    // px hloubky mezi sousedními plány
+
+  function start() {
+    var rack = document.getElementById('galleryGrid');
+    if (!rack) return true;        // šablona bez regálu — není co řešit
+    var items = Array.prototype.slice.call(rack.querySelectorAll('.g-item'));
+    if (!items.length) return false;
+
+    var order = items.slice();     // odzadu dopředu; výchozí = pořadí z configu
+
+    function apply() {
+      order.forEach(function (el, i) {
+        el.style.setProperty('--d', String(i * STEP));
+      });
+    }
+    apply();
+
+    items.forEach(function (el) {
+      el.addEventListener('pointerenter', function () {
+        if (order[order.length - 1] === el) return;   // už je vepředu
+        order = order.filter(function (x) { return x !== el; });
+        order.push(el);
+        apply();
+      });
+    });
+    return true;
+  }
+
+  /* engine staví regál synchronně, ale kdyby se to změnilo, zkusíme to znovu */
+  if (!start()) document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
 </body>
 </html>

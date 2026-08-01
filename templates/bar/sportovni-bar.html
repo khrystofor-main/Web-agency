@@ -140,7 +140,9 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:5px 10px;margin-bottom:16px;
   opacity:0;animation:slide .6s .2s var(--ease) forwards;
 }
-.hero h1{font-size:clamp(3rem,9vw,6rem)}
+/* Anton má řádek natěsno (1.02), takže kroužek nad „Ů“ přetéká nahoru
+   a naráží do štítku. Kousek místa navíc ho udrží uvnitř nadpisu. */
+.hero h1{font-size:clamp(3rem,9vw,6rem);padding-top:.12em}
 .hero h1 .ch{display:inline-block;opacity:0;animation:slide .5s var(--ease) forwards;animation-delay:calc(.035s * var(--i) + .25s)}
 @keyframes slide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .hero__sub{color:var(--gray);font-size:clamp(.98rem,2vw,1.08rem);max-width:42ch;margin-top:16px;opacity:0;animation:slide .6s .6s var(--ease) forwards}
@@ -207,10 +209,7 @@ section{padding:82px 20px;max-width:1300px;margin:0 auto}
 .facts span{font-size:.9rem;color:var(--gray)}
 
 /* ============ GALERIE INTERIÉRU ============ */
-.carousel{position:relative;margin-top:42px}
-/* rám obepíná jen okno s fotkou; tečky leží pod ním na podkladu stránky,
-   aby pod galerií nezůstal plný pruh (v nočním tématu by navíc svítil) */
-.carousel__frame{position:relative;border:2px solid var(--ink)}
+.carousel{position:relative;margin-top:42px;border:2px solid var(--ink)}
 .carousel__viewport{overflow:hidden;background:var(--surface);cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .carousel__viewport.dragging{cursor:grabbing}
 .carousel__viewport:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -236,7 +235,9 @@ section{padding:82px 20px;max-width:1300px;margin:0 auto}
 .carousel__btn:disabled{opacity:.3;cursor:default}
 .carousel__btn--prev{left:0}
 .carousel__btn--next{right:0}
-.carousel__dots{display:flex;gap:5px;margin-top:14px;justify-content:center}
+/* Řádek teček nemá vlastní podklad — plná plocha `--ink` by v nočním
+   tématu (kde je `--ink` světlý) svítila pod fotkou jako bílý pruh. */
+.carousel__dots{display:flex;gap:5px;padding:10px;justify-content:center}
 .carousel__dot{width:22px;height:5px;border:0;padding:0;cursor:pointer;background:var(--line-strong);transition:background .25s}
 .carousel__dot.active{background:var(--accent)}
 
@@ -378,17 +379,15 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
 
     <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
     <div class="carousel reveal">
-      <div class="carousel__frame">
-        <div class="carousel__counter" id="carCounter">1 / 1</div>
-        <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
-        </button>
-        <div class="carousel__viewport" id="carViewport">
-          <div class="carousel__track" id="carTrack"></div>
-        </div>
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
       </div>
       <div class="carousel__dots" id="carDots"></div>
     </div>

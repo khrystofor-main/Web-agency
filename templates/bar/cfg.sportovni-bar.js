@@ -11,7 +11,7 @@ window.SITE = {
 
   brand: {
     name: 'Můj sport bar',
-    title: { cs:'Můj sport bar — sportovní bar', en:'My sports bar' },
+    title: { cs:'Můj sport bar — sportovní bar', en:'Můj sport bar — sports bar' },
     description: {
       cs:'Ukázková šablona webu pro sportovní bar. Šest obrazovek, plátno, program zápasů.',
       en:'Demo website template for a sports bar. Six screens, a projector and the match schedule.'

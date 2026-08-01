@@ -23,8 +23,8 @@ napříč sadami (bistro má svých pět dalších):
 
 | Šablona | Hero |
 |---|---|
-| kraftový pub | pás svislých sloupů fotek podél spodní hrany, nad ním beton s deskou textu |
-| koktejlový bar | žádné fotky — jen tma, kužel světla a text v mosazném rámečku |
+| kraftový pub | fotky jako svislé sloupy přes celé okno, text v desce přes ně dole vlevo |
+| koktejlový bar | prázdná tma bez jediné fotky, text uprostřed v mosazném rámečku |
 | vinný bar | překrývající se řada nakloněných fotek, text v úzkém sloupci pod nimi |
 | sportovní bar | tři sloupce vedle sebe: program zápasů, text, stopka fotek |
 | rumovna | vše uvnitř jednoho plakátu, fotky jako malé čtvercové výřezy dole |
@@ -37,8 +37,9 @@ chybí, šablona na jeho místo nakreslí zástupný vzor (viz níž). Zadání 
 fotografa je v README uvnitř každé složky.
 
 - `gallery: [{ src, alt, caption }]` → fotky v hero, každá šablona jinak.
-  Koktejlový bar tenhle klíč nemá — v jeho hero fotky záměrně nejsou
-  a všechny snímky jsou v galerii (`interior`).
+  **Koktejlový bar je výjimka:** jeho hero je záměrně bez fotek, takže
+  se tenhle klíč u něj nikde nevykreslí (v configu zůstává pro případ,
+  že by si někdo hero s fotkami vrátil).
 - `interior: [{ src, alt, caption }]` → listovací galerie v sekci atmosféry.
   Ovládá se šipkami, tečkami, tažením i klávesnicí a sama se posouvá; při
   najetí myší se zastaví. Prázdné pole = engine celou sekci skryje.
@@ -71,6 +72,16 @@ matches: {
 
 Prázdné pole `items` (nebo chybějící klíč `matches`) tabuli vůbec
 nezobrazí a hero se sesype do dvou sloupců.
+
+## Paměť regálu (jen vinný bar)
+
+Fotka, na kterou host najede, se v regálu plynule prosune dopředu
+a **zůstane tam** i po odjetí myši. Plán neurčuje `z-index` — ten se
+animovat nedá a přeskakoval by — ale hloubka: pořadí se přepočítá na malé
+`translateZ` a `transition` ho přesune hladce. Perspektivní zvětšení se
+zpátky vyruší protisměrným `scale`, takže fotky nemění velikost.
+Pořadí drží krátký skript uvnitř `vinny-bar.html`, ne engine (4. a 5.
+zásada).
 
 ## Nový web za pár kroků
 

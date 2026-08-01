@@ -11,7 +11,7 @@ window.SITE = {
 
   brand: {
     name: 'Můj bar',
-    title: { cs:'Můj bar — koktejlový bar', en:'My bar — cocktail bar' },
+    title: { cs:'Můj bar — koktejlový bar', en:'Můj bar — cocktail bar' },
     description: {
       cs:'Ukázková šablona webu pro koktejlový bar. Dvacet čtyři míst, vlastní led, sezonní sirupy.',
       en:'Demo website template for a cocktail bar. Twenty-four seats, our own ice, seasonal syrups.'
@@ -44,23 +44,7 @@ window.SITE = {
 
   /* Šest fotek — v hero se přes celé okno pomalu prolínají.
      Tmavé, kontrastní záběry fungují nejlépe; text leží přes ně. */
-  /* Tahle šablona nemá v hero žádné fotky — všechny snímky jsou
-     v listovací galerii v sekci „Bar“. Klíč `gallery` proto chybí
-     a nejdřív jdou záběry místa, pak drinky.
-     Soubory: photos/bar/koktejlovy-bar/ a .../interier/. */
-  interior: [
-    { src:'../../photos/bar/koktejlovy-bar/interier/01.webp',
-      alt:{cs:'Dlouhý barový pult v podsvícení',en:'A long bar counter in backlight'},
-      caption:{cs:'Pult',en:'The counter'} },
-    { src:'../../photos/bar/koktejlovy-bar/interier/02.webp',
-      alt:{cs:'Stůl v boxu s růžemi a koktejlem',en:'A booth table with roses and a cocktail'},
-      caption:{cs:'Boxy',en:'The booths'} },
-    { src:'../../photos/bar/koktejlovy-bar/interier/03.webp',
-      alt:{cs:'Podsvícené police s lahvemi za barem',en:'Backlit shelves of bottles behind the bar'},
-      caption:{cs:'Police',en:'The shelves'} },
-    { src:'../../photos/bar/koktejlovy-bar/interier/04.webp',
-      alt:{cs:'Stoly pod policemi s barmanským sklem',en:'Tables under shelves of bar glassware'},
-      caption:{cs:'Sál',en:'The room'} },
+  gallery: [
     { src:'../../photos/bar/koktejlovy-bar/01.webp',
       alt:{cs:'Červený koktejl na baru v tlumeném světle',en:'A red cocktail on the bar in low light'},
       caption:{cs:'Na baru',en:'On the bar'} },
@@ -79,6 +63,23 @@ window.SITE = {
     { src:'../../photos/bar/koktejlovy-bar/06.webp',
       alt:{cs:'Detail koktejlu s bylinkou',en:'Close-up of a cocktail with a herb garnish'},
       caption:{cs:'Detail',en:'Detail'} }
+  ],
+
+  /* Listovací galerie interiéru v sekci „Bar“.
+     Soubory patří do photos/bar/koktejlovy-bar/interier/. */
+  interior: [
+    { src:'../../photos/bar/koktejlovy-bar/interier/01.webp',
+      alt:{cs:'Dlouhý barový pult v podsvícení',en:'A long bar counter in backlight'},
+      caption:{cs:'Pult',en:'The counter'} },
+    { src:'../../photos/bar/koktejlovy-bar/interier/02.webp',
+      alt:{cs:'Stůl v boxu s růžemi a koktejlem',en:'A booth table with roses and a cocktail'},
+      caption:{cs:'Boxy',en:'The booths'} },
+    { src:'../../photos/bar/koktejlovy-bar/interier/03.webp',
+      alt:{cs:'Podsvícené police s lahvemi za barem',en:'Backlit shelves of bottles behind the bar'},
+      caption:{cs:'Police',en:'The shelves'} },
+    { src:'../../photos/bar/koktejlovy-bar/interier/04.webp',
+      alt:{cs:'Stoly pod policemi s barmanským sklem',en:'Tables under shelves of bar glassware'},
+      caption:{cs:'Sál',en:'The room'} }
   ],
 
   menu: {
