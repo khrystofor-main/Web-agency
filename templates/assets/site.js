@@ -59,6 +59,23 @@
     // vrátí data-cs="…" data-en="…" pro dvojjazyčnou hodnotu
     return LANGS.map(function (l) { return 'data-' + l + '="' + esc(t(v, l)) + '"'; }).join(' ');
   }
+  /* Fotka, která se nenačte (chybí soubor, špatná cesta), nesmí zůstat jako
+     rozbitá ikona. Obal dostane třídu `is-missing`, obrázek zmizí a šablona
+     si na jeho místo v CSS nakreslí zástupný vzor ve svém duchu.
+     Sady, které fotky mají, se toho nikdy nedotknou. */
+  function markMissingPhotos(box) {
+    if (!box) return;
+    Array.prototype.slice.call(box.querySelectorAll('img')).forEach(function (img) {
+      function miss() {
+        img.style.display = 'none';
+        var holder = img.closest('figure') || img.parentNode;
+        if (holder) holder.classList.add('is-missing');
+      }
+      img.addEventListener('error', miss);
+      if (img.complete && img.naturalWidth === 0) miss();   // chyba už proběhla
+    });
+  }
+
   function menuPhoto(file) {
     if (!file) return null;
     var base = (S.menu && S.menu.photoBase) || '';
@@ -163,6 +180,7 @@
         (g.caption ? '<figcaption ' + langAttrs(g.caption) + '>' + esc(t(g.caption, DEFAULT_LANG)) + '</figcaption>' : '') +
         '</figure>';
     }).join('');
+    markMissingPhotos(track);
   }
 
   /* ---------- galerie bez karuselu ----------
@@ -178,6 +196,7 @@
         (g.caption ? '<figcaption ' + langAttrs(g.caption) + '>' + esc(t(g.caption, DEFAULT_LANG)) + '</figcaption>' : '') +
         '</figure>';
     }).join('');
+    markMissingPhotos(box);
   }
 
   /* ---------- mapa ---------- */
