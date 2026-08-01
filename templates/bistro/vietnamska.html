@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="cs" data-variant-name="Street Food">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Šablona · Bistro — vietnamská kuchyně</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============
+   Street food: hluboká indigová, limetkově zelená a pálivě oranžová.
+   Zaoblené karty, bambusové svislé pruhy, hodně vzduchu. */
+:root{
+  --bg:#FFF8EC;
+  --ink:#0E3B43;
+  --gray:#5C7379;
+  --brand:#E4572E;               /* přepisovatelné přes SITE.brand.color */
+  --accent:var(--brand);
+  --lime:#A7C957;
+  --deep:#0E3B43;
+  --line:rgba(14,59,67,.16);
+  --line-strong:rgba(14,59,67,.42);
+  --on-ink:#FFF8EC;
+  --raised-bg:#0E3B43;
+  --raised-fg:#FFF8EC;
+  --raised-soft:rgba(255,248,236,.76);
+  --raised-faint:rgba(255,248,236,.46);
+  --raised-line:rgba(255,248,236,.3);
+  --surface:#F4EBDA;
+  --map-bg:#F4EBDA;
+  --ph-empty:rgba(14,59,67,.28);
+  --nav-rgb:255,248,236;
+  --map-filter:saturate(.9) contrast(1.02);
+  --display:'Be Vietnam Pro',system-ui,sans-serif;
+  --sans:'Manrope',system-ui,sans-serif;
+  --nav-h:64px;
+  --r:18px;
+  --ease:cubic-bezier(.2,.9,.3,1);
+  color-scheme:light;
+}
+/* ============ NOČNÍ TÉMA ============
+   Večerní trh: indigo jako podklad, limetka a oranžová svítí. */
+html[data-theme="dark"]{
+  --bg:#08272C;
+  --ink:#EAF3F0;
+  --gray:#8FA9AC;
+  --brand:#FF7A4D;
+  --lime:#BEDC72;
+  --line:rgba(234,243,240,.18);
+  --line-strong:rgba(234,243,240,.4);
+  --on-ink:#08272C;
+  --raised-bg:#051A1E;
+  --raised-fg:#EAF3F0;
+  --raised-soft:rgba(234,243,240,.76);
+  --raised-faint:rgba(234,243,240,.46);
+  --raised-line:rgba(234,243,240,.3);
+  --surface:#0E3B43;
+  --map-bg:#0E3B43;
+  --ph-empty:rgba(234,243,240,.26);
+  --nav-rgb:8,39,44;
+  --map-filter:saturate(.85) contrast(.92) invert(.9);
+  color-scheme:dark;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);line-height:1.7;
+  transition:background-color .3s,color .3s;
+  overflow-x:clip;-webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:rgba(var(--nav-rgb),0);transition:background .3s,box-shadow .3s;
+}
+nav.scrolled{background:rgba(var(--nav-rgb),.94);backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(14,59,67,.09)}
+nav .logo{font-family:var(--display);font-weight:800;font-size:1.1rem;color:var(--ink);text-decoration:none}
+nav .right{display:flex;align-items:center;gap:14px}
+nav .links{display:none;gap:24px}
+nav .links a{color:var(--gray);text-decoration:none;font-size:.86rem;font-weight:600;transition:color .2s}
+nav .links a:hover{color:var(--accent)}
+@media(min-width:760px){nav .links{display:flex}}
+.lang-toggle{display:flex;border:1px solid var(--line-strong);border-radius:99px;overflow:hidden}
+.lang-toggle button{background:transparent;border:0;padding:6px 13px;cursor:pointer;font-family:var(--sans);font-size:.74rem;font-weight:600;color:var(--gray);transition:.2s}
+.lang-toggle button.active{background:var(--deep);color:var(--on-ink)}
+html[data-theme="dark"] .lang-toggle button.active{background:var(--lime);color:#08272C}
+.theme-btn{
+  display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;cursor:pointer;
+  border:1px solid var(--line-strong);border-radius:99px;background:transparent;color:var(--ink);transition:.2s;
+}
+.theme-btn:hover{background:var(--lime);color:#0E3B43;border-color:var(--lime)}
+.theme-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .i-sun{display:none}
+html[data-theme="dark"] .theme-btn .i-moon{display:none}
+html[data-theme="dark"] .theme-btn .i-sun{display:block}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--nav-h) + 36px) 20px 36px;overflow:hidden;
+}
+/* bambusové svislé pruhy na pozadí hero */
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(167,201,87,.16) 0 3px,transparent 3px 46px);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.85),transparent 78%);
+}
+.hero__grid{position:relative;z-index:1;max-width:1180px;margin:0 auto;width:100%;display:grid;gap:44px}
+/* text sám, fotky jedou pod ním — zarovnáno se zbytkem stránky */
+.hero__grid{max-width:1180px}
+.hero__grid > div{max-width:52ch}
+.hero__kicker{
+  display:inline-block;font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--deep);background:var(--lime);padding:6px 14px;border-radius:99px;margin-bottom:20px;
+}
+html[data-theme="dark"] .hero__kicker{color:#08272C}
+.hero h1{font-size:clamp(2.8rem,9vw,5.6rem)}
+.hero h1 .ch{display:inline-block;opacity:0;transform:translateY(30px) rotate(4deg);animation:pop .5s var(--ease) forwards;animation-delay:calc(.04s * var(--i) + .1s)}
+@keyframes pop{to{opacity:1;transform:none}}
+.hero__sub{color:var(--gray);font-size:clamp(1rem,2.3vw,1.16rem);max-width:44ch;margin-top:20px;opacity:0;animation:fadeUp .5s .55s var(--ease) forwards}
+.hero__cta{
+  display:inline-flex;align-items:center;gap:11px;margin-top:28px;padding:15px 28px;border-radius:99px;
+  background:var(--accent);color:#FFF8EC;text-decoration:none;font-weight:600;font-size:.92rem;
+  opacity:0;animation:fadeUp .5s .68s var(--ease) forwards;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 10px 24px rgba(228,87,46,.28);
+}
+.hero__cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(228,87,46,.34)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* nekonečný pás fotek — hlavní trik téhle šablony.
+   Kartičky jedou zprava doleva pořád dokola a nezastavují se ani při
+   najetí myší; zvedne se jen ta kartička, nad kterou kurzor je. */
+.strip{
+  margin:24px calc(50% - 50vw) 0;width:100vw;   /* přes celou šířku okna */
+  /* svisle nic neořezáváme, aby zvednutá kartička nepřišla o horní okraj;
+     vodorovné přetečení řeší `clip` jen na ose X */
+  overflow-x:clip;overflow-y:visible;position:relative;
+  padding:26px 0 18px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  opacity:0;animation:fadeUp .6s .5s var(--ease) forwards;
+}
+/* Pás se posouvá přesně o délku jedné sady fotek (`--strip-set`, počítá ji
+   skript na konci stránky) a pak skočí zpátky na nulu — švy nejsou vidět,
+   protože v tu chvíli stojí na stejném místě další kopie téže sady.
+   Mezery dělá `margin` kartiček, ne `gap`: ten by do délky sady jednu
+   mezeru nezapočítal a pás by po projetí poskočil. */
+.strip__track{display:flex;width:max-content;animation:slide 46s linear infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(calc(-1 * var(--strip-set,50%)))}}
+.strip .g-item{margin:0 18px 0 0;flex:0 0 auto;width:210px;position:relative}
+/* každá druhá kartička o kus níž — pás pak nevypadá jako pravítko */
+.strip .g-item:nth-child(even){margin-top:26px}
+.strip .g-frame{
+  display:block;border-radius:var(--r);overflow:hidden;background:var(--surface);
+  box-shadow:0 12px 28px rgba(14,59,67,.16);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.strip img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.strip figcaption{
+  padding:10px 4px 0;font-family:var(--display);font-weight:600;font-size:.82rem;color:var(--gray);
+  transition:color .3s;
+}
+.strip .g-item:hover .g-frame{transform:translateY(-6px);box-shadow:0 18px 36px rgba(14,59,67,.24)}
+.strip .g-item:hover figcaption{color:var(--accent)}
+@media(min-width:900px){.strip .g-item{width:250px}}
+@media(max-width:520px){.strip .g-item{width:170px}}
+
+.hero__meta{
+  position:relative;z-index:1;max-width:1180px;margin:34px auto 0;width:100%;display:flex;flex-wrap:wrap;gap:10px;
+  opacity:0;animation:fadeUp .5s .8s var(--ease) forwards;
+}
+.hero__meta > div{
+  padding:9px 18px;border-radius:99px;border:1px solid var(--line);background:var(--surface);
+  font-size:.84rem;color:var(--gray);display:flex;align-items:center;gap:8px;
+}
+.hero__meta b{color:var(--ink);font-family:var(--display);font-weight:600}
+@media(max-width:560px){.hero__meta .scrolltxt{display:none}}
+
+/* ============ GENERIC ============ */
+section{padding:84px 20px;max-width:1180px;margin:0 auto}
+.rule{height:2px;background:linear-gradient(90deg,var(--lime),transparent);max-width:1180px;margin:0 auto;transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.rule.in{transform:scaleX(1)}
+.rule-wrap{padding:0 20px}
+.kicker{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px}
+.h2{font-size:clamp(2rem,5.6vw,3.3rem);margin-bottom:18px}
+.lead{color:var(--gray);max-width:58ch;font-size:clamp(1rem,2.2vw,1.08rem)}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ ATMOSFÉRA — tři teze na kartách ============ */
+.facts{display:grid;gap:14px;margin-top:36px}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts > div{background:var(--surface);border-radius:var(--r);padding:20px 22px}
+.facts b{font-family:var(--display);font-weight:600;font-size:1rem;display:block;margin-bottom:2px}
+.facts span{font-size:.85rem;color:var(--gray)}
+
+/* ============ GALERIE INTERIÉRU — listovací, měkké rohy ============ */
+.carousel{position:relative;margin-top:36px}
+.carousel__viewport{
+  overflow:hidden;border-radius:var(--r);background:var(--surface);
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.carousel__track{display:flex;transition:transform .45s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:16/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide figcaption{
+  position:absolute;left:22px;bottom:22px;background:var(--bg);color:var(--ink);
+  font-family:var(--display);font-weight:600;font-size:.84rem;padding:9px 18px;border-radius:99px;
+}
+.carousel__counter{
+  position:absolute;top:18px;right:18px;z-index:3;border-radius:99px;
+  background:var(--deep);color:#FFF8EC;font-size:.78rem;font-weight:600;padding:6px 14px;
+}
+html[data-theme="dark"] .carousel__counter{background:var(--lime);color:#08272C}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:0;background:var(--bg);color:var(--ink);cursor:pointer;
+  box-shadow:0 8px 20px rgba(14,59,67,.18);transition:background .2s,color .2s,opacity .2s;
+}
+.carousel__btn:hover{background:var(--lime);color:#08272C}
+.carousel__btn:disabled{opacity:.3;cursor:default}
+.carousel__btn:disabled:hover{background:var(--bg);color:var(--ink)}
+.carousel__btn--prev{left:14px}
+.carousel__btn--next{right:14px}
+.carousel__dots{display:flex;gap:8px;margin-top:16px;justify-content:center}
+.carousel__dot{
+  width:9px;height:9px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:var(--line);transition:background .2s,transform .2s;
+}
+.carousel__dot.active{background:var(--accent);transform:scale(1.3)}
+
+/* ============ MENU ============ */
+.menu-cats{
+  position:sticky;top:var(--nav-h);z-index:5;background:var(--bg);
+  display:flex;gap:8px;margin:34px -20px 40px;padding:12px 20px;
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+}
+.menu-cats::-webkit-scrollbar{display:none}
+.menu-cat{
+  flex:0 0 auto;border:1px solid var(--line);border-radius:99px;background:transparent;cursor:pointer;white-space:nowrap;
+  font-family:var(--sans);font-size:.86rem;font-weight:600;color:var(--gray);padding:9px 18px;transition:.2s;
+}
+.menu-cat:hover{border-color:var(--line-strong)}
+.menu-cat.active{background:var(--deep);color:var(--on-ink);border-color:var(--deep)}
+html[data-theme="dark"] .menu-cat.active{background:var(--lime);color:#08272C;border-color:var(--lime)}
+.menu-group{margin-bottom:40px}
+.menu-group h3{font-size:clamp(1.4rem,3.4vw,1.95rem);margin-bottom:14px}
+.menu-note{border-radius:var(--r);padding:12px 18px;font-size:.9rem;color:var(--gray);margin:0 0 22px;max-width:64ch;background:var(--surface)}
+/* Karta jídla: velká fotka nahoře, pod ní název a cena. */
+.menu-items{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.menu-item{
+  border:1px solid var(--line);border-radius:var(--r);background:var(--bg);
+  display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .45s var(--ease),transform .45s var(--ease),border-color .2s,box-shadow .2s;
+}
+.menu-item.in{opacity:1;transform:none}
+.menu-item:hover{border-color:var(--lime);box-shadow:0 10px 24px rgba(14,59,67,.10)}
+.menu-item__ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease)}
+.menu-item:hover .menu-item__ph img{transform:scale(1.05)}
+/* bez fotky: limetkový kruh s ikonou misky */
+.menu-item__ph--empty{
+  display:flex;align-items:center;justify-content:center;color:var(--ph-empty);
+  background:radial-gradient(circle at 50% 50%,rgba(167,201,87,.28) 0 26%,transparent 27%),var(--surface);
+}
+.menu-item__ph--empty svg{width:44px;height:44px}
+.menu-item__body{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 18px 16px}
+.menu-item__body b{font-family:var(--display);font-weight:600;font-size:.98rem;line-height:1.35}
+.menu-item__price{flex:0 0 auto;font-family:var(--display);font-weight:800;color:var(--accent);font-size:.96rem;white-space:nowrap}
+
+/* ============ VISIT ============ */
+.visit{display:grid;gap:36px;margin-top:38px}
+@media(min-width:860px){.visit{grid-template-columns:1fr 1fr;gap:56px;align-items:start}}
+.info-card{border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:16px;background:var(--surface)}
+.info-card h3{font-size:1rem;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-weight:600}
+.info-card h3 svg{flex:0 0 auto;color:var(--accent)}
+.hours-list{list-style:none}
+.hours-list li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.hours-list li:last-child{border:0}
+.hours-list .today{color:var(--accent);font-weight:700}
+.addr{font-size:1rem;line-height:1.8}
+.addr a{color:var(--accent);font-weight:600;text-decoration:none}
+.addr a:hover{text-decoration:underline}
+.info-card.phone-card{background:var(--raised-bg);border-color:var(--raised-bg);color:var(--raised-fg)}
+.info-card.phone-card h3{color:var(--raised-fg)}
+.info-card.phone-card h3 svg{color:var(--lime)}
+.phone-big{color:var(--raised-fg);font-family:var(--display);font-size:1.4rem;font-weight:600;text-decoration:none}
+.phone-big:hover{color:var(--lime)}
+.map-wrap{border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;background:var(--map-bg);border:1px solid var(--line)}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:var(--map-filter)}
+
+/* ============ FOOTER ============ */
+footer{background:var(--raised-bg);color:var(--raised-soft);padding:50px 20px 40px;border-radius:var(--r) var(--r) 0 0;margin-top:24px}
+.f-inner{max-width:1180px;margin:0 auto}
+footer .flogo{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--raised-fg);margin-bottom:10px}
+footer p{font-size:.86rem;margin:4px 0}
+footer a{color:var(--raised-fg);text-decoration:none;border-bottom:1px solid var(--raised-line)}
+footer a:hover{color:var(--lime);border-color:var(--lime)}
+footer .tiny{margin-top:20px;font-size:.74rem;color:var(--raised-faint)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
+  .reveal,.menu-item,.strip,.hero__sub,.hero__cta,.hero__meta,.hero h1 .ch{opacity:1;transform:none}
+  .rule{transform:scaleX(1)}
+  .strip__track{animation:none}
+  html{scroll-behavior:auto}
+}
+</style>
+<script src="cfg.vietnamska.js"></script>
+<script src="../assets/theme.js"></script>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="#top" data-site="brand.name"></a>
+  <div class="right">
+    <div class="links">
+      <a href="#atmosfera" data-cs="Bistro" data-en="Bistro">Bistro</a>
+      <a href="#nabidka" data-cs="Nabídka" data-en="Menu">Nabídka</a>
+      <a href="#navsteva" data-cs="Návštěva" data-en="Visit">Návštěva</a>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button id="btn-cs" class="active" onclick="setLang('cs')">CZ</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Přepnout téma / Toggle theme" title="Přepnout téma">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero__grid">
+      <div>
+        <p class="hero__kicker" data-site="hero.kicker"></p>
+        <h1 data-site-letters="brand.name"></h1>
+        <p class="hero__sub" data-site="hero.sub"></p>
+        <a class="hero__cta" href="#navsteva">
+          <span data-site="hero.cta"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- nekonečný pás fotek; obsah plní engine, druhou půlku klonuje skript -->
+    <div class="strip">
+      <div class="strip__track" id="galleryGrid"></div>
+    </div>
+  </header>
+  <div class="hero__meta">
+    <div data-site-if="rating"><b>★ <span data-site="rating.score"></span></b><span><span data-site="rating.count"></span> <span data-cs="recenzí" data-en="reviews">recenzí</span></span></div>
+    <div><span data-site="hours.summary"></span></div>
+    <div class="scrolltxt"><span data-cs="posouvejte ↓" data-en="scroll ↓">posouvejte ↓</span></div>
+  </div>
+
+  <!-- ATMOSFÉRA -->
+  <div class="rule-wrap"><div class="rule"></div></div>
+  <section id="atmosfera">
+    <p class="kicker reveal" data-cs="Bistro" data-en="Bistro">Bistro</p>
+    <h2 class="h2 reveal" data-cs="Rychlé bistro, pomalá kuchyně" data-en="Fast bistro, slow kitchen">Rychlé bistro, pomalá kuchyně</h2>
+    <p class="lead reveal" data-cs="Vaříme tak, jak se vaří doma v Sài Gònu — jen o pár tisíc kilometrů dál." data-en="We cook the way they cook at home in Sài Gòn — just a few thousand kilometres away.">Vaříme tak, jak se vaří doma v Sài Gònu — jen o pár tisíc kilometrů dál.</p>
+    <div class="facts reveal">
+      <div><b data-cs="Dvanáct hodin vývaru" data-en="Twelve-hour broth">Dvanáct hodin vývaru</b><span data-cs="Kosti, badyán, skořice, žádný glutamát" data-en="Bones, star anise, cinnamon, no MSG">Kosti, badyán, skořice, žádný glutamát</span></div>
+      <div><b data-cs="Ostrost podle vás" data-en="Your heat level">Ostrost podle vás</b><span data-cs="Od nuly po tři chilli — řekněte u pultu" data-en="From zero to three chillies — say it at the counter">Od nuly po tři chilli — řekněte u pultu</span></div>
+      <div><b data-cs="Bylinky každé ráno" data-en="Herbs every morning">Bylinky každé ráno</b><span data-cs="Koriandr, máta, thajská bazalka" data-en="Coriander, mint, Thai basil">Koriandr, máta, thajská bazalka</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
+      </div>
+      <div class="carousel__dots" id="carDots"></div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <div class="rule-wrap"><div class="rule"></div></div>
+  <section id="nabidka">
+    <p class="kicker reveal" data-cs="Jídelní lístek" data-en="Food menu">Jídelní lístek</p>
+    <h2 class="h2 reveal" data-cs="Nabídka" data-en="Our menu">Nabídka</h2>
+    <p class="lead reveal" data-site="menu.intro"></p>
+    <div class="menu-cats" id="menuCats"></div>
+    <div class="menu-groups" id="menuGroups"></div>
+  </section>
+
+  <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
+  <section id="navsteva">
+    <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
+    <h2 class="h2 reveal" data-cs="Přijďte na misku" data-en="Come for a bowl">Přijďte na misku</h2>
+    <div class="visit">
+      <div class="reveal">
+        <div class="info-card">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-cs="Adresa" data-en="Address">Adresa</span></h3>
+          <p class="addr">
+            <span data-site="contact.address.line1"></span><br>
+            <span data-site="contact.address.line2"></span><br>
+            <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Otevřít v Mapách Google →" data-en="Open in Google Maps →">Otevřít v Mapách Google →</a>
+          </p>
+        </div>
+        <div class="info-card">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-cs="Otevírací doba" data-en="Opening hours">Otevírací doba</span></h3>
+          <ul class="hours-list" id="hoursList"></ul>
+        </div>
+        <div class="info-card phone-card">
+          <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg><span data-cs="Telefon" data-en="Phone">Telefon</span></h3>
+          <a class="phone-big" data-site-href="contact.phoneHref" data-site="contact.phone"></a>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="map-wrap">
+          <iframe data-site-map loading="lazy" title="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="f-inner">
+    <div class="flogo" data-site="brand.name"></div>
+    <p data-site="contact.address.short"></p>
+    <p><a data-site-href="contact.phoneHref" data-site="contact.phone"></a> · <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Mapy Google" data-en="Google Maps">Mapy Google</a></p>
+    <p class="tiny">© <span id="year"></span> <span data-site="brand.name"></span> · <span data-site="footer.credits"></span></p>
+    <p class="tiny"><a href="../../index.html" data-cs="← Všechny šablony" data-en="← All templates">← Všechny šablony</a></p>
+  </div>
+</footer>
+
+<script>window.TEMPLATE={letterClass:'ch',letterIndexVar:true,placeholderIcon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1.5 1-2 1-3"/><path d="M12 6c0-1.5 1-2 1-3"/><path d="M2 20h20"/></svg>'};</script>
+<script src="../assets/site.js"></script>
+<script>
+/* Pás jede dokola: druhá půlka je klon první, animace posune track
+   přesně o 50 % a smyčka je bez švu. */
+(function(){
+  var track = document.getElementById('galleryGrid');
+  if (!track || !track.children.length) return;
+  var base = Array.prototype.slice.call(track.children);
+
+  function setWidth() {
+    var w = 0;
+    base.forEach(function (fig) {
+      w += fig.getBoundingClientRect().width + parseFloat(getComputedStyle(fig).marginRight);
+    });
+    return w;
+  }
+
+  function addCopy() {
+    base.forEach(function (fig) {
+      var clone = fig.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      /* `loading="lazy"` se řídí pozicí v rozvržení, ne posunem animace —
+         kartičky stojící za pravým okrajem okna by se nenačetly nikdy
+         a další kolo smyčky by přijelo prázdné. */
+      Array.prototype.forEach.call(clone.querySelectorAll('img'), function (img) {
+        img.loading = 'eager';
+      });
+      track.appendChild(clone);
+    });
+  }
+
+  function fill() {
+    var one = setWidth();
+    if (!one) return;
+    /* Po odjetí jedné sady musí zbytek pásu pořád pokrývat celé okno,
+       jinak se vpravo objeví prázdno. Kopií proto musí být tolik, aby
+       (počet − 1) × délka sady byla aspoň široká jako okno. */
+    var need = Math.max(2, Math.ceil(window.innerWidth / one) + 1);
+    while (track.children.length / base.length < need) addCopy();
+    track.style.setProperty('--strip-set', one + 'px');
+  }
+
+  Array.prototype.forEach.call(track.querySelectorAll('img'), function (img) {
+    img.loading = 'eager';
+  });
+  fill();
+  /* fotky mohou dorazit až po prvním měření a šířka kartiček se mění
+     s breakpointy — po obojím délku sady přepočítáme */
+  window.addEventListener('load', fill);
+  var t;
+  window.addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(fill, 150);
+  });
+})();
+</script>
+</body>
+</html>

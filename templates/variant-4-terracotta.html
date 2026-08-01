@@ -137,10 +137,10 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .hero__photo{position:relative;padding:12px}
 .hero__photo::before{
   content:"";position:absolute;inset:0;border:1px solid var(--terra);
-  border-radius:var(--arch);transform:translate(14px,14px);
+  border-radius:var(--arch);
 }
 .hero__photo .frame{overflow:hidden;border-radius:var(--arch);position:relative}
-.hero__photo img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.hero__photo img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
 .scroll-hint{
   position:absolute;bottom:20px;left:0;right:0;text-align:center;
   font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brown-soft);
@@ -276,9 +276,9 @@ section{padding:96px 22px;max-width:1140px;margin:0 auto;position:relative}
 .info-card.phone-card h3{color:var(--on-terra)}
 .info-card.phone-card h3 svg{color:var(--on-terra)}
 .phone-big{color:var(--on-terra);font-family:var(--serif);font-size:1.5rem;text-decoration:none;letter-spacing:.03em}
-.map-wrap{overflow:hidden;border-radius:var(--arch);border:1px solid rgba(198,95,63,.35);aspect-ratio:3/4;background:var(--card-bg)}
+.map-wrap{position:relative;overflow:hidden;border-radius:var(--arch);border:1px solid rgba(198,95,63,.35);aspect-ratio:3/4;background:var(--card-bg)}
 @media(min-width:880px){.map-wrap{aspect-ratio:auto;height:100%;min-height:480px}}
-.map-wrap iframe{width:100%;height:100%;border:0;filter:var(--map-filter)}
+.map-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:var(--map-filter)}
 
 /* ============ FOOTER ============ */
 footer{background:var(--raised-bg);color:rgba(241,228,208,.75);padding:48px 22px 38px;text-align:center}
@@ -378,10 +378,6 @@ footer .tiny{margin-top:22px;font-size:.72rem;color:rgba(241,228,208,.4)}
     <div class="menu-cats" id="menuCats"></div>
     <div class="menu-groups" id="menuGroups"></div>
 
-    <div class="menu-group" style="margin-top:10px">
-      <h3 data-cs="Seznam alergenů" data-en="Allergen list">Seznam alergenů</h3>
-      <p class="allergens" id="allergenList"></p>
-    </div>
   </section>
 
   <!-- VISIT -->
@@ -445,6 +441,26 @@ footer .tiny{margin-top:22px;font-size:.72rem;color:rgba(241,228,208,.4)}
       ticking=true;
     }
   },{passive:true});
+})();
+</script>
+<script>
+/* zoom hero fotky při scrollu: cíl sleduje scrollY, aktuální hodnota se k němu po
+   snímcích dotahuje — pohyb je pak měkčí než přímé mapování na scroll
+   (stejné chování jako u varianty Warm Paper) */
+(function(){
+  var img = document.querySelector('img[data-site-src="hero.image"]');
+  if (!img) return;
+  var target = 0, current = 0, rafId = null;
+  function frame(){
+    current += (target - current) * 0.25;
+    if (Math.abs(target - current) < 0.1) current = target;
+    if (current < innerHeight) img.style.transform = 'scale(' + (1 + current * .0003) + ')';
+    if (current !== target) rafId = requestAnimationFrame(frame); else rafId = null;
+  }
+  addEventListener('scroll', function(){
+    target = scrollY;
+    if (rafId === null) rafId = requestAnimationFrame(frame);
+  }, { passive: true });
 })();
 </script>
 </body>

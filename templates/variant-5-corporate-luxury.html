@@ -448,10 +448,6 @@ footer .tiny{margin-top:24px;font-size:.75rem;font-weight:300;color:rgba(245,244
     <div class="menu-cats" id="menuCats"></div>
     <div class="menu-groups" id="menuGroups"></div>
 
-    <div class="menu-group" style="margin-top:20px">
-      <h3 data-cs="Informace o alergenech" data-en="Allergen information">Informace o alergenech</h3>
-      <p class="allergens" id="allergenList"></p>
-    </div>
   </section>
 
   <div class="divider-line"></div>
@@ -523,6 +519,26 @@ if(window.gsap && window.ScrollTrigger){
     });
   });
 }
+</script>
+<script>
+/* zoom hero fotky při scrollu: cíl sleduje scrollY, aktuální hodnota se k němu po
+   snímcích dotahuje — pohyb je pak měkčí než přímé mapování na scroll
+   (stejné chování jako u varianty Warm Paper) */
+(function(){
+  var img = document.querySelector('img[data-site-src="hero.image"]');
+  if (!img) return;
+  var target = 0, current = 0, rafId = null;
+  function frame(){
+    current += (target - current) * 0.25;
+    if (Math.abs(target - current) < 0.1) current = target;
+    if (current < innerHeight) img.style.transform = 'scale(' + (1 + current * .0003) + ')';
+    if (current !== target) rafId = requestAnimationFrame(frame); else rafId = null;
+  }
+  addEventListener('scroll', function(){
+    target = scrollY;
+    if (rafId === null) rafId = requestAnimationFrame(frame);
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

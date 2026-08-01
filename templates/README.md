@@ -16,7 +16,16 @@ souboru** — `assets/site.config.js`. HTML šablon se nemusí sahat.
 Warm Paper leží mimo tuhle složku (`../site/`), protože vznikl první — engine
 i konfiguraci ale sdílí se zbytkem, jen na ně odkazuje o adresář výš.
 
-Demo obsah = PF Café, Brno. Je to jen ukázková náplň: pro nový podnik se
+Pro bistra je vedle toho samostatná sada pěti šablon podle kuchyně
+(česká, vietnamská, japonská, italská, rostlinná) ve složce
+[`bistro/`](bistro/README.md). Sdílí stejný engine, jen má vlastní konfigurace
+a vlastní sadu fotek ve `../photos/bistro/`.
+
+Zásady, podle kterých šablony vznikají — čím se má nová šablona lišit, co
+patří do konfigurace a co do HTML, co všechno se před vypuštěním zkouší —
+jsou v [`../TEMPLATE-PRINCIPLES.md`](../TEMPLATE-PRINCIPLES.md).
+
+Demo obsah = obecná „Kavárna“. Je to jen ukázková náplň: pro nový podnik se
 přepíše `assets/site.config.js` a šablona zůstane beze změny.
 
 ## Struktura
@@ -111,7 +120,7 @@ python -m http.server 8000
 | `data-site="contact.phone"` | text prvku z konfigurace |
 | `data-site-href` / `-src` / `-alt` | odpovídající atribut |
 | `data-site-letters="brand.name"` | rozseká text na `<span>` písmena (animace hero) |
-| `data-site-split="brand.name"` | „PF Café“ → `PF <span>Café</span>` (dvoubarevné logo) |
+| `data-site-split="brand.name"` | „Naše Kavárna“ → `Naše <span>Kavárna</span>` (dvoubarevné logo) |
 | `data-site-map` | `src` vložené mapy z `contact.mapCoords` |
 | `data-site-if="rating"` | prvek se skryje, když je hodnota prázdná |
 | `data-cs` / `data-en` | statická copy patřící k designu šablony, ne k podniku |

@@ -59,6 +59,23 @@
     // vrátí data-cs="…" data-en="…" pro dvojjazyčnou hodnotu
     return LANGS.map(function (l) { return 'data-' + l + '="' + esc(t(v, l)) + '"'; }).join(' ');
   }
+  /* Fotka, která se nenačte (chybí soubor, špatná cesta), nesmí zůstat jako
+     rozbitá ikona. Obal dostane třídu `is-missing`, obrázek zmizí a šablona
+     si na jeho místo v CSS nakreslí zástupný vzor ve svém duchu.
+     Sady, které fotky mají, se toho nikdy nedotknou. */
+  function markMissingPhotos(box) {
+    if (!box) return;
+    Array.prototype.slice.call(box.querySelectorAll('img')).forEach(function (img) {
+      function miss() {
+        img.style.display = 'none';
+        var holder = img.closest('figure') || img.parentNode;
+        if (holder) holder.classList.add('is-missing');
+      }
+      img.addEventListener('error', miss);
+      if (img.complete && img.naturalWidth === 0) miss();   // chyba už proběhla
+    });
+  }
+
   function menuPhoto(file) {
     if (!file) return null;
     var base = (S.menu && S.menu.photoBase) || '';
@@ -108,12 +125,24 @@
       var text = t(get(el.dataset.siteLetters), LANG);
       el.setAttribute('aria-label', text);
       el.innerHTML = '';
+      /* Písmena jsou samostatné inline-block spany a prohlížeč mezi nimi smí
+         zalomit — víceslovný název by se trhal uprostřed slova. Každé slovo
+         je proto v nezalomitelném obalu a mezera visí na jeho konci. */
+      var word = null;
+      function newWord() {
+        word = document.createElement('span');
+        word.style.display = 'inline-block';
+        word.style.whiteSpace = 'nowrap';
+        el.appendChild(word);
+      }
+      newWord();
       text.split('').forEach(function (ch, i) {
         var s = document.createElement('span');
         s.className = LETTER_CLASS;
         if (T.letterIndexVar) s.style.setProperty('--i', i);
         s.textContent = ch === ' ' ? ' ' : ch;
-        el.appendChild(s);
+        word.appendChild(s);
+        if (ch === ' ') newWord();
       });
     });
   }
@@ -135,12 +164,39 @@
   /* ---------- galerie ---------- */
   function buildGallery() {
     var track = $('carTrack');
-    if (!track || !S.gallery) return;
-    track.innerHTML = S.gallery.map(function (g) {
+    /* Bistro šablony mají v hero vlastní mřížku fotek jídel (`gallery`),
+       a listovací galerii interiéru zvlášť (`interior`). Kavárenské
+       varianty klíč `interior` nemají a jedou dál z `gallery`. */
+    var items = S.interior || S.gallery;
+    if (!track) return;
+    if (!items || !items.length) {
+      /* prázdná galerie = sekce se vůbec nezobrazí, ať nezůstane díra */
+      var sec = track.closest('section');
+      if (sec) sec.hidden = true;
+      return;
+    }
+    track.innerHTML = items.map(function (g) {
       return '<figure class="carousel__slide"><img src="' + esc(g.src) + '" alt="' + esc(t(g.alt, DEFAULT_LANG)) + '" loading="lazy">' +
         (g.caption ? '<figcaption ' + langAttrs(g.caption) + '>' + esc(t(g.caption, DEFAULT_LANG)) + '</figcaption>' : '') +
         '</figure>';
     }).join('');
+    markMissingPhotos(track);
+  }
+
+  /* ---------- galerie bez karuselu ----------
+     Šablony bister nemají posuvný karusel, ale vlastní rozvržení fotek.
+     Engine sem jen vysype <figure> z S.gallery, vzhled si řeší každá
+     šablona sama v CSS (kolik sloupců, jaké rámečky, jaký hover). */
+  function buildGalleryGrid() {
+    var box = $('galleryGrid');
+    if (!box || !S.gallery) return;
+    box.innerHTML = S.gallery.map(function (g, i) {
+      return '<figure class="g-item" style="--n:' + i + '">' +
+        '<span class="g-frame"><img src="' + esc(g.src) + '" alt="' + esc(t(g.alt, DEFAULT_LANG)) + '" loading="lazy"></span>' +
+        (g.caption ? '<figcaption ' + langAttrs(g.caption) + '>' + esc(t(g.caption, DEFAULT_LANG)) + '</figcaption>' : '') +
+        '</figure>';
+    }).join('');
+    markMissingPhotos(box);
   }
 
   /* ---------- mapa ---------- */
@@ -372,6 +428,7 @@
   if (S.brand && S.brand.color) document.documentElement.style.setProperty('--brand', S.brand.color);
 
   buildGallery();
+  buildGalleryGrid();
   buildMenu();
   buildAllergens();
   buildMap();
