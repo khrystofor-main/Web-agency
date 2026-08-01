@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="cs" data-variant-name="Tabule">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Šablona · Bar — sportovní bar</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============
+   Tabule — výsledková tabule. Studená šeď, jedna signální červená,
+   zelená jen pro „hraje se teď“. Čísla jsou hlavní typografie. */
+:root{
+  --bg:#EDEFF2;
+  --ink:#111519;
+  --gray:#5F6873;
+  --brand:#E03127;                /* signální — přepisovatelné přes SITE.brand.color */
+  --accent:var(--brand);
+  --live:#12A05C;
+  --line:rgba(17,21,25,.14);
+  --line-strong:rgba(17,21,25,.38);
+  --on-ink:#EDEFF2;
+  --raised-bg:#111519;
+  --raised-fg:#EDEFF2;
+  --raised-soft:rgba(237,239,242,.74);
+  --raised-faint:rgba(237,239,242,.44);
+  --raised-line:rgba(237,239,242,.22);
+  --surface:#DFE3E8;
+  --map-bg:#DFE3E8;
+  --nav-rgb:237,239,242;
+  --map-filter:grayscale(.5) contrast(1.05);
+  --head:'Anton',Impact,sans-serif;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --nav-h:62px;
+  --ease:cubic-bezier(.2,.8,.3,1);
+  color-scheme:light;
+}
+/* ============ NOČNÍ TÉMA ============
+   Zápas ve tmě — tabule svítí, sál zhasne. */
+html[data-theme="dark"]{
+  --bg:#0E1216;
+  --ink:#E9EDF2;
+  --gray:#8A939E;
+  --brand:#FF4A3D;
+  --live:#2ECB7C;
+  --line:rgba(233,237,242,.14);
+  --line-strong:rgba(233,237,242,.36);
+  --on-ink:#0E1216;
+  --raised-bg:#05080A;
+  --raised-fg:#E9EDF2;
+  --raised-soft:rgba(233,237,242,.74);
+  --raised-faint:rgba(233,237,242,.44);
+  --raised-line:rgba(233,237,242,.22);
+  --surface:#171C22;
+  --map-bg:#171C22;
+  --nav-rgb:14,18,22;
+  --map-filter:grayscale(.5) contrast(.95) invert(.92);
+  color-scheme:dark;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-weight:400;line-height:1.65;
+  transition:background-color .3s,color .3s;
+  overflow-x:clip;-webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--head);font-weight:400;line-height:1.02;text-transform:uppercase;letter-spacing:.005em}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:rgba(var(--nav-rgb),0);transition:background .3s,box-shadow .3s;
+}
+nav.scrolled{background:rgba(var(--nav-rgb),.95);box-shadow:0 1px 0 var(--line-strong)}
+nav .logo{font-family:var(--head);font-size:1.3rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+nav .right{display:flex;align-items:center;gap:14px}
+nav .links{display:none;gap:22px}
+nav .links a{color:var(--gray);text-decoration:none;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .25s}
+nav .links a:hover{color:var(--accent)}
+@media(min-width:760px){nav .links{display:flex}}
+.lang-toggle{display:flex;gap:4px}
+.lang-toggle button{
+  background:transparent;border:0;border-radius:3px;padding:4px 8px;cursor:pointer;
+  font-family:var(--sans);font-size:.72rem;font-weight:600;letter-spacing:.08em;color:var(--gray);transition:.25s;
+}
+.lang-toggle button.active{background:var(--accent);color:#fff}
+.theme-btn{
+  display:flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;cursor:pointer;
+  border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--gray);transition:.25s;
+}
+.theme-btn:hover{color:var(--accent);border-color:var(--accent)}
+.theme-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .i-sun{display:none}
+html[data-theme="dark"] .theme-btn .i-moon{display:none}
+html[data-theme="dark"] .theme-btn .i-sun{display:block}
+
+/* ============ HERO ============
+   Tři sloupce vedle sebe: vlevo program zápasů, uprostřed text,
+   vpravo stopka fotek. Žádný z nich není přes celou šířku —
+   stránka začíná jako tabule s několika okny. */
+.hero{min-height:100svh;display:flex;align-items:center;padding:calc(var(--nav-h) + 26px) 20px 30px}
+.hero__grid{
+  max-width:1300px;margin:0 auto;width:100%;
+  display:grid;gap:26px;grid-template-columns:1fr;
+}
+@media(min-width:820px){.hero__grid{grid-template-columns:1fr 1fr;gap:30px}}
+@media(min-width:1120px){.hero__grid{grid-template-columns:270px 1fr 300px;gap:34px;align-items:stretch}}
+
+/* --- levý sloupec: program --- */
+.board{
+  border:2px solid var(--ink);background:var(--surface);
+  display:flex;flex-direction:column;
+  opacity:0;animation:slide .6s .1s var(--ease) forwards;
+}
+.board__head{
+  background:var(--ink);color:var(--on-ink);padding:10px 14px;
+  font-family:var(--head);font-size:.86rem;letter-spacing:.12em;display:flex;justify-content:space-between;align-items:center;
+}
+.board__list{list-style:none;flex:1}
+.board__list li{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);align-items:baseline}
+.board__list li:last-child{border-bottom:0}
+.board__time{font-family:var(--head);font-size:.94rem;color:var(--accent);letter-spacing:.02em}
+.board__match{font-size:.86rem;line-height:1.4}
+.board__match small{display:block;color:var(--gray);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase}
+/* „hraje se teď“ — jediné místo, kde svítí zelená */
+.board__list li.live .board__time{color:var(--live)}
+.board__list li.live .board__match small::after{content:" ●";color:var(--live)}
+@media(max-width:1119px){.board{order:3}}
+
+/* --- prostřední sloupec: text --- */
+.hero__head{display:flex;flex-direction:column;justify-content:center;padding:6px 0}
+@media(min-width:820px) and (max-width:1119px){.hero__head{grid-column:1/-1;order:1}}
+.hero__kicker{
+  display:inline-block;align-self:flex-start;background:var(--accent);color:#fff;
+  font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:5px 10px;margin-bottom:16px;
+  opacity:0;animation:slide .6s .2s var(--ease) forwards;
+}
+/* Anton má řádek natěsno (1.02), takže kroužek nad „Ů“ přetéká nahoru
+   a naráží do štítku. Kousek místa navíc ho udrží uvnitř nadpisu. */
+.hero h1{font-size:clamp(3rem,9vw,6rem);padding-top:.12em}
+.hero h1 .ch{display:inline-block;opacity:0;animation:slide .5s var(--ease) forwards;animation-delay:calc(.035s * var(--i) + .25s)}
+@keyframes slide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero__sub{color:var(--gray);font-size:clamp(.98rem,2vw,1.08rem);max-width:42ch;margin-top:16px;opacity:0;animation:slide .6s .6s var(--ease) forwards}
+.hero__cta{
+  display:inline-block;align-self:flex-start;margin-top:22px;padding:13px 28px;
+  background:var(--accent);color:#fff;text-decoration:none;
+  font-family:var(--head);font-size:.94rem;letter-spacing:.1em;text-transform:uppercase;
+  opacity:0;animation:slide .6s .75s var(--ease) forwards;transition:background .25s;
+}
+.hero__cta:hover{background:var(--ink)}
+
+/* --- pravý sloupec: stopka fotek --- */
+.stack{display:grid;gap:10px;align-content:center}
+@media(min-width:820px) and (max-width:1119px){.stack{grid-template-columns:repeat(3,1fr);order:2}}
+@media(max-width:819px){.stack{grid-template-columns:repeat(2,1fr);order:2}}
+.stack .g-item{
+  position:relative;margin:0;overflow:hidden;background:var(--surface);border:2px solid var(--ink);
+  opacity:0;animation:slide .6s var(--ease) forwards;animation-delay:calc(.09s * var(--n) + .35s);
+}
+/* v širokém rozvržení se zobrazí jen první tři — sloupec má být stopka, ne mřížka */
+@media(min-width:1120px){.stack .g-item:nth-child(n+4){display:none}}
+@media(min-width:820px) and (max-width:1119px){.stack .g-item:nth-child(n+4){display:none}}
+.stack .g-frame{display:block}
+.stack img{width:100%;aspect-ratio:16/10;object-fit:cover;filter:grayscale(.3) contrast(1.06);transition:filter .4s}
+.stack .g-item:hover img{filter:none}
+/* zástupný vzor: vodorovné pruhy jako rozostřená obrazovka */
+.stack .g-item.is-missing .g-frame{
+  aspect-ratio:16/10;
+  background:repeating-linear-gradient(0deg,var(--surface) 0 6px,color-mix(in srgb,var(--gray) 22%,var(--surface)) 6px 12px);
+}
+.stack figcaption{
+  position:absolute;left:0;bottom:0;background:var(--ink);color:var(--on-ink);
+  font-family:var(--head);font-size:.68rem;letter-spacing:.1em;padding:4px 9px;
+}
+.hero__meta{
+  display:flex;flex-wrap:wrap;gap:0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  max-width:1300px;margin:0 auto;padding:0 20px;
+}
+.hero__meta > div{flex:1;min-width:150px;padding:12px 0;font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);display:flex;align-items:center;gap:8px}
+.hero__meta b{color:var(--accent);font-family:var(--head);font-weight:400}
+@media(max-width:560px){.hero__meta .scrolltxt{display:none}}
+
+/* ============ GENERIC ============ */
+section{padding:82px 20px;max-width:1300px;margin:0 auto}
+.rule{height:2px;background:var(--line-strong);max-width:1300px;margin:0 auto;transform:scaleX(0);transform-origin:left;transition:transform .9s var(--ease)}
+.rule.in{transform:scaleX(1)}
+.rule-wrap{padding:0 20px}
+.kicker{font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.h2{font-size:clamp(2rem,5.5vw,3.4rem);margin-bottom:16px}
+.lead{color:var(--gray);max-width:56ch;font-size:clamp(.98rem,2vw,1.06rem)}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ ATMOSFÉRA ============
+   Tři čísla velkým řezem — jako statistika zápasu. */
+.facts{display:grid;gap:0;margin-top:38px;border-top:2px solid var(--ink)}
+@media(min-width:760px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts > div{padding:22px 0;border-bottom:1px solid var(--line)}
+@media(min-width:760px){
+  .facts > div{padding:22px 26px 22px 0;border-bottom:0;border-right:2px solid var(--line)}
+  .facts > div:last-child{border-right:0}
+}
+.facts b{font-family:var(--head);font-weight:400;font-size:1.5rem;display:block;margin-bottom:2px;text-transform:uppercase}
+.facts span{font-size:.9rem;color:var(--gray)}
+
+/* ============ GALERIE INTERIÉRU ============ */
+.carousel{position:relative;margin-top:42px;border:2px solid var(--ink)}
+.carousel__viewport{overflow:hidden;background:var(--surface);cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.carousel__viewport.dragging{cursor:grabbing}
+.carousel__viewport:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.carousel__track{display:flex;transition:transform .45s var(--ease);will-change:transform}
+.carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3}
+@media(min-width:760px){.carousel__slide{aspect-ratio:21/9}}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.carousel__slide.is-missing{background:repeating-linear-gradient(0deg,var(--surface) 0 8px,color-mix(in srgb,var(--gray) 20%,var(--surface)) 8px 16px)}
+.carousel__slide figcaption{
+  position:absolute;left:0;bottom:0;background:var(--ink);color:var(--on-ink);
+  font-family:var(--head);font-size:.82rem;letter-spacing:.1em;padding:7px 14px;
+}
+.carousel__counter{
+  position:absolute;top:0;left:0;z-index:3;background:var(--accent);color:#fff;
+  font-family:var(--head);font-size:.8rem;letter-spacing:.08em;padding:6px 12px;
+}
+.carousel__btn{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:40px;height:48px;display:flex;align-items:center;justify-content:center;
+  border:0;background:var(--ink);color:var(--on-ink);cursor:pointer;transition:background .25s,opacity .25s;
+}
+.carousel__btn:hover{background:var(--accent)}
+.carousel__btn:disabled{opacity:.3;cursor:default}
+.carousel__btn--prev{left:0}
+.carousel__btn--next{right:0}
+/* Řádek teček nemá vlastní podklad — plná plocha `--ink` by v nočním
+   tématu (kde je `--ink` světlý) svítila pod fotkou jako bílý pruh. */
+.carousel__dots{display:flex;gap:5px;padding:10px;justify-content:center}
+.carousel__dot{width:22px;height:5px;border:0;padding:0;cursor:pointer;background:var(--line-strong);transition:background .25s}
+.carousel__dot.active{background:var(--accent)}
+
+/* ============ MENU ============
+   Nabídka jako tabulka výsledků: řádek, tučný název, cena vpravo.
+   Sudé řádky mají podklad — čte se rychle i přes celý sál. */
+.menu-cats{
+  position:sticky;top:var(--nav-h);z-index:5;background:var(--bg);
+  display:flex;gap:0;margin:34px -20px 34px;padding:0 20px;
+  border-bottom:2px solid var(--ink);flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+}
+.menu-cats::-webkit-scrollbar{display:none}
+.menu-cat{
+  flex:0 0 auto;border:0;background:none;cursor:pointer;white-space:nowrap;
+  font-family:var(--head);font-size:.92rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gray);padding:12px 16px;transition:color .25s,background .25s;
+}
+.menu-cat.active{color:#fff;background:var(--accent)}
+.menu-group{margin-bottom:44px}
+.menu-group h3{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:12px}
+.menu-note{font-size:.9rem;color:var(--gray);margin:0 0 20px;max-width:60ch;border-left:4px solid var(--accent);padding-left:12px}
+.menu-items{display:grid;gap:0;grid-template-columns:1fr}
+@media(min-width:960px){.menu-items{grid-template-columns:1fr 1fr;column-gap:44px}}
+.menu-item{
+  display:flex;align-items:center;gap:12px;padding:11px 12px;
+  opacity:0;transform:translateY(8px);transition:opacity .45s var(--ease),transform .45s var(--ease);
+}
+.menu-item.in{opacity:1;transform:none}
+.menu-item:nth-child(odd){background:var(--surface)}
+.menu-item__ph{flex:0 0 44px;width:44px;height:44px;overflow:hidden;background:var(--bg)}
+.menu-item__ph img{width:100%;height:100%;object-fit:cover}
+.menu-item__ph--empty{display:none}
+.menu-item__body{flex:1;display:flex;align-items:center;gap:10px}
+.menu-item__body b{font-weight:500;font-size:.96rem}
+.menu-item__body::after{content:"";flex:1}
+.menu-item__price{flex:0 0 auto;font-family:var(--head);font-size:1rem;color:var(--accent);letter-spacing:.04em;white-space:nowrap}
+
+/* ============ VISIT ============ */
+.visit{display:grid;gap:34px;margin-top:34px}
+@media(min-width:860px){.visit{grid-template-columns:1fr 1fr;gap:52px;align-items:start}}
+.info-card{border-top:2px solid var(--ink);padding:16px 0 22px}
+.info-card h3{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gray);margin-bottom:13px;display:flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:600}
+.info-card h3 svg{flex:0 0 auto;color:var(--accent)}
+.hours-list{list-style:none}
+.hours-list li{display:flex;justify-content:space-between;padding:6px 0;font-size:.92rem;color:var(--gray)}
+.hours-list .today{color:var(--accent);font-weight:600}
+.addr{font-size:1rem;line-height:1.85}
+.addr a{color:var(--ink);text-decoration:none;border-bottom:2px solid var(--accent);transition:.25s}
+.addr a:hover{color:var(--accent)}
+.info-card.phone-card{background:var(--raised-bg);border:0;color:var(--raised-fg);padding:22px}
+.info-card.phone-card h3{color:var(--raised-soft)}
+.phone-big{color:var(--raised-fg);font-family:var(--head);font-size:1.6rem;letter-spacing:.04em;text-decoration:none}
+.phone-big:hover{color:var(--accent)}
+.map-wrap{aspect-ratio:1/1;background:var(--map-bg);border:2px solid var(--ink)}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:var(--map-filter)}
+
+/* ============ FOOTER ============ */
+footer{background:var(--raised-bg);color:var(--raised-soft);padding:52px 20px 40px}
+.f-inner{max-width:1300px;margin:0 auto}
+footer .flogo{font-family:var(--head);font-size:1.6rem;letter-spacing:.04em;text-transform:uppercase;color:var(--raised-fg);margin-bottom:10px}
+footer p{font-size:.86rem;margin:4px 0}
+footer a{color:var(--raised-fg);text-decoration:none;border-bottom:1px solid var(--raised-line)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
+  .reveal,.menu-item,.stack .g-item,.board,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch{opacity:1;transform:none}
+  .rule{transform:scaleX(1)}
+  html{scroll-behavior:auto}
+}
+</style>
+<script src="cfg.sportovni-bar.js"></script>
+<script src="../assets/theme.js"></script>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="#top" data-site="brand.name"></a>
+  <div class="right">
+    <div class="links">
+      <a href="#atmosfera" data-cs="Bar" data-en="The bar">Bar</a>
+      <a href="#nabidka" data-cs="Nabídka" data-en="Menu">Nabídka</a>
+      <a href="#navsteva" data-cs="Návštěva" data-en="Visit">Návštěva</a>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button id="btn-cs" class="active" onclick="setLang('cs')">CZ</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Přepnout téma / Toggle theme" title="Přepnout téma">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO — tři sloupce: program, text, fotky -->
+  <header class="hero">
+    <div class="hero__grid">
+
+      <!-- program zápasů; řádky doplní skript na konci stránky ze SITE.matches -->
+      <aside class="board" id="matchBoard" hidden>
+        <div class="board__head">
+          <span data-cs="Dnes na plátně" data-en="On screen today">Dnes na plátně</span>
+          <span data-site="matches.channel"></span>
+        </div>
+        <ul class="board__list" id="matchList"></ul>
+      </aside>
+
+      <div class="hero__head">
+        <p class="hero__kicker" data-site="hero.kicker"></p>
+        <h1 data-site-letters="brand.name"></h1>
+        <p class="hero__sub" data-site="hero.sub"></p>
+        <a class="hero__cta" href="#nabidka" data-site="hero.cta"></a>
+      </div>
+
+      <!-- stopka fotek; obsah plní engine ze SITE.gallery -->
+      <div class="stack" id="galleryGrid"></div>
+    </div>
+  </header>
+  <div class="hero__meta">
+    <div data-site-if="rating"><b>★ <span data-site="rating.score"></span></b><span><span data-site="rating.count"></span> <span data-cs="recenzí" data-en="reviews">recenzí</span></span></div>
+    <div><span data-site="hours.summary"></span></div>
+    <div class="scrolltxt"><span data-cs="posouvejte ↓" data-en="scroll ↓">posouvejte ↓</span></div>
+  </div>
+
+  <!-- ATMOSFÉRA -->
+  <section id="atmosfera">
+    <p class="kicker reveal" data-cs="Bar" data-en="The bar">Bar</p>
+    <h2 class="h2 reveal" data-cs="Šest obrazovek, jedno plátno, zvuk vždy u toho hlavního" data-en="Six screens, one projector, sound always on the main game">Šest obrazovek, jedno plátno, zvuk vždy u toho hlavního</h2>
+    <p class="lead reveal" data-cs="Co se hraje, visí na tabuli u vchodu i tady na webu. Na velké zápasy si rezervujte stůl — bývá plno." data-en="What is on is posted by the door and here on the site. Book a table for the big games — we fill up.">Co se hraje, visí na tabuli u vchodu i tady na webu. Na velké zápasy si rezervujte stůl — bývá plno.</p>
+    <div class="facts reveal">
+      <div><b data-cs="6 obrazovek" data-en="6 screens">6 obrazovek</b><span data-cs="Plus plátno 3 m v zadním sále." data-en="Plus a 3 m projector screen in the back room.">Plus plátno 3 m v zadním sále.</span></div>
+      <div><b data-cs="Zvuk u hlavního" data-en="Sound on the main game">Zvuk u hlavního</b><span data-cs="Ostatní zápasy běží potichu s titulky." data-en="Other games run muted with subtitles.">Ostatní zápasy běží potichu s titulky.</span></div>
+      <div><b data-cs="Rezervace na zápas" data-en="Book for the game">Rezervace na zápas</b><span data-cs="Držíme stůl do prvního hvizdu." data-en="We hold your table until kick-off.">Držíme stůl do prvního hvizdu.</span></div>
+    </div>
+
+    <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
+    <div class="carousel reveal">
+      <div class="carousel__counter" id="carCounter">1 / 1</div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="carousel__viewport" id="carViewport">
+        <div class="carousel__track" id="carTrack"></div>
+      </div>
+      <div class="carousel__dots" id="carDots"></div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <div class="rule-wrap"><div class="rule"></div></div>
+  <section id="nabidka">
+    <p class="kicker reveal" data-cs="Nabídka" data-en="Menu">Nabídka</p>
+    <h2 class="h2 reveal" data-cs="Pivo, burger, poločas" data-en="Beer, burger, half-time">Pivo, burger, poločas</h2>
+    <p class="lead reveal" data-site="menu.intro"></p>
+    <div class="menu-cats" id="menuCats"></div>
+    <div class="menu-groups" id="menuGroups"></div>
+  </section>
+
+  <!-- VISIT -->
+  <div class="rule-wrap"><div class="rule"></div></div>
+  <section id="navsteva">
+    <p class="kicker reveal" data-cs="Návštěva" data-en="Visit">Návštěva</p>
+    <h2 class="h2 reveal" data-cs="Najdete nás tady" data-en="Find us here">Najdete nás tady</h2>
+    <div class="visit">
+      <div class="reveal">
+        <div class="info-card">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-cs="Adresa" data-en="Address">Adresa</span></h3>
+          <p class="addr">
+            <span data-site="contact.address.line1"></span><br>
+            <span data-site="contact.address.line2"></span><br>
+            <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Otevřít v Mapách Google →" data-en="Open in Google Maps →">Otevřít v Mapách Google →</a>
+          </p>
+        </div>
+        <div class="info-card">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-cs="Otevírací doba" data-en="Opening hours">Otevírací doba</span></h3>
+          <ul class="hours-list" id="hoursList"></ul>
+        </div>
+        <div class="info-card phone-card">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg><span data-cs="Telefon" data-en="Phone">Telefon</span></h3>
+          <a class="phone-big" data-site-href="contact.phoneHref" data-site="contact.phone"></a>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="map-wrap">
+          <iframe data-site-map loading="lazy" title="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="f-inner">
+    <div class="flogo" data-site="brand.name"></div>
+    <p data-site="contact.address.short"></p>
+    <p><a data-site-href="contact.phoneHref" data-site="contact.phone"></a> · <a data-site-href="contact.mapsUrl" target="_blank" rel="noopener" data-cs="Mapy Google" data-en="Google Maps">Mapy Google</a></p>
+    <p class="tiny">© <span id="year"></span> <span data-site="brand.name"></span> · <span data-site="footer.credits"></span></p>
+    <p class="tiny"><a href="../../index.html" data-cs="← Všechny šablony" data-en="← All templates">← Všechny šablony</a></p>
+  </div>
+</footer>
+
+<script>window.TEMPLATE={letterClass:'ch',letterIndexVar:true};</script>
+<script>
+/* Program zápasů — jediná věc, kterou umí jen tahle šablona, takže
+   nepatří do sdíleného enginu (assets/site.js) a bydlí tady.
+   Data jsou v cfg.sportovni-bar.js pod klíčem `matches`. Když pole
+   chybí nebo je prázdné, tabule se vůbec nezobrazí a hero se sesype
+   do dvou sloupců — žádná díra po prázdném panelu. */
+(function () {
+  var S = window.SITE || {};
+  var list = (S.matches && S.matches.items) || [];
+  var board = document.getElementById('matchBoard');
+  var ul = document.getElementById('matchList');
+  if (!board || !ul || !list.length) return;
+  board.hidden = false;
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+  ul.innerHTML = list.map(function (m) {
+    var lg = m.league || {};
+    return '<li' + (m.live ? ' class="live"' : '') + '>' +
+      '<span class="board__time">' + esc(m.time || '') + '</span>' +
+      '<span class="board__match">' + esc(m.match || '') +
+      '<small data-cs="' + esc(lg.cs || '') + '" data-en="' + esc(lg.en || '') + '">' + esc(lg.cs || '') + '</small>' +
+      '</span></li>';
+  }).join('');
+
+  /* setLang() překládá jen prvky, které v DOM už jsou — tabuli
+     vykreslujeme před site.js, takže se přeloží při prvním setLang(). */
+})();
+</script>
+<script src="../assets/site.js"></script>
+</body>
+</html>

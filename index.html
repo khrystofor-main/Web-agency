@@ -373,6 +373,31 @@ footer{
       </aside>
     </div>
   </div>
+
+  <div class="showcase" id="showcaseBar">
+    <p class="showcase-cat">Šablony pro bar / hospodu</p>
+
+    <div class="tabs tpl-tabs" role="tablist" aria-label="Výběr šablony pro bar">
+      <button type="button" role="tab" data-i="0" aria-selected="true">Šablona 1</button>
+      <button type="button" role="tab" data-i="1" aria-selected="false">Šablona 2</button>
+      <button type="button" role="tab" data-i="2" aria-selected="false">Šablona 3</button>
+      <button type="button" role="tab" data-i="3" aria-selected="false">Šablona 4</button>
+      <button type="button" role="tab" data-i="4" aria-selected="false">Šablona 5</button>
+    </div>
+
+    <div class="showcase-body">
+      <div class="preview tpl-preview">
+        <a class="preview-link tpl-preview-link" href="templates/bar/koktejlovy-bar.html" aria-label="Otevřít šablonu"></a>
+      </div>
+      <aside class="showcase-info">
+        <h3 class="tpl-name">Půlnoc</h3>
+        <p class="pair tpl-pair"></p>
+        <p class="desc tpl-desc"></p>
+        <div class="swatches tpl-swatches"></div>
+        <a class="open tpl-open" href="templates/bar/koktejlovy-bar.html">Otevřít →</a>
+      </aside>
+    </div>
+  </div>
 </section>
 
 <!-- CENA -->
@@ -502,6 +527,24 @@ const TEMPLATES_BISTRO = [
   { href:'templates/bistro/plant-based.html', name:'Zelený minimal', pair:'DM Serif Display + Nunito Sans',
     desc:'Rostlinná kuchyně. Matcha, hlína a len, měkké tvary, kreslená miska a listy — všechno v CSS.',
     colors:['#F2F6EF','#3E6B48','#8FBF6A','#D8CBB4'] }
+];
+
+const TEMPLATES_BAR = [
+  { href:'templates/bar/koktejlovy-bar.html', name:'Půlnoc', pair:'Cormorant Garamond + Jost',
+    desc:'Koktejlový bar. Tma, mosaz a jeden kužel světla. Vlásečnice z mosazi, kapitálky, žádné plné plochy barvy.',
+    colors:['#181513','#C4A265','#5B1F28','#EFE7DA'] },
+  { href:'templates/bar/vinny-bar.html', name:'Regál', pair:'Spectral + Work Sans',
+    desc:'Vinný bar. Láhve položené v regálu: teplý krém, vinná červeň, všechno na šířku a mírně nakřivo.',
+    colors:['#F4EFE6','#2A211E','#7A2233','#C9A87C'] },
+  { href:'templates/bar/kraftovy-pub.html', name:'Tankovna', pair:'Oswald + Barlow',
+    desc:'Kraftový pivovar. Ležácké tanky, beton, ocel. Nic měkkého: pravé úhly, nýtované linky, měděná pípa.',
+    colors:['#E5E2DC','#17181B','#B85C1E','#9C9E9F'] },
+  { href:'templates/bar/rumovna.html', name:'Plakát', pair:'Alfa Slab One + Rubik',
+    desc:'Rumovna. Vývěska za výlohou: okrový papír, tlusté dvojité rámy, patkový plakátový řez, tisková červená.',
+    colors:['#F0E3C6','#221E19','#B4342A','#6B6A3A'] },
+  { href:'templates/bar/sportovni-bar.html', name:'Tabule', pair:'Anton + IBM Plex Sans',
+    desc:'Sportovní bar. Výsledková tabule: studená šeď, signální červená, zelená pro „hraje se teď“.',
+    colors:['#EDEFF2','#111519','#E03127','#12A05C'] }
 ];
 
 /* Náhled se sám pomalu posouvá dolů, aby bylo vidět víc než jen hero.
@@ -662,6 +705,7 @@ function initShowcase(rootEl, TEMPLATES) {
 
 initShowcase(document.getElementById('showcaseCafe'), TEMPLATES_CAFE);
 initShowcase(document.getElementById('showcaseBistro'), TEMPLATES_BISTRO);
+initShowcase(document.getElementById('showcaseBar'), TEMPLATES_BAR);
 
 /* Klik na portrét: zatřesení + bublina */
 const photo = document.getElementById('photo');
