@@ -191,7 +191,10 @@ section > .sec-frame{border:3px solid var(--ink);padding:clamp(24px,4vw,44px)}
 .facts span{font-size:.9rem;color:var(--gray)}
 
 /* ============ GALERIE INTERIÉRU ============ */
-.carousel{position:relative;margin-top:34px;border:3px solid var(--ink)}
+.carousel{position:relative;margin-top:34px}
+/* rám obepíná jen okno s fotkou; tečky leží pod ním na papíru, aby pod
+   galerií nezůstal plný pruh (v nočním tématu by navíc svítil) */
+.carousel__frame{position:relative;border:3px solid var(--ink)}
 .carousel__viewport{overflow:hidden;background:var(--surface);cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .carousel__viewport.dragging{cursor:grabbing}
 .carousel__viewport:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
@@ -217,8 +220,8 @@ section > .sec-frame{border:3px solid var(--ink);padding:clamp(24px,4vw,44px)}
 .carousel__btn:disabled{opacity:.3;cursor:default}
 .carousel__btn--prev{left:0}
 .carousel__btn--next{right:0}
-.carousel__dots{display:flex;gap:7px;padding:11px;justify-content:center;background:var(--ink)}
-.carousel__dot{width:11px;height:11px;border:0;padding:0;cursor:pointer;background:var(--raised-line);transition:background .25s}
+.carousel__dots{display:flex;gap:7px;margin-top:15px;justify-content:center}
+.carousel__dot{width:11px;height:11px;border:0;padding:0;cursor:pointer;background:var(--line-strong);transition:background .25s}
 .carousel__dot.active{background:var(--accent)}
 
 /* ============ MENU ============
@@ -349,15 +352,17 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
 
       <!-- Listovací galerie interiéru. Slidy plní engine z SITE.interior. -->
       <div class="carousel reveal">
-        <div class="carousel__counter" id="carCounter">1 / 1</div>
-        <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5l7 7-7 7"/></svg>
-        </button>
-        <div class="carousel__viewport" id="carViewport">
-          <div class="carousel__track" id="carTrack"></div>
+        <div class="carousel__frame">
+          <div class="carousel__counter" id="carCounter">1 / 1</div>
+          <button class="carousel__btn carousel__btn--prev" id="carPrev" type="button" aria-label="Předchozí fotka">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="carousel__btn carousel__btn--next" id="carNext" type="button" aria-label="Další fotka">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <div class="carousel__viewport" id="carViewport">
+            <div class="carousel__track" id="carTrack"></div>
+          </div>
         </div>
         <div class="carousel__dots" id="carDots"></div>
       </div>

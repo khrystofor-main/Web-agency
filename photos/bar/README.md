@@ -19,8 +19,8 @@ Každá šablona má jinou kompozici hero a potřebuje jiný poměr stran:
 
 | Šablona | Složka | Hero formát | Proč |
 |---|---|---|---|
-| Kraftový pub | `kraftovy-pub/` | **na výšku, 2:3** | šest svislých sloupů přes celou výšku okna |
-| Koktejlový bar | `koktejlovy-bar/` | **na šířku, 16:9** | celoplošné pozadí, fotky se pomalu prolínají |
+| Kraftový pub | `kraftovy-pub/` | **na výšku, 2:3** | šest svislých sloupů v pásu podél spodní hrany hero |
+| Koktejlový bar | `koktejlovy-bar/` | **na šířku, 16:9** | hero je bez fotek — `01`–`06` jdou rovnou do galerie |
 | Vinný bar | `vinny-bar/` | **na výšku, 2:3** | překrývající se řada nakloněných fotek jako láhve v regálu |
 | Sportovní bar | `sportovni-bar/` | **na šířku, 16:10** | tři sloupce vedle sebe, fotky ve svislé stopce vpravo |
 | Rumovna | `rumovna/` | **čtverec, 1:1** | malé čtvercové výřezy v dolní části plakátu |

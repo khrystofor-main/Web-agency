@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bar-sport-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Tabule',
-    title: { cs:'Tabule — sportovní bar', en:'Tabule — sports bar' },
+    name: 'Můj sport bar',
+    title: { cs:'Můj sport bar — sportovní bar', en:'My sports bar' },
     description: {
       cs:'Ukázková šablona webu pro sportovní bar. Šest obrazovek, plátno, program zápasů.',
       en:'Demo website template for a sports bar. Six screens, a projector and the match schedule.'

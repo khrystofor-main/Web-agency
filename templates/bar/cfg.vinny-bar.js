@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bar-vino-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Regál',
-    title: { cs:'Regál — vinný bar', en:'Regál — wine bar' },
+    name: 'Moje vinárna',
+    title: { cs:'Moje vinárna — vinný bar', en:'My wine bar' },
     description: {
       cs:'Ukázková šablona webu pro vinný bar. Osmdesát etiket, dvanáct po sklenici, láhev i s sebou.',
       en:'Demo website template for a wine bar. Eighty labels, twelve by the glass, bottles to take away.'

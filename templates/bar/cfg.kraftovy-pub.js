@@ -10,8 +10,8 @@ window.SITE = {
            timeZone:'Europe/Prague', storageKey:'bar-kraft-theme', manualTtlHours:12 },
 
   brand: {
-    name: 'Tankovna',
-    title: { cs:'Tankovna — kraftová pivnice', en:'Tankovna — craft taproom' },
+    name: 'Můj pub',
+    title: { cs:'Můj pub — kraftová pivnice', en:'My pub — craft taproom' },
     description: {
       cs:'Ukázková šablona webu pro kraftovou pivnici. Dvanáct pip, tank na sále, plnění s sebou.',
       en:'Demo website template for a craft taproom. Twelve taps, a tank in the room, growlers to go.'

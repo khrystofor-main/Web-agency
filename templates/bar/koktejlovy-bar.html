@@ -94,30 +94,20 @@ html[data-theme="dark"] .theme-btn .i-moon{display:none}
 html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO ============
-   Kužel světla: fotky leží přes celé okno jako jedna tmavá plocha,
-   text stojí uprostřed v mosazném rámečku. Nic není vedle sebe —
-   všechno je nad sebou. */
+   Kužel světla: v hero není žádná fotka, jen tma a jeden pruh světla
+   shora. Text stojí uprostřed v mosazném rámečku a nic mu nekonkuruje —
+   fotky patří do galerie níž. */
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.stage{position:absolute;inset:0;display:grid;grid-template-columns:1fr;grid-template-rows:1fr}
-/* první fotka drží celé pozadí, ostatní se přes ni pomalu prolínají */
-.stage .g-item{
-  grid-area:1/1;position:relative;margin:0;overflow:hidden;
-  opacity:0;animation:cross 40s var(--n-delay,0s) infinite;
-}
-.stage .g-frame{display:block;width:100%;height:100%}
-.stage img{width:100%;height:100%;object-fit:cover;filter:brightness(.42) saturate(.7) contrast(1.1)}
-/* šest fotek, každá je na scéně ~6,7 s a mezi nimi se prolíná */
-.stage .g-item{--n-delay:calc(var(--n) * 6.66s)}
-@keyframes cross{0%{opacity:0}3%{opacity:1}14%{opacity:1}17%{opacity:0}100%{opacity:0}}
-/* zástupné pozadí bez fotek: kužel světla nad barem */
-.stage .g-item.is-missing .g-frame{
+/* světlo dopadá shora doprostřed pultu a ztrácí se do rohů */
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 60% 46% at 50% 22%,rgba(196,162,101,.2),transparent 70%),
-    linear-gradient(180deg,#221D19,#0C0A09);
-  height:100%;
+    radial-gradient(ellipse 54% 42% at 50% 4%,rgba(196,162,101,.22),transparent 68%),
+    radial-gradient(ellipse 86% 52% at 50% 104%,rgba(91,31,40,.24),transparent 74%),
+    linear-gradient(180deg,#211C18,var(--bg) 58%);
+  opacity:0;animation:fade 1.8s .1s var(--ease) forwards;
 }
-.stage figcaption{display:none}
-/* vinětace, aby text držel čitelnost na jakékoli fotce */
+/* vinětace, která světlo uzavře do rohů */
 .hero::after{
   content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 20%,color-mix(in srgb,var(--bg) 86%,transparent) 100%);
@@ -279,10 +269,7 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
-  .reveal,.menu-item,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch{opacity:1;transform:none}
-  /* bez prolínání zůstane v hero první fotka; ostatní se schovají */
-  .stage .g-item{opacity:0}
-  .stage .g-item:first-child{opacity:1}
+  .reveal,.menu-item,.hero__kicker,.hero__sub,.hero__cta,.hero h1 .ch,.hero::before{opacity:1;transform:none}
   .rule{transform:scaleX(1)}
   html{scroll-behavior:auto}
 }
@@ -315,8 +302,7 @@ footer .tiny{margin-top:26px;font-size:.72rem;color:var(--raised-faint)}
 
   <!-- HERO -->
   <header class="hero">
-    <!-- fotky přes celé okno, pomalu se prolínají; plní engine ze SITE.gallery -->
-    <div class="stage" id="galleryGrid"></div>
+    <!-- V hero záměrně nejsou fotky. Všechny snímky jsou v galerii níž. -->
     <div class="hero__box">
       <p class="hero__kicker" data-site="hero.kicker"></p>
       <h1 data-site-letters="brand.name"></h1>
