@@ -140,9 +140,9 @@ html[data-theme="dark"] .theme-btn .i-moon{display:none}
 html[data-theme="dark"] .theme-btn .i-sun{display:block}
 
 /* ============ HERO ============ */
-.hero{position:relative;height:100svh;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;background:var(--green-deep)}
-.hero__bg{position:absolute;inset:-10% 0;background-size:cover;background-position:center 30%;will-change:transform}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,26,18,.82) 0%,rgba(20,26,18,.25) 45%,rgba(20,26,18,.35) 100%)}
+.hero{position:relative;height:100svh;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;clip-path:inset(0);background:var(--green-deep)}
+.hero__bg{position:absolute;inset:-10% 0;background-size:cover;background-position:center 30%}
+.hero::after{content:"";position:absolute;inset:1px 0 0 0;background:linear-gradient(to top,rgba(20,26,18,.82) 0%,rgba(20,26,18,.25) 45%,rgba(20,26,18,.35) 100%)}
 .hero__inner{position:relative;z-index:3;width:100%;padding:0 22px calc(var(--nav-h) + 40px);max-width:1100px;margin:0 auto}
 .hero h1{
   color:var(--cream);font-size:clamp(3rem,12vw,7.5rem);font-weight:700;letter-spacing:-.01em;
@@ -189,7 +189,7 @@ section{padding:76px 22px;max-width:1100px;margin:0 auto}
 .menu-sec,.visit-sec{overflow-x:clip}
 
 /* ============ GALLERY (classic carousel) ============ */
-.gallery-sec{max-width:none;padding-left:0;padding-right:0;background:var(--green-deep);color:var(--cream);overflow-x:clip}
+.gallery-sec{max-width:none;padding-left:0;padding-right:0;background:var(--green-deep);color:var(--cream);overflow-x:clip;margin-top:0px}
 .gallery-head{max-width:1100px;margin:0 auto 34px;padding:0 22px}
 .gallery-head .kicker{color:#E4A86B}
 .gallery-head .lead{color:rgba(251,248,241,.7)}

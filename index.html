@@ -201,18 +201,23 @@ section > .eyebrow{text-align:center}
 .showcase-body{display:grid;gap:24px;grid-template-columns:1fr}
 @media(min-width:820px){.showcase-body{grid-template-columns:1fr 240px;align-items:start}}
 .preview{
-  position:relative;aspect-ratio:16/10;overflow:hidden;
+  position:relative;aspect-ratio:8/10;overflow:hidden;
   border:1px solid var(--line);border-radius:12px;background:var(--line);
+  /* GPU vrstva — zabrání problikávání iframe při scale transformaci */
+  transform:translateZ(0);
 }
+@media(min-width:820px){.preview{aspect-ratio:16/10}}
 /* Pět iframe nad sebou — všechny načtené, vidět je jen aktivní (žádné probliknutí
    při přepnutí tabu). Drží desktopovou šířku šablony, do rámečku se vejdou přes
    scale (počítá JS). Jsou o 16px širší než viditelných 1280 — svislý posuvník
    tak ořízne maska rámečku. */
+/* mobil: šířka iPhonu → šablona se vykreslí v mobilním layoutu */
 .preview iframe{
   position:absolute;top:0;left:0;
-  width:1296px;height:800px;border:0;display:block;
+  width:390px;height:488px;border:0;display:block;
   transform-origin:0 0;pointer-events:none;
 }
+@media(min-width:820px){.preview iframe{width:1296px;height:800px}}
 .preview-link{position:absolute;inset:0;border-radius:12px;transition:box-shadow .2s}
 .preview-link:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 100%,transparent)}
 .showcase-info h3{font-size:1.55rem;line-height:1.15;margin-bottom:6px}
@@ -425,6 +430,33 @@ footer{
   </div>
 </section>
 
+<!-- KONTAKT -->
+<section class="wrap" id="kontakt">
+  <p class="eyebrow">Spojme se</p>
+  <h2 class="section-title">Kontakt</h2>
+
+  <div class="contact-list">
+    <a class="row" href="tel:+420720696256">
+      <span class="label">Telefon</span>
+      <span class="value">720 696 256</span>
+    </a>
+    <a class="row" href="https://wa.me/420720696256" target="_blank" rel="noopener">
+      <span class="label">WhatsApp</span>
+      <span class="value">Napsat na WhatsApp →</span>
+    </a>
+    <a class="row" href="mailto:oleksandrkhrystofor@gmail.com">
+      <span class="label">E-mail</span>
+      <span class="value">oleksandrkhrystofor@gmail.com</span>
+    </a>
+  </div>
+
+  <button class="msg-toggle" id="msgToggle" aria-expanded="false">Napsat zprávu</button>
+  <form class="msg-form" id="msgForm" hidden>
+    <textarea id="msgBody" placeholder="Dobrý den, mám zájem o web pro svůj podnik…" aria-label="Vaše zpráva"></textarea>
+    <button type="submit" class="send">Odeslat e-mailem</button>
+  </form>
+</section>
+
 <!-- TÝM -->
 <section class="wrap" id="tym">
   <p class="eyebrow">Kdo za tím stojí</p>
@@ -476,33 +508,6 @@ footer{
       </figcaption>
     </figure>
   </div>
-</section>
-
-<!-- KONTAKT -->
-<section class="wrap" id="kontakt">
-  <p class="eyebrow">Spojme se</p>
-  <h2 class="section-title">Kontakt</h2>
-
-  <div class="contact-list">
-    <a class="row" href="tel:+420720696256">
-      <span class="label">Telefon</span>
-      <span class="value">720 696 256</span>
-    </a>
-    <a class="row" href="https://wa.me/420720696256" target="_blank" rel="noopener">
-      <span class="label">WhatsApp</span>
-      <span class="value">Napsat na WhatsApp →</span>
-    </a>
-    <a class="row" href="mailto:oleksandrkhrystofor@gmail.com">
-      <span class="label">E-mail</span>
-      <span class="value">oleksandrkhrystofor@gmail.com</span>
-    </a>
-  </div>
-
-  <button class="msg-toggle" id="msgToggle" aria-expanded="false">Napsat zprávu</button>
-  <form class="msg-form" id="msgForm" hidden>
-    <textarea id="msgBody" placeholder="Dobrý den, mám zájem o web pro svůj podnik…" aria-label="Vaše zpráva"></textarea>
-    <button type="submit" class="send">Odeslat e-mailem</button>
-  </form>
 </section>
 
 <footer class="wrap">
@@ -634,6 +639,9 @@ function initShowcase(rootEl, TEMPLATES) {
   let returnToTop = false; // měkký dojezd na začátek po opětovném kliku na aktivní tab
   let waitUntil = 0;       // pauza autoscrollu dole/nahoře (timestamp)
   let pausedByHover = false;
+  let pausedByTouch = false;
+  function isPaused() { return pausedByHover || pausedByTouch; }
+  let refreshCache = null;   // exposed pro resize handler
 
   /* Pět iframe nad sebou, ale šablona se načte až při prvním zvolení tabu —
      návštěvník tak jednou vidí, jak se web načítá. Další přepnutí už jen
@@ -652,10 +660,12 @@ function initShowcase(rootEl, TEMPLATES) {
     return f;
   });
 
-  /* iframe má pevných 1280×800 (desktopová šířka šablony) a do rámečku
-     se zmenšuje přes scale — šablona tak v náhledu vypadá jako na monitoru */
+  /* desktop: scale podle obsahu 1280px (16px navíc = scrollbar, ořízne overflow).
+     mobil:  scale podle plné šířky iframe (overlay scrollbar nezabírá místo). */
   function fitPreview() {
-    const s = 'scale(' + tplPreview.clientWidth / 1280 + ')';
+    const baseW = window.innerWidth >= 820 ? 1280 : (tplFrames[0] && tplFrames[0].offsetWidth);
+    if (!baseW) return;
+    const s = 'scale(' + tplPreview.clientWidth / baseW + ')';
     tplFrames.forEach(f => { f.style.transform = s; });
   }
 
@@ -706,15 +716,29 @@ function initShowcase(rootEl, TEMPLATES) {
     returnToTop = false;
     waitUntil = 0;
     if (reducedMotion.matches) return;
+
+    /* kešované hodnoty z iframe — čtení scrollHeight/innerHeight při každém
+       snímku nutí layout uvnitř iframe, což na mobilu zabíjí výkon.
+       Přepočítávají se jen při změně šablony nebo resize. */
+    let cachedInnerH = 488;
+    let cachedMax = 0;
+    refreshCache = function() {
+      const w = tplFrames[activeIdx].contentWindow;
+      if (!w || !w.document.documentElement) return;
+      cachedInnerH = w.innerHeight;
+      cachedMax = Math.max(0, w.document.documentElement.scrollHeight - w.innerHeight);
+    };
+    refreshCache();
+
     let lastT = 0;
+    const isDesktop = window.innerWidth >= 820;
     function step(t) {
       scrollRafId = requestAnimationFrame(step);
       if (!lastT) { lastT = t; return; }
       const dt = (t - lastT) / 1000; lastT = t;
       const w = tplFrames[activeIdx].contentWindow;
-      if (!w || !w.document.documentElement) return;
-      if (pausedByHover) {
-        /* ruční režim: pozice měkce dojíždí k cíli koleckem — plynulé skrolování */
+      if (!w) return;
+      if (isPaused()) {
         if (manualTarget !== null && Math.abs(manualTarget - scrollPos) > .5) {
           scrollPos += (manualTarget - scrollPos) * .15;
           w.scrollTo({ top: scrollPos, behavior: 'instant' });
@@ -722,30 +746,46 @@ function initShowcase(rootEl, TEMPLATES) {
         return;
       }
       if (returnToTop) {
-        scrollPos *= .88;   // měkký dojezd nahoru; autoscroll naváže hned dalším snímkem
-        if (scrollPos < 1) { scrollPos = 0; returnToTop = false; waitUntil = 0; }
-        w.scrollTo({ top: scrollPos, behavior: 'instant' });
+        if (isDesktop) {
+          scrollPos *= .88;
+          if (scrollPos < 1) { scrollPos = 0; returnToTop = false; waitUntil = 0; }
+          else w.scrollTo({ top: scrollPos, behavior: 'instant' });
+        } else {
+          w.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollPos = 0;
+          returnToTop = false;
+          waitUntil = t + 600;
+        }
         return;
       }
       if (t < waitUntil) return;
-      const max = w.document.documentElement.scrollHeight - w.innerHeight;
-      /* behavior:'instant' přebije scroll-behavior:smooth šablon — jinak by každý
-         snímek spouštěl novou plynulou animaci a náhled by se zasekával */
-      if (scrollPos >= max) { scrollPos = 0; waitUntil = t + 1500; w.scrollTo({ top: 0, behavior: 'instant' }); return; }
-      scrollPos = Math.min(scrollPos + 80 * dt, max);
+      if (scrollPos >= cachedMax) {
+        scrollPos = 0; waitUntil = 0;
+        w.scrollTo({ top: 0, behavior: 'instant' });
+        return;
+      }
+      if (isDesktop) {
+        scrollPos = Math.min(scrollPos + 80 * dt, cachedMax);
+      } else {
+        scrollPos = Math.min(scrollPos + cachedInnerH * .25 * dt, cachedMax);
+      }
       w.scrollTo({ top: scrollPos, behavior: 'instant' });
-      if (scrollPos >= max) waitUntil = t + 2500;   // dole chvíli postát
+      if (scrollPos >= cachedMax) waitUntil = t + 2500;
     }
     scrollRafId = requestAnimationFrame(step);
   }
   tplPreview.addEventListener('mouseenter', () => { pausedByHover = true; });
   tplPreview.addEventListener('mouseleave', () => { pausedByHover = false; manualTarget = null; });
+  /* touch: stejné chování jako hover — prst dolů = pauza, prst nahoru = pokračovat */
+  tplPreview.addEventListener('touchstart', (e) => { pausedByTouch = true; }, {passive:true});
+  tplPreview.addEventListener('touchend',   () => { pausedByTouch = false; manualTarget = null; });
+  tplPreview.addEventListener('touchcancel',() => { pausedByTouch = false; manualTarget = null; });
   /* kolečko nad náhledem skroluje přímo šablonu; hub stojí (preventDefault) */
   tplPreview.addEventListener('wheel', (e) => {
     e.preventDefault();
     const w = tplFrames[activeIdx].contentWindow;
-    if (!w || !w.document.documentElement) return;
-    const max = w.document.documentElement.scrollHeight - w.innerHeight;
+    if (!w) return;
+    const max = w.document.documentElement ? w.document.documentElement.scrollHeight - w.innerHeight : 0;
     manualTarget = Math.min(Math.max((manualTarget === null ? scrollPos : manualTarget) + e.deltaY, 0), max);
     if (scrollRafId === null) {
       /* bez animační smyčky (prefers-reduced-motion) skáčeme rovnou na cíl */
@@ -757,7 +797,7 @@ function initShowcase(rootEl, TEMPLATES) {
   selectTemplate(0);
 
   showcases.push({
-    fit: fitPreview,
+    fit() { fitPreview(); if (refreshCache) refreshCache(); },
     motionChanged() {
       if (reducedMotion.matches) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
       else startAutoScroll();
