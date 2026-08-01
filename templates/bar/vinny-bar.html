@@ -541,23 +541,24 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
     }
 
     /* Přehození pořadí posune fotky, takže kurzor, který se ani nehnul,
-       najednou „vstoupí" do souseda. Takový `pointerenter` nese pořád
-       stejné souřadnice — a jen podle nich se pozná od skutečného pohybu
-       ruky. Bez téhle podmínky by se dvě fotky na překryvu přetahovaly
-       donekonečna. */
-    var lastX = null, lastY = null;
+       najednou „vstoupí" do souseda. Bez rozlišení by se dvě fotky na
+       překryvu přetahovaly donekonečna.
 
-    function moved(e) {
-      if (lastX !== null && Math.abs(e.clientX - lastX) < 3
-                         && Math.abs(e.clientY - lastY) < 3) return false;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      return true;
-    }
+       Poznávacím znamením není poloha — sousední fotky se překrývají,
+       takže odchod k sousedovi i návrat zpátky se dějí prakticky na jednom
+       místě. Rozhoduje, jestli mezitím přišel `pointermove`: skutečný
+       pohyb ruky ho pošle vždycky, posun fotek pod nehybným kurzorem nikdy. */
+    var handMoved = false;
+    rack.addEventListener('pointermove', function () { handMoved = true; });
+    rack.addEventListener('pointerenter', function () { handMoved = true; });
 
     items.forEach(function (el) {
       el.addEventListener('pointerenter', function (e) {
-        if (moved(e)) promote(el);
+        /* dotyk ani pero žádné bloudění kurzoru nemají — u nich se neptáme */
+        if (e.pointerType && e.pointerType !== 'mouse') { promote(el); return; }
+        if (!handMoved) return;
+        handMoved = false;
+        promote(el);
       });
     });
 
@@ -566,7 +567,6 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
     rack.addEventListener('pointerleave', function () {
       settle();
       items.forEach(function (x) { x.classList.remove('is-front'); });
-      lastX = lastY = null;
     });
     return true;
   }
