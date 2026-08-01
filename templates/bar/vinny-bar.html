@@ -107,36 +107,24 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:clamp(34px,6vw,64px);padding:calc(var(--nav-h) + 40px) 0 44px}
 .rack{
   display:flex;align-items:center;justify-content:center;
-  padding:0 26px;perspective:900px;transform-style:preserve-3d;
+  /* Perspektiva je schválně hodně daleko: prostor slouží jen k řazení
+     fotek na plány, ne k prostorovému efektu. Při takové vzdálenosti
+     posun do hloubky nezmění ani velikost, ani polohu fotky. */
+  padding:0 26px;perspective:12000px;transform-style:preserve-3d;
 }
 .rack .g-item{
   position:relative;margin:0;flex:0 0 auto;
   width:clamp(140px,17vw,224px);
   transform-origin:center bottom;
-  /* Plán fotky neurčuje `z-index` (ten se animovat nedá a přeskakuje),
-     ale hloubka v prostoru — `.rack` má perspektivu, takže translateZ
-     fotku plynule prosune dopředu i dozadu.
-
-     Samotné překrytí je v CSS vždycky binární: v jednu chvíli je fotka
-     vzadu, o okamžik později vepředu. Plynulé to udělá až pohyb kolem —
-     fotka se viditelně přiblíží (perspektiva ji cestou zvětší) a přehození
-     plánu padne doprostřed té cesty, takže se ztratí v pohybu. Proto se
-     přiblížení **nekompenzuje** zpětným zmenšením; právě ono je tím, co je
-     vidět.
-
-     `--d` je klidová hloubka podle pořadí (rozdává ji skript dole),
-     `--lift` je přiblížení po dobu, co na fotce leží myš. Obě v pixelech
-     bez jednotky. */
+  /* Plán fotky neurčuje `z-index`, ale hloubka v prostoru — o překryvu
+     rozhoduje translateZ. `--d` je hloubka v pixelech bez jednotky;
+     hodnoty rozdává skript dole. Samotná změna hloubky je okamžitá;
+     plynulost obstará prolnutí kopie fotky (`.g-ghost` níž), pod kterou
+     se pořadí přehodí nepozorovaně. */
   --d:0;
-  --lift:0;
-  transform:translateZ(calc((var(--d) + var(--lift)) * 1px));
-  /* Hloubka má vlastní, souměrnou křivku. Výchozí `--ease` je prudce
-     zrychlené „expo out“ — s ním by fotka urazila většinu cesty během
-     první desetiny sekundy a všechny sousedy by předběhla hned na začátku,
-     takže by změna plánu pořád vypadala jako skok. Souměrná křivka rozloží
-     předbíhání doprostřed pohybu. */
-  transition:rotate .5s var(--ease),translate .5s var(--ease),
-             transform .62s cubic-bezier(.45,.05,.3,1);
+  transform:translateZ(calc(var(--d) * 1px));
+  transform-style:preserve-3d;
+  transition:rotate .5s var(--ease),translate .5s var(--ease);
 }
 /* nástup: nadechne se rámeček, aby transform na .g-item zůstal volný pro hloubku */
 .rack .g-frame{opacity:0;animation:lay .9s var(--ease) forwards;animation-delay:calc(.13s * var(--n) + .2s)}
@@ -144,9 +132,7 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .rack .g-item + .g-item{margin-left:clamp(-56px,-3.4vw,-26px)}
 .rack .g-item:nth-child(odd){rotate:-3.5deg}
 .rack .g-item:nth-child(even){rotate:2.5deg;translate:0 clamp(10px,1.6vw,26px)}
-/* najetí myší: fotka se narovná, povytáhne z řady a vysune dopředu —
-   sousedy předběhne uprostřed té cesty, ne skokem na místě */
-.rack .g-item:hover{rotate:0deg;translate:0 -10px;--lift:40}
+.rack .g-item:hover{rotate:0deg;translate:0 -10px}
 /* na mobilu se regál složí do dvou řad a přestane se překrývat */
 @media(max-width:760px){
   .rack{flex-wrap:wrap;gap:12px}
@@ -160,6 +146,19 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 }
 .rack img{width:100%;aspect-ratio:2/3;object-fit:cover;filter:saturate(.88) contrast(1.02);transition:filter .5s var(--ease)}
 .rack .g-item:hover img{filter:none}
+/* Kopie fotky, kterou skript položí do stejné dlaždice, když jde fotka
+   dopředu. Vlastní translateZ ji díky `preserve-3d` zvedne nad sousedy
+   a ona se přes ně plynule prolne — spodní karta se tak objeví nad vrchní
+   místo skoku. Náklon, posun i chování při najetí dědí po dlaždici, takže
+   se hýbe přesně s ní. Musí stát až za pravidly pro `.g-frame`, jinak by
+   po nich zdědila nástupní animaci. */
+.rack .g-ghost{
+  position:absolute;left:0;top:0;width:100%;
+  pointer-events:none;animation:none;opacity:0;
+  transform:translateZ(60px);
+  transition:opacity .45s var(--ease);
+}
+.rack .g-ghost.is-on{opacity:1}
 /* zástupný vzor: etiketa bez potisku */
 .rack .g-item.is-missing .g-frame{
   aspect-ratio:2/3;
@@ -460,16 +459,18 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
 /* Paměť regálu — jediná věc, kterou umí jen tahle šablona, takže nepatří
    do sdíleného enginu (assets/site.js) a bydlí tady.
 
-   Fotka, na kterou host najel, se plynule prosune dopředu a **zůstane tam**
-   i po odjetí myši. Plán neurčuje `z-index` (skáče a animovat se nedá),
-   ale hloubka: pořadí se přepočítá na malé `translateZ`, které se díky
-   `transition` přesune hladce. Krok je jen pár pixelů, aby se fotky
-   perspektivou viditelně nezvětšovaly. */
+   Fotka, na kterou host najel, jde dopředu a **zůstane tam** i po odjetí
+   myši. O překryvu rozhoduje hloubka (`--d` → translateZ), ne `z-index`.
+
+   Samotné pořadí se ale nedá prolnout — ať se přehodí jakkoli pomalu,
+   v jednu chvíli fotky prostě přeskočí. Proto se do dlaždice na okamžik
+   položí **kopie její fotky**, která leží nad všemi sousedy a plynule se
+   rozsvítí z průhledné. Teprve pod hotovou kopií se přehodí skutečné
+   pořadí a kopie zmizí — divák vidí jen to, jak se spodní karta pomalu
+   objevuje nad vrchní. */
 (function () {
-  /* Rozestup plánů. Musí být dost velký, aby fotka sousedy předbíhala
-     postupně během celého pohybu — při malém rozestupu se všechna
-     předbíhání seběhnou hned na začátku a změna plánu zas vypadá jako skok. */
-  var STEP = 8;                    // px hloubky mezi sousedními plány
+  var STEP = 6;                    // px hloubky mezi sousedními plány
+  var FADE = 450;                  // ms — musí sedět s přechodem .g-ghost v CSS
 
   function start() {
     var rack = document.getElementById('galleryGrid');
@@ -478,6 +479,8 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
     if (!items.length) return false;
 
     var order = items.slice();     // odzadu dopředu; výchozí = pořadí z configu
+    var ghost = null;              // kopie fotky, která se právě prolíná
+    var timer = 0;
 
     function apply() {
       order.forEach(function (el, i) {
@@ -486,13 +489,51 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
     }
     apply();
 
-    items.forEach(function (el) {
-      el.addEventListener('pointerenter', function () {
-        if (order[order.length - 1] === el) return;   // už je vepředu
-        order = order.filter(function (x) { return x !== el; });
-        order.push(el);
-        apply();
+    /* dotáhne rozdělané prolnutí naráz — když host přejede na další fotku */
+    function settle() {
+      if (!ghost) return;
+      clearTimeout(timer);
+      timer = 0;
+      commit(ghost.owner);
+      ghost.node.parentNode.removeChild(ghost.node);
+      ghost = null;
+    }
+
+    function commit(el) {
+      order = order.filter(function (x) { return x !== el; });
+      order.push(el);
+      apply();
+    }
+
+    function promote(el) {
+      settle();
+      if (order[order.length - 1] === el) return;    // už je vepředu
+
+      var frame = el.querySelector('.g-frame');
+      if (!frame) { commit(el); return; }            // bez fotky není co prolínat
+
+      var node = frame.cloneNode(true);
+      node.classList.add('g-ghost');
+      node.setAttribute('aria-hidden', 'true');
+      Array.prototype.forEach.call(node.querySelectorAll('img'), function (img) {
+        img.setAttribute('alt', '');
+        img.removeAttribute('loading');               // kopie se musí ukázat hned
       });
+      el.appendChild(node);
+      ghost = { node: node, owner: el };
+
+      /* rozsvítit až v dalším snímku, jinak nemá přechod z čeho vyjít */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          if (ghost && ghost.node === node) node.classList.add('is-on');
+        });
+      });
+
+      timer = setTimeout(settle, FADE + 30);
+    }
+
+    items.forEach(function (el) {
+      el.addEventListener('pointerenter', function () { promote(el); });
     });
     return true;
   }

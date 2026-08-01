@@ -75,20 +75,22 @@ nezobrazí a hero se sesype do dvou sloupců.
 
 ## Paměť regálu (jen vinný bar)
 
-Fotka, na kterou host najede, se v regálu plynule prosune dopředu
-a **zůstane tam** i po odjetí myši. Plán neurčuje `z-index` — ten se
-animovat nedá a přeskakoval by — ale hloubka: pořadí se přepočítá na
-`translateZ` a `transition` ho přesune hladce.
+Fotka, na kterou host najede, jde v regálu dopředu a **zůstane tam**
+i po odjetí myši. O překryvu nerozhoduje `z-index`, ale hloubka
+(`translateZ` v perspektivě regálu).
 
-Samotné překrytí je v CSS vždycky binární — fotka je buď vzadu, nebo
-vepředu. Plynulé to udělá až pohyb kolem: fotka se při najetí viditelně
-přiblíží (perspektiva ji cestou zvětší) a přehození plánu padne doprostřed
-té cesty. Přiblížení se proto **nekompenzuje** zpětným zmenšením; kdyby se
-zmenšovalo, zbyl by z celé změny jen ten skok.
+Pořadí samo o sobě se prolnout nedá — ať se přehodí jakkoli pomalu,
+fotky v jednu chvíli přeskočí. Proto se do dlaždice na okamžik položí
+**kopie její fotky** (`.g-ghost`), která leží nad všemi sousedy a plynule
+se rozsvítí z průhledné; teprve pod hotovou kopií se přehodí skutečné
+pořadí a kopie zmizí. Divák vidí jen to, jak se spodní karta pomalu
+objevuje nad vrchní. Kopie sedí uvnitř dlaždice, takže náklon i posun
+při najetí dědí po ní a hýbe se přesně s ní.
 
-Klidovou hloubku podle pořadí drží `--d`, přiblížení pod myší `--lift`;
-pořadí přepočítává krátký skript uvnitř `vinny-bar.html`, ne engine
-(4. a 5. zásada).
+Perspektiva je schválně velmi daleko (12000 px) — prostor slouží jen
+k řazení na plány, takže hloubka nemění ani velikost, ani polohu fotky.
+Celé to drží krátký skript uvnitř `vinny-bar.html`, ne engine (4. a 5.
+zásada).
 
 ## Nový web za pár kroků
 
