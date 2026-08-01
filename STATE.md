@@ -90,8 +90,9 @@ Alternative version with simplified structure — only 3 content sections, in th
 
 ## Goal
 
-**Five reusable one-page templates** for cafés and small businesses, plus a
-portfolio hub that shows them off. A new client site = fill in one config file,
+**Five reusable one-page templates** for cafés and small businesses, plus the
+hub of the **Rosa Web** studio that shows them off (agency voice, team section
+with both designers at the bottom). A new client site = fill in one config file,
 pick a template. Mobile-first, Czech primary with an EN toggle, static photos
 only — animation is text + scroll-driven elements.
 
@@ -154,7 +155,7 @@ that now lives in `templates/assets/site.config.js`. Key facts used:
 ## Files
 
 ```
-index.html                          — hub / portfolio (own dark theme, manual toggle)
+index.html                          — hub Rosa Web (own dark theme, manual toggle)
 site/index.html                     — template 1 · Warm Paper
 templates/
   variant-1-swiss.html              — template 2 · Swiss Minimal

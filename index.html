@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oleksandr Khrystofor — Webový designér</title>
+<title>Rosa Web — elegantní weby pro gastronomii</title>
+<meta name="description" content="Rosa Web — webové studio z Brna. Navrhujeme jednoduché a elegantní weby pro kavárny, bistra a bary.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,6 +13,8 @@
 :root{
   --bg:#FBF9F5; --ink:#1C1A17; --muted:#6E675E; --line:#E5DFD5;
   --card:#FFFFFF; --accent:#B33A2B;
+  /* druhý akcent — patří jen jednomu členovi týmu, jinde se nepoužívá */
+  --accent-blue:#2F6FB5;
   --line-strong:#C9C1B2; --body-text:#3B382F;
   --shadow:0 14px 30px rgba(28,26,23,.07);
   --sw-ring:rgba(28,26,23,.12);
@@ -20,6 +24,7 @@
 html[data-theme="dark"]{
   --bg:#141311; --ink:#F2EEE7; --muted:#9C948A; --line:#2E2B27;
   --card:#1C1A17; --accent:#E0705C;
+  --accent-blue:#7CB2E8;
   --line-strong:#463F38; --body-text:#D6D0C7;
   --shadow:0 14px 30px rgba(0,0,0,.45);
   --sw-ring:rgba(242,238,231,.18);
@@ -64,11 +69,40 @@ section{padding-block:80px}
 section > .eyebrow{text-align:center}
 
 /* ---------- Hero ---------- */
-.hero{
-  display:grid;gap:40px;align-items:center;
-  grid-template-columns:1fr;padding-block:72px 80px;
+/* Hero patří studiu, ne osobě: žádný portrét, jen jméno a věta o tom,
+   co děláme. Lidé jsou až dole v sekci „Tým“. */
+.hero{padding-block:96px 88px;text-align:center}
+.hero .brand{
+  font-size:clamp(2.8rem,8vw,5rem);line-height:1;
+  margin-bottom:14px;letter-spacing:-.02em;
 }
-@media(min-width:760px){.hero{grid-template-columns:300px 1fr;gap:64px}}
+/* „Web“ odlišíme akcentem — logotyp bez obrázku */
+.hero .brand em{font-style:normal;color:var(--accent)}
+.hero .claim{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:clamp(1.1rem,2.8vw,1.6rem);color:var(--accent);margin-bottom:22px;
+}
+.hero p.lead{color:var(--muted);max-width:56ch;margin:0 auto}
+.hero .cta{
+  display:inline-block;margin-top:30px;padding:13px 28px;
+  background:var(--ink);color:var(--bg);text-decoration:none;
+  border-radius:99px;font-size:.9rem;font-weight:600;
+  transition:transform .2s,background .2s;
+}
+.hero .cta:hover{transform:translateY(-2px);background:var(--accent)}
+
+/* ---------- Tým ---------- */
+/* Dva portréty vedle sebe. Každý má vlastní akcent (`--pop`): vedoucí
+   designér terakotu jako celý web, druhý designér modrou. */
+.team{
+  display:grid;gap:44px 56px;justify-content:center;
+  grid-template-columns:repeat(auto-fit,minmax(220px,260px));
+}
+.member{display:grid;justify-items:center;text-align:center;--pop:var(--accent)}
+.member.is-blue{--pop:var(--accent-blue)}
+.member figcaption{margin-top:18px}
+.member-name{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;letter-spacing:-.01em}
+.member-role{font-size:.85rem;color:var(--muted);margin-top:2px}
 .photo-wrap{position:relative;width:260px;max-width:100%}
 .photo{
   width:100%;height:320px;
@@ -77,7 +111,7 @@ section > .eyebrow{text-align:center}
   transition:border-color .2s,transform .2s,box-shadow .2s;
 }
 .photo:hover{
-  border-color:var(--accent);transform:translateY(-3px);
+  border-color:var(--pop);transform:translateY(-3px);
   box-shadow:var(--shadow);
 }
 .photo img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
@@ -88,10 +122,13 @@ section > .eyebrow{text-align:center}
   30%{transform:translate(-7px,-3px)}
   70%{transform:translate(7px,-3px)}
 }
-.photo.shake{animation:photo-shake .26s ease-in-out;border-color:var(--accent)}
+.photo.shake{animation:photo-shake .26s ease-in-out;border-color:var(--pop)}
 .ouch{
-  position:absolute;z-index:2;pointer-events:none;
-  color:var(--accent);
+  /* Výchozí místo drží bublinu uvnitř rámečku i před prvním kliknutím —
+     bez něj by neviditelný `nowrap` text přetekl stránku na mobilu.
+     Skutečnou polohu nastaví skript při každém kliknutí. */
+  position:absolute;top:16px;left:0;z-index:2;pointer-events:none;
+  color:var(--pop);
   font-family:'Fraunces',serif;font-style:italic;font-size:1rem;
   white-space:nowrap;
   transform:translate(var(--tx,0),var(--ty,0));
@@ -137,19 +174,6 @@ section > .eyebrow{text-align:center}
 @media(prefers-reduced-motion:reduce){
   .photo.shake{animation:none}
 }
-.hero h1{font-size:clamp(2.4rem,6vw,4rem);line-height:1.05;margin-bottom:10px}
-.hero .role{
-  font-family:'Fraunces',serif;font-style:italic;
-  font-size:clamp(1.1rem,2.6vw,1.5rem);color:var(--accent);margin-bottom:22px;
-}
-.hero p.lead{color:var(--muted);max-width:52ch}
-.hero .cta{
-  display:inline-block;margin-top:28px;padding:13px 28px;
-  background:var(--ink);color:var(--bg);text-decoration:none;
-  border-radius:99px;font-size:.9rem;font-weight:600;
-  transition:transform .2s,background .2s;
-}
-.hero .cta:hover{transform:translateY(-2px);background:var(--accent)}
 
 /* ---------- Šablony — vitrína s taby ---------- */
 .showcase{
@@ -293,34 +317,19 @@ footer{
 
 <!-- HERO -->
 <header class="wrap hero">
-  <div class="photo-wrap">
-    <div class="photo" id="photo" role="button" tabindex="0" aria-label="Portrét — klikněte">
-      <img src="photos/optimized/user-portrait.webp" alt="Oleksandr Khrystofor — portrét"
-           width="260" height="320" fetchpriority="high" decoding="async">
-      <span class="tap-hint" aria-hidden="true">
-        <svg class="hand" viewBox="0 0 24 24">
-          <path d="M10 9.5V4a2 2 0 0 0-4 0v10"/>
-          <path d="M10 10V9a2 2 0 0 1 4 0v1"/>
-          <path d="M14 10.5V10a2 2 0 0 1 4 0v1"/>
-          <path d="M18 11a2 2 0 0 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
-        </svg>
-      </span>
-    </div>
-    <span class="ouch" id="ouch" role="status">Au! Nesahejte na mě!</span>
-  </div>
-  <div>
-    <p class="eyebrow">Portfolio</p>
-    <h1>Oleksandr Khrystofor</h1>
-    <p class="role">Webový designér</p>
-    <p class="lead">Navrhuji jednoduché a elegantní weby pro kavárny a malé podniky. Hotová šablona, rychlé spuštění, férová cena.</p>
-    <a class="cta" href="#kontakt">Kontaktovat</a>
-  </div>
+  <p class="eyebrow">Webové studio · Brno</p>
+  <h1 class="brand">Rosa&nbsp;<em>Web</em></h1>
+  <p class="claim">Elegantní weby pro gastronomii</p>
+  <p class="lead">Navrhujeme jednoduché a elegantní weby pro kavárny, bistra a bary.
+    Vybereme šablonu, přizpůsobíme ji vašemu podniku a postaráme se o provoz —
+    rychlé spuštění, férová cena, žádné starosti navíc.</p>
+  <a class="cta" href="#kontakt">Nezávazně poptat</a>
 </header>
 
 <!-- ŠABLONY -->
 <section class="wrap" id="sablony">
   <p class="eyebrow">Ukázky práce</p>
-  <h2 class="section-title">Moje šablony</h2>
+  <h2 class="section-title">Naše šablony</h2>
 
   <!-- Obě karty mají stejnou stavbu; skript je oživí přes initShowcase() -->
   <div class="showcase" id="showcaseCafe">
@@ -408,11 +417,64 @@ footer{
   <div class="price">
     <div class="amount">300 Kč<span> / měsíc</span></div>
     <ul>
-      <li>Web na jedné z hotových šablon, přizpůsobený vaší kavárně</li>
+      <li>Web na jedné z hotových šablon, přizpůsobený vašemu podniku</li>
       <li>Průběžná údržba a technický provoz webu</li>
       <li>Aktualizace menu a fotografií</li>
       <li>Drobné úpravy textů a obsahu</li>
     </ul>
+  </div>
+</section>
+
+<!-- TÝM -->
+<section class="wrap" id="tym">
+  <p class="eyebrow">Kdo za tím stojí</p>
+  <h2 class="section-title">Tým</h2>
+
+  <div class="team">
+    <!-- Obě karty mají stejnou stavbu; skript je oživí přes initPoke() -->
+    <figure class="member">
+      <div class="photo-wrap">
+        <div class="photo" role="button" tabindex="0" aria-label="Portrét Oleksandra — klepněte">
+          <img src="photos/optimized/user-portrait.webp" alt="Oleksandr Khrystofor — portrét"
+               width="260" height="320" loading="lazy" decoding="async">
+          <span class="tap-hint" aria-hidden="true">
+            <svg class="hand" viewBox="0 0 24 24">
+              <path d="M10 9.5V4a2 2 0 0 0-4 0v10"/>
+              <path d="M10 10V9a2 2 0 0 1 4 0v1"/>
+              <path d="M14 10.5V10a2 2 0 0 1 4 0v1"/>
+              <path d="M18 11a2 2 0 0 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+            </svg>
+          </span>
+        </div>
+        <span class="ouch" role="status">Au! Nesahejte na mě!</span>
+      </div>
+      <figcaption>
+        <p class="member-name">Oleksandr Khrystofor</p>
+        <p class="member-role">Hlavní webový designér</p>
+      </figcaption>
+    </figure>
+
+    <figure class="member is-blue">
+      <div class="photo-wrap">
+        <div class="photo" role="button" tabindex="0" aria-label="Portrét Maksyma — klepněte">
+          <img src="photos/optimized/maksym-portrait.webp" alt="Maksym Pleshyvtsev — portrét"
+               width="260" height="320" loading="lazy" decoding="async">
+          <span class="tap-hint" aria-hidden="true">
+            <svg class="hand" viewBox="0 0 24 24">
+              <path d="M10 9.5V4a2 2 0 0 0-4 0v10"/>
+              <path d="M10 10V9a2 2 0 0 1 4 0v1"/>
+              <path d="M14 10.5V10a2 2 0 0 1 4 0v1"/>
+              <path d="M18 11a2 2 0 0 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+            </svg>
+          </span>
+        </div>
+        <span class="ouch" role="status">Ještě chvíli, dodělávám pixel.</span>
+      </div>
+      <figcaption>
+        <p class="member-name">Maksym Pleshyvtsev</p>
+        <p class="member-role">Webový designér</p>
+      </figcaption>
+    </figure>
   </div>
 </section>
 
@@ -438,13 +500,13 @@ footer{
 
   <button class="msg-toggle" id="msgToggle" aria-expanded="false">Napsat zprávu</button>
   <form class="msg-form" id="msgForm" hidden>
-    <textarea id="msgBody" placeholder="Dobrý den, mám zájem o web pro svou kavárnu…" aria-label="Vaše zpráva"></textarea>
+    <textarea id="msgBody" placeholder="Dobrý den, mám zájem o web pro svůj podnik…" aria-label="Vaše zpráva"></textarea>
     <button type="submit" class="send">Odeslat e-mailem</button>
   </form>
 </section>
 
 <footer class="wrap">
-  Oleksandr Khrystofor · Webový designér · Brno
+  Rosa Web · Elegantní weby pro gastronomii · Brno
 </footer>
 
 <script>
@@ -485,7 +547,7 @@ toggle.addEventListener('click', () => {
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  const subject = encodeURIComponent('Web pro kavárnu — poptávka');
+  const subject = encodeURIComponent('Rosa Web — poptávka webu');
   const text = encodeURIComponent(body.value.trim());
   window.location.href = 'mailto:oleksandrkhrystofor@gmail.com?subject=' + subject + '&body=' + text;
 });
@@ -707,12 +769,13 @@ initShowcase(document.getElementById('showcaseCafe'), TEMPLATES_CAFE);
 initShowcase(document.getElementById('showcaseBistro'), TEMPLATES_BISTRO);
 initShowcase(document.getElementById('showcaseBar'), TEMPLATES_BAR);
 
-/* Klik na portrét: zatřesení + bublina */
-const photo = document.getElementById('photo');
-const ouch = document.getElementById('ouch');
-let ouchTimer;
-
-const OUCH_TEXTS = ['Au! Nesahejte na mě!', 'Au! To bolí!', 'Hej! Ruce pryč!'];
+/* Klik na portrét: zatřesení + bublina. V týmu jsou dva portréty, každý
+   s vlastní sadou hlášek — proto je logika v továrně initPoke(). */
+const OUCH_TEXTS = {
+  oleksandr: ['Au! Nesahejte na mě!', 'Au! To bolí!', 'Hej! Ruce pryč!'],
+  maksym:    ['Ještě chvíli, dodělávám pixel.', 'Klikat na mě není v ceníku!',
+              'Hotovo bude, až to bude hezké.']
+};
 
 /* pozice po obvodu fotky — smí zasahovat přes okraje, nikdy ne na obličej.
    wide: true = trčí ven do strany, na úzkých displejích se přeskočí */
@@ -729,39 +792,55 @@ const OUCH_SPOTS = [
 
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-function poke() {
-  photo.classList.add('tapped');   // nápověda už není potřeba
-  photo.classList.remove('shake');
-  void photo.offsetWidth;          // restart animace při rychlém klikání
-  photo.classList.add('shake');
+/* `side` říká, kterým směrem smí bublina trčet ven z fotky. Portréty stojí
+   vedle sebe, takže levý mluví doleva a pravý doprava — jinak by hláška
+   jednoho přeplula přes obličej druhého. */
+function initPoke(member, texts, side) {
+  if (!member) return;
+  const photo = member.querySelector('.photo');
+  const ouch = member.querySelector('.ouch');
+  if (!photo || !ouch) return;
+  let ouchTimer;
 
-  // tvrdý reset na nulu bez přechodu — jinak by se při dalším kliknutí
-  // text jen "dosvítil" a animace by proběhla pouze poprvé
-  ouch.classList.remove('show');
-  ouch.style.transition = 'none';
-  void ouch.offsetWidth;
-  ouch.style.transition = '';
+  function poke() {
+    photo.classList.add('tapped');   // nápověda už není potřeba
+    photo.classList.remove('shake');
+    void photo.offsetWidth;          // restart animace při rychlém klikání
+    photo.classList.add('shake');
 
-  ouch.textContent = pick(OUCH_TEXTS);
+    // tvrdý reset na nulu bez přechodu — jinak by se při dalším kliknutí
+    // text jen "dosvítil" a animace by proběhla pouze poprvé
+    ouch.classList.remove('show');
+    ouch.style.transition = 'none';
+    void ouch.offsetWidth;
+    ouch.style.transition = '';
 
-  const roomy = window.innerWidth >= 760;
-  const spot = pick(roomy ? OUCH_SPOTS : OUCH_SPOTS.filter(s => !s.wide));
-  ouch.style.top = spot.top || 'auto';
-  ouch.style.bottom = spot.bottom || 'auto';
-  ouch.style.left = spot.left;
-  ouch.style.setProperty('--tx', spot.tx);
-  ouch.style.setProperty('--ty', spot.ty || '0');
-  ouch.classList.add('show');
+    ouch.textContent = pick(texts);
 
-  clearTimeout(ouchTimer);
-  ouchTimer = setTimeout(() => ouch.classList.remove('show'), 2000);
+    const roomy = window.innerWidth >= 760;
+    const spot = pick(OUCH_SPOTS.filter(s => !s.wide ||
+      (roomy && s.left === (side === 'left' ? '0' : '100%'))));
+    ouch.style.top = spot.top || 'auto';
+    ouch.style.bottom = spot.bottom || 'auto';
+    ouch.style.left = spot.left;
+    ouch.style.setProperty('--tx', spot.tx);
+    ouch.style.setProperty('--ty', spot.ty || '0');
+    ouch.classList.add('show');
+
+    clearTimeout(ouchTimer);
+    ouchTimer = setTimeout(() => ouch.classList.remove('show'), 2000);
+  }
+
+  photo.addEventListener('click', poke);
+  photo.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); }
+  });
+  photo.addEventListener('animationend', () => photo.classList.remove('shake'));
 }
 
-photo.addEventListener('click', poke);
-photo.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); }
-});
-photo.addEventListener('animationend', () => photo.classList.remove('shake'));
+const members = document.querySelectorAll('#tym .member');
+initPoke(members[0], OUCH_TEXTS.oleksandr, 'left');
+initPoke(members[1], OUCH_TEXTS.maksym, 'right');
 </script>
 </body>
 </html>
