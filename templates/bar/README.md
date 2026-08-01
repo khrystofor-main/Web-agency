@@ -77,11 +77,18 @@ nezobrazí a hero se sesype do dvou sloupců.
 
 Fotka, na kterou host najede, se v regálu plynule prosune dopředu
 a **zůstane tam** i po odjetí myši. Plán neurčuje `z-index` — ten se
-animovat nedá a přeskakoval by — ale hloubka: pořadí se přepočítá na malé
-`translateZ` a `transition` ho přesune hladce. Perspektivní zvětšení se
-zpátky vyruší protisměrným `scale`, takže fotky nemění velikost.
-Pořadí drží krátký skript uvnitř `vinny-bar.html`, ne engine (4. a 5.
-zásada).
+animovat nedá a přeskakoval by — ale hloubka: pořadí se přepočítá na
+`translateZ` a `transition` ho přesune hladce.
+
+Samotné překrytí je v CSS vždycky binární — fotka je buď vzadu, nebo
+vepředu. Plynulé to udělá až pohyb kolem: fotka se při najetí viditelně
+přiblíží (perspektiva ji cestou zvětší) a přehození plánu padne doprostřed
+té cesty. Přiblížení se proto **nekompenzuje** zpětným zmenšením; kdyby se
+zmenšovalo, zbyl by z celé změny jen ten skok.
+
+Klidovou hloubku podle pořadí drží `--d`, přiblížení pod myší `--lift`;
+pořadí přepočítává krátký skript uvnitř `vinny-bar.html`, ne engine
+(4. a 5. zásada).
 
 ## Nový web za pár kroků
 

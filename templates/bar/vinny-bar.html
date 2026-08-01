@@ -115,13 +115,28 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   transform-origin:center bottom;
   /* Plán fotky neurčuje `z-index` (ten se animovat nedá a přeskakuje),
      ale hloubka v prostoru — `.rack` má perspektivu, takže translateZ
-     fotku plynule prosune dopředu i dozadu. `--d` je hloubka v pixelech
-     bez jednotky; hodnoty rozdává skript dole.
-     Přiblížení by fotku perspektivou zvětšilo, proto ji zpátky zmenšíme
-     v přesně opačném poměru — velikost v regálu tak zůstává stejná. */
+     fotku plynule prosune dopředu i dozadu.
+
+     Samotné překrytí je v CSS vždycky binární: v jednu chvíli je fotka
+     vzadu, o okamžik později vepředu. Plynulé to udělá až pohyb kolem —
+     fotka se viditelně přiblíží (perspektiva ji cestou zvětší) a přehození
+     plánu padne doprostřed té cesty, takže se ztratí v pohybu. Proto se
+     přiblížení **nekompenzuje** zpětným zmenšením; právě ono je tím, co je
+     vidět.
+
+     `--d` je klidová hloubka podle pořadí (rozdává ji skript dole),
+     `--lift` je přiblížení po dobu, co na fotce leží myš. Obě v pixelech
+     bez jednotky. */
   --d:0;
-  transform:translateZ(calc(var(--d) * 1px)) scale(calc((900 - var(--d)) / 900));
-  transition:rotate .5s var(--ease),translate .5s var(--ease),transform .55s var(--ease);
+  --lift:0;
+  transform:translateZ(calc((var(--d) + var(--lift)) * 1px));
+  /* Hloubka má vlastní, souměrnou křivku. Výchozí `--ease` je prudce
+     zrychlené „expo out“ — s ním by fotka urazila většinu cesty během
+     první desetiny sekundy a všechny sousedy by předběhla hned na začátku,
+     takže by změna plánu pořád vypadala jako skok. Souměrná křivka rozloží
+     předbíhání doprostřed pohybu. */
+  transition:rotate .5s var(--ease),translate .5s var(--ease),
+             transform .62s cubic-bezier(.45,.05,.3,1);
 }
 /* nástup: nadechne se rámeček, aby transform na .g-item zůstal volný pro hloubku */
 .rack .g-frame{opacity:0;animation:lay .9s var(--ease) forwards;animation-delay:calc(.13s * var(--n) + .2s)}
@@ -129,7 +144,9 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .rack .g-item + .g-item{margin-left:clamp(-56px,-3.4vw,-26px)}
 .rack .g-item:nth-child(odd){rotate:-3.5deg}
 .rack .g-item:nth-child(even){rotate:2.5deg;translate:0 clamp(10px,1.6vw,26px)}
-.rack .g-item:hover{rotate:0deg;translate:0 -10px}
+/* najetí myší: fotka se narovná, povytáhne z řady a vysune dopředu —
+   sousedy předběhne uprostřed té cesty, ne skokem na místě */
+.rack .g-item:hover{rotate:0deg;translate:0 -10px;--lift:40}
 /* na mobilu se regál složí do dvou řad a přestane se překrývat */
 @media(max-width:760px){
   .rack{flex-wrap:wrap;gap:12px}
@@ -449,7 +466,10 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
    `transition` přesune hladce. Krok je jen pár pixelů, aby se fotky
    perspektivou viditelně nezvětšovaly. */
 (function () {
-  var STEP = 4;                    // px hloubky mezi sousedními plány
+  /* Rozestup plánů. Musí být dost velký, aby fotka sousedy předbíhala
+     postupně během celého pohybu — při malém rozestupu se všechna
+     předbíhání seběhnou hned na začátku a změna plánu zas vypadá jako skok. */
+  var STEP = 8;                    // px hloubky mezi sousedními plány
 
   function start() {
     var rack = document.getElementById('galleryGrid');
