@@ -132,7 +132,11 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
 .rack .g-item + .g-item{margin-left:clamp(-56px,-3.4vw,-26px)}
 .rack .g-item:nth-child(odd){rotate:-3.5deg}
 .rack .g-item:nth-child(even){rotate:2.5deg;translate:0 clamp(10px,1.6vw,26px)}
-.rack .g-item:hover{rotate:0deg;translate:0 -10px}
+/* Vytažení řídí třída, ne `:hover`. Kdyby se fotka zvedala pod kurzorem
+   sama, změnila by tím geometrii, kurzor by spadl na souseda, zvedl by se
+   soused — a dvě fotky by si na překryvu donekonečna přehazovaly pořadí.
+   Třídu dává skript dole a bere ji, až kurzor opustí celý regál. */
+.rack .g-item.is-front{rotate:0deg;translate:0 -10px}
 /* na mobilu se regál složí do dvou řad a přestane se překrývat */
 @media(max-width:760px){
   .rack{flex-wrap:wrap;gap:12px}
@@ -145,7 +149,7 @@ html[data-theme="dark"] .theme-btn .i-sun{display:block}
   border:7px solid var(--bg);box-shadow:0 10px 26px rgba(42,33,30,.2);
 }
 .rack img{width:100%;aspect-ratio:2/3;object-fit:cover;filter:saturate(.88) contrast(1.02);transition:filter .5s var(--ease)}
-.rack .g-item:hover img{filter:none}
+.rack .g-item.is-front img{filter:none}
 /* Kopie fotky, kterou skript položí do stejné dlaždice, když jde fotka
    dopředu. Vlastní translateZ ji díky `preserve-3d` zvedne nad sousedy
    a ona se přes ně plynule prolne — spodní karta se tak objeví nad vrchní
@@ -507,6 +511,10 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
 
     function promote(el) {
       settle();
+
+      items.forEach(function (x) { x.classList.remove('is-front'); });
+      el.classList.add('is-front');
+
       if (order[order.length - 1] === el) return;    // už je vepředu
 
       var frame = el.querySelector('.g-frame');
@@ -532,8 +540,33 @@ footer .tiny{margin-top:24px;font-size:.74rem;color:var(--raised-faint)}
       timer = setTimeout(settle, FADE + 30);
     }
 
+    /* Přehození pořadí posune fotky, takže kurzor, který se ani nehnul,
+       najednou „vstoupí" do souseda. Takový `pointerenter` nese pořád
+       stejné souřadnice — a jen podle nich se pozná od skutečného pohybu
+       ruky. Bez téhle podmínky by se dvě fotky na překryvu přetahovaly
+       donekonečna. */
+    var lastX = null, lastY = null;
+
+    function moved(e) {
+      if (lastX !== null && Math.abs(e.clientX - lastX) < 3
+                         && Math.abs(e.clientY - lastY) < 3) return false;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      return true;
+    }
+
     items.forEach(function (el) {
-      el.addEventListener('pointerenter', function () { promote(el); });
+      el.addEventListener('pointerenter', function (e) {
+        if (moved(e)) promote(el);
+      });
+    });
+
+    /* Odchod z regálu: rozdělané prolnutí dotáhneme a fotky se položí zpět.
+       Pořadí zůstává — to si regál pamatuje dál. */
+    rack.addEventListener('pointerleave', function () {
+      settle();
+      items.forEach(function (x) { x.classList.remove('is-front'); });
+      lastX = lastY = null;
     });
     return true;
   }

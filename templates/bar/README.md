@@ -92,6 +92,14 @@ k řazení na plány, takže hloubka nemění ani velikost, ani polohu fotky.
 Celé to drží krátký skript uvnitř `vinny-bar.html`, ne engine (4. a 5.
 zásada).
 
+**Proč se fotky na překryvu nepřetahují.** Kdyby se fotka zvedala přes
+`:hover`, sama by si posunula geometrii, kurzor by spadl na souseda,
+zvedl by se soused — a dvě fotky by na překryvu blikaly donekonečna.
+Proto vytažení řídí třída `is-front`, kterou dává skript a bere ji, až
+kurzor opustí celý regál. Navíc se přijímá jen `pointerenter`, jehož
+souřadnice se liší od minulého — `pointerenter` vyvolaný posunem fotek
+pod nehybným kurzorem nese pořád ty samé, a tak se pozná a zahodí.
+
 ## Nový web za pár kroků
 
 1. Vyberte šablonu a zkopírujte ji spolu s `cfg.*.js` a složkou
