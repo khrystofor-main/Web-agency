@@ -228,6 +228,19 @@ section > .eyebrow{text-align:center}
 .open{display:inline-block;margin-top:18px;font-size:.85rem;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:2px;text-decoration:none;transition:border-color .2s}
 .open:hover{border-color:var(--ink)}
 
+/* ---------- Web na míru — doplňková služba ---------- */
+/* Přerušovaný rámeček odliší nabídku od tří vitrín se šablonami.
+   --line je na tmavém pozadí příliš slabá, aby byly čárky vidět. */
+.showcase--custom{display:block;text-decoration:none;color:inherit;
+  border-style:dashed;border-color:var(--line-strong)}
+.showcase--custom:hover{border-color:var(--accent)}
+.showcase--custom .showcase-info{max-width:62ch}
+.showcase--custom .plus{
+  display:flex;align-items:center;gap:14px;
+  font-family:'Fraunces',serif;font-size:2.9rem;line-height:1;color:var(--accent);
+}
+.showcase--custom .plus-price{font-family:'Inter',sans-serif;font-size:1rem;font-weight:600}
+
 /* ---------- Cena ---------- */
 .price{
   background:var(--card);border:1px solid var(--line);border-radius:20px;
@@ -412,6 +425,18 @@ footer{
       </aside>
     </div>
   </div>
+
+  <a class="showcase showcase--custom" href="na-miru.html">
+    <p class="showcase-cat">Nenašli jste to pravé?</p>
+
+    <div class="showcase-info">
+      <h3>Web na míru</h3>
+      <p class="pair">Individuální design + rozšířené funkce</p>
+      <p class="desc">Navrhnu web od nuly podle vaší značky — vlastní písma, barvy i struktura, plus funkce navíc.</p>
+      <span class="plus"><span aria-hidden="true">+</span><span class="plus-price">1000 Kč</span></span>
+      <span class="open">Zjistit více →</span>
+    </div>
+  </a>
 </section>
 
 <!-- CENA -->
