@@ -8,6 +8,3 @@ photos/*.jpg
 Thumbs.db
 Desktop.ini
 .DS_Store
-
-# graphify generated knowledge graph (rebuild with /graphify .)
-graphify-out/

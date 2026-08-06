@@ -139,4 +139,3 @@ v chybu.
 - [ ] Prázdná data nikde nedělají díru.
 - [ ] `prefers-reduced-motion` vypne pohyb.
 - [ ] Nedodělky jsou sepsané v README.
-- [ ] `graphify update .` proběhl.
