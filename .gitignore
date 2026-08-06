@@ -1,5 +1,7 @@
-# Original heavy photos (18.5 MB) — optimized versions live in photos/optimized/
+# Original heavy photos — optimized versions live in photos/optimized/
+# a photos/menu-optimized/ a jen ty patří do repozitáře.
 photos/demo/
+photos/menu photos/
 photos/*.jpg
 
 # OS junk

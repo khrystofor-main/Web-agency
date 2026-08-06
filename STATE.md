@@ -173,7 +173,7 @@ templates/
 photos/optimized/*.webp             — hero + gallery (café)
 photos/menu-optimized/*.webp        — menu items (café)
 photos/bar/, photos/bistro/         — per-template photo sets
-photos/demo/*.jpg                   — originals, GITIGNORED
+photos/demo/, photos/menu photos/   — originals, GITIGNORED (kept on disk)
 cafe info/pf-cafe.json              — demo source data (Google Places export)
 STATE.md                            — this file
 IDEA.md                             — original one-line brief
