@@ -44,20 +44,20 @@
   <div class="showcase-body">
     <div class="preview" id="tplPreview">
       <!-- iframes náhledů vkládá skript (lazy, při prvním zvolení tabu) -->
-      <a class="preview-link" id="tplPreviewLink" href="site/index.html" aria-label="Otevřít šablonu"></a>
+      <a class="preview-link" id="tplPreviewLink" href="templates/kavarna/warm-paper.html" aria-label="Otevřít šablonu"></a>
     </div>
     <aside class="showcase-info">
       <h3 id="tplName">Warm Paper</h3>
       <p class="pair" id="tplPair"></p>
       <p class="desc" id="tplDesc"></p>
       <div class="swatches" id="tplSwatches"></div>
-      <a class="open" id="tplOpen" href="site/index.html">Otevřít →</a>
+      <a class="open" id="tplOpen" href="templates/kavarna/warm-paper.html">Otevřít →</a>
     </aside>
   </div>
 </div>
 ```
 
-Важно: в ссылках указывать файл явно (`site/index.html`, а не `site/`) —
+Важно: в ссылках указывать файл явно (`templates/kavarna/warm-paper.html`, а не `templates/kavarna/`) —
 иначе при открытии хаба через `file://` браузер покажет листинг папки.
 
 ## CSS
@@ -115,7 +115,7 @@
 
 ```js
 const TEMPLATES = [
-  { href:'site/index.html', name:'Warm Paper', pair:'Playfair Display + Inter',
+  { href:'templates/kavarna/warm-paper.html', name:'Warm Paper', pair:'Playfair Display + Inter',
     desc:'…', colors:['#F6F1E7','#33523E','#22382B','#C8742C'] },
   // … остальные шаблоны: href, name, pair, desc, colors[4]
 ];

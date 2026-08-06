@@ -8,7 +8,7 @@
    • Dvojjazyčný text = { cs:'…', en:'…' }. Jednojazyčný web?
      Nechte v lang.available jen jeden kód a { cs:'…' } stačí.
    • Cesty k fotkám jsou relativní vůči HTML souboru šablony
-     (šablony leží v templates/, proto '../photos/…').
+     (šablony leží v templates/, proto '../../photos/…').
    • Prázdné pole nebo null = blok se na webu skryje.
    ============================================================ */
 window.SITE = {
@@ -50,7 +50,7 @@ window.SITE = {
     kicker: { cs:'Kavárna — Město', en:'Café — City' },
     sub: { cs:'Jedna dvě věty o tom, čím je podnik výjimečný.', en:'One or two sentences about the place.' },
     cta: { cs:'Kde nás najdete', en:'Find us' },
-    image: '../photos/optimized/hero.webp',
+    image: '../../photos/optimized/hero.webp',
     imageAlt: { cs:'', en:'' },
     caption: { cs:'', en:'' },                   // popisek pod fotkou (šablona Editorial)
     captionMeta: ''                              // např. 'Brno, CZ'
@@ -58,11 +58,11 @@ window.SITE = {
 
   /* Kolik položek, tolik slidů karuselu. */
   gallery: [
-    { src:'../photos/optimized/1.webp', alt:{cs:'',en:''}, caption:{cs:'',en:''} }
+    { src:'../../photos/optimized/1.webp', alt:{cs:'',en:''}, caption:{cs:'',en:''} }
   ],
 
   menu: {
-    photoBase: '../photos/menu-optimized/',      // složka s fotkami jídel
+    photoBase: '../../photos/menu-optimized/',      // složka s fotkami jídel
     photoExt: '.webp',                           // přípona se u fotek automaticky nahradí touto
     intro: { cs:'Kompletní nabídka s cenami.', en:'Full menu with prices.' },
     stripLabel: { cs:'', en:'' },                // popisek u pásu fotek bez ceny (viz „strip“ níže)

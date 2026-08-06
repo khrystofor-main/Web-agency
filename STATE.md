@@ -156,27 +156,33 @@ that now lives in `templates/assets/site.config.js`. Key facts used:
 
 ```
 index.html                          — hub Rosa Web (own dark theme, manual toggle)
-site/index.html                     — template 1 · Warm Paper
 templates/
-  variant-1-swiss.html              — template 2 · Swiss Minimal
-  variant-2-editorial.html          — template 3 · Editorial (GSAP)
-  variant-4-terracotta.html         — template 4 · Terracotta
-  variant-5-corporate-luxury.html   — template 5 · Corporate Luxury (GSAP)
-  assets/site.config.js             — ALL café data (demo: PF Café)
+  kavarna/                          — 5 templates, one venue type, 5 design styles
+    warm-paper.html                 — Warm Paper (paper cream, greenery)
+    swiss.html                      — Swiss Minimal
+    editorial.html                  — Editorial (GSAP)
+    terracotta.html                 — Terracotta
+    corporate-luxury.html           — Corporate Luxury (GSAP)
+  bistro/<cuisine>.html + cfg.*.js  — 5 templates by cuisine
+  bar/<venue>.html + cfg.*.js       — 5 templates by venue type
+  assets/site.config.js             — ALL café data (demo: generic "Kavárna")
   assets/site.config.example.js     — empty skeleton with comments
   assets/site.js                    — shared engine
   assets/theme.js                   — light/dark by time in Czechia
   README.md                         — "how to build a site for your café"
-photos/optimized/*.webp             — hero + gallery (771 KB total)
-photos/menu-optimized/*.webp        — menu items (971 KB total)
-photos/demo/*.jpg                   — originals, GITIGNORED (18.5 MB)
+photos/optimized/*.webp             — hero + gallery (café)
+photos/menu-optimized/*.webp        — menu items (café)
+photos/bar/, photos/bistro/         — per-template photo sets
+photos/demo/*.jpg                   — originals, GITIGNORED
 cafe info/pf-cafe.json              — demo source data (Google Places export)
 STATE.md                            — this file
 IDEA.md                             — original one-line brief
 ```
 
-Numbering follows the hub cards. Warm Paper lives outside `templates/` because
-it came first; it loads the shared engine and config from one level up.
+All three verticals follow one layout: `templates/<vertical>/<name>.html`,
+engine and shared config one level up in `templates/assets/`. Café templates
+are named by design style, bar and bistro by venue subtype — the axis differs
+because the café set is one venue in five looks, the other two are five venues.
 
 ## Changelog
 

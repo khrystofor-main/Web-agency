@@ -50,7 +50,7 @@ window.SITE = {
       en:'A place where coffee meets calm. Stop by for a moment — or for the whole afternoon.'
     },
     cta: { cs:'Kde nás najdete', en:'Find us' },
-    image: '../photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp',
+    image: '../../photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp',
     imageAlt: { cs:'Latte art s rostlinami', en:'Latte art with plants' },
     /* popisek pod hero fotkou — používá varianta Editorial */
     caption: { cs:'Ranní světlo v kavárně', en:'Morning light at the café' },
@@ -58,16 +58,16 @@ window.SITE = {
   },
 
   gallery: [
-    { src:'../photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp', alt:{cs:'Latte art s rostlinami',en:'Latte art with plants'},   caption:{cs:'Ranní rituál',en:'Morning ritual'} },
-    { src:'../photos/optimized/nathan-dumlao-x5FhHp3-UlI-unsplash.webp', alt:{cs:'Tři kávy na stole',en:'Three coffees on a table'},     caption:{cs:'Tři generace kávy',en:'Three generations of coffee'} },
-    { src:'../photos/optimized/toa-heftiba-so-7RsbB_q4-unsplash.webp',   alt:{cs:'Káva a sukulent',en:'Coffee and a succulent'},         caption:{cs:'Náš oblíbený stůl',en:'Our favourite table'} },
-    { src:'../photos/optimized/nathan-dumlao-4QaNg9pu3nk-unsplash.webp', alt:{cs:'Latte art trio',en:'Latte art trio'},                  caption:{cs:'Latte art od baristů',en:'Latte art by our baristas'} },
-    { src:'../photos/optimized/nathan-dumlao-c2Y16tC3yO8-unsplash.webp', alt:{cs:'Káva v listech',en:'Coffee among leaves'},             caption:{cs:'Zelený koutek',en:'Green corner'} },
-    { src:'../photos/optimized/nadia-valko-HINbY6sHh3M-unsplash.webp',   alt:{cs:'Flat white shora',en:'Flat white from above'},         caption:{cs:'Detail, na kterém záleží',en:'The detail that matters'} }
+    { src:'../../photos/optimized/nathan-dumlao-zUNs99PGDg0-unsplash.webp', alt:{cs:'Latte art s rostlinami',en:'Latte art with plants'},   caption:{cs:'Ranní rituál',en:'Morning ritual'} },
+    { src:'../../photos/optimized/nathan-dumlao-x5FhHp3-UlI-unsplash.webp', alt:{cs:'Tři kávy na stole',en:'Three coffees on a table'},     caption:{cs:'Tři generace kávy',en:'Three generations of coffee'} },
+    { src:'../../photos/optimized/toa-heftiba-so-7RsbB_q4-unsplash.webp',   alt:{cs:'Káva a sukulent',en:'Coffee and a succulent'},         caption:{cs:'Náš oblíbený stůl',en:'Our favourite table'} },
+    { src:'../../photos/optimized/nathan-dumlao-4QaNg9pu3nk-unsplash.webp', alt:{cs:'Latte art trio',en:'Latte art trio'},                  caption:{cs:'Latte art od baristů',en:'Latte art by our baristas'} },
+    { src:'../../photos/optimized/nathan-dumlao-c2Y16tC3yO8-unsplash.webp', alt:{cs:'Káva v listech',en:'Coffee among leaves'},             caption:{cs:'Zelený koutek',en:'Green corner'} },
+    { src:'../../photos/optimized/nadia-valko-HINbY6sHh3M-unsplash.webp',   alt:{cs:'Flat white shora',en:'Flat white from above'},         caption:{cs:'Detail, na kterém záleží',en:'The detail that matters'} }
   ],
 
   menu: {
-    photoBase: '../photos/menu-optimized/',
+    photoBase: '../../photos/menu-optimized/',
     photoExt: '.webp',            // fotky se automaticky přepisují na tuto příponu
     intro: {
       cs:'Ukázková nabídka s cenami. Položky i ceny jsou jen ilustrační.',

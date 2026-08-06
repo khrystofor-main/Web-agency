@@ -6,15 +6,16 @@ souboru** — `assets/site.config.js`. HTML šablon se nemusí sahat.
 
 | Šablona | Soubor | Styl | Písma | Animace |
 |---|---|---|---|---|
-| 1 | `../site/index.html` | Warm Paper — papírový krém, zeleň, oblá karta | Playfair Display + Inter | CSS |
-| 2 | `variant-1-swiss.html` | Swiss Minimal — bílá, černý grotesk, červený akcent | Space Grotesk + Inter | CSS |
-| 3 | `variant-2-editorial.html` | Editorial — novinový masthead, čísla sekcí | Fraunces + Newsreader | GSAP |
-| 4 | `variant-4-terracotta.html` | Terracotta — písek, oliva, oblouky | Marcellus + Work Sans | CSS |
-| 5 | `variant-5-corporate-luxury.html` | Corporate Luxury — námořnická modř a zlatá | Playfair Display + Lato | GSAP |
+| 1 | `kavarna/warm-paper.html` | Warm Paper — papírový krém, zeleň, oblá karta | Playfair Display + Inter | CSS |
+| 2 | `kavarna/swiss.html` | Swiss Minimal — bílá, černý grotesk, červený akcent | Space Grotesk + Inter | CSS |
+| 3 | `kavarna/editorial.html` | Editorial — novinový masthead, čísla sekcí | Fraunces + Newsreader | GSAP |
+| 4 | `kavarna/terracotta.html` | Terracotta — písek, oliva, oblouky | Marcellus + Work Sans | CSS |
+| 5 | `kavarna/corporate-luxury.html` | Corporate Luxury — námořnická modř a zlatá | Playfair Display + Lato | GSAP |
 
-Číslování odpovídá kartám na rozcestníku (kořenový `../index.html`).
-Warm Paper leží mimo tuhle složku (`../site/`), protože vznikl první — engine
-i konfiguraci ale sdílí se zbytkem, jen na ně odkazuje o adresář výš.
+Číslo je jen pořadí tabů na rozcestníku (kořenový `../index.html`); v názvech
+souborů nefiguruje, aby se od sebe zase nerozešlo jako dřív u `variant-*`.
+Warm Paper vznikl první a dlouho ležel mimo `templates/`, ve složce `site/`.
+Teď stojí vedle ostatních — všechny tři vertikály mají stejné rozvržení.
 
 Pro bistra je vedle toho samostatná sada pěti šablon podle kuchyně
 (česká, vietnamská, japonská, italská, rostlinná) ve složce
@@ -37,8 +38,8 @@ templates/
     site.config.example.js  ← prázdný skeleton s komentáři
     site.js                 ← sdílený engine (neupravovat pro běžný projekt)
     theme.js                ← světlé/noční téma podle času (viz níže)
-  variant-*.html            ← rozvržení + styl (jedna šablona = jeden soubor)
-../site/index.html          ← šablona 1 (Warm Paper)
+  kavarna/*.html            ← rozvržení + styl (jedna šablona = jeden soubor)
+  bistro/, bar/             ← vlastní sady šablon s vlastními konfiguracemi
 ../index.html               ← rozcestník pro porovnání všech pěti
 ../photos/optimized/        ← fotky hero a galerie
 ../photos/menu-optimized/   ← fotky jídel a nápojů
@@ -53,9 +54,10 @@ templates/
    `photos/menu-optimized/` (položky menu). Doporučeno `.webp`, šířka ~1600 px
    pro galerii a ~800 px pro položky menu.
 4. Smažte šablony, které nepoužijete, a přejmenujte tu zvolenou na `index.html`.
-   Pak upravte cesty k fotkám v konfiguraci (`../photos/…` → `photos/…`),
-   pokud soubor přesunete o úroveň výš. U šablony 1 (Warm Paper) navíc opravte
-   cesty ke skriptům (`../templates/assets/…` → `assets/…`).
+   Přesunete-li ji o dvě úrovně výš do kořene projektu, opravte cesty k fotkám
+   v konfiguraci (`../../photos/…` → `photos/…`) a ke skriptům v HTML
+   (`../assets/…` → `assets/…`). Platí to pro všech pět stejně — žádná
+   šablona už nemá výjimku.
 5. Otevřete v prohlížeči a projděte všechny sekce.
 
 ## Co se dá nastavit z konfigurace
