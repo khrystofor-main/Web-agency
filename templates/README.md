@@ -2,7 +2,7 @@
 
 **Pět** hotových jednostránkových šablon se stejnou strukturou a různým
 vizuálním charakterem. Veškerý obsah konkrétního podniku je v **jednom
-souboru** — `assets/site.config.js`. HTML šablon se nemusí sahat.
+souboru** — `kavarna/cfg.kavarna.js`. HTML šablon se nemusí sahat.
 
 | Šablona | Soubor | Styl | Písma | Animace |
 |---|---|---|---|---|
@@ -27,19 +27,24 @@ patří do konfigurace a co do HTML, co všechno se před vypuštěním zkouší
 jsou v [`../TEMPLATE-PRINCIPLES.md`](../TEMPLATE-PRINCIPLES.md).
 
 Demo obsah = obecná „Kavárna“. Je to jen ukázková náplň: pro nový podnik se
-přepíše `assets/site.config.js` a šablona zůstane beze změny.
+přepíše `kavarna/cfg.kavarna.js` a šablona zůstane beze změny.
+
+Všech pět šablon sdílí **jednu** konfiguraci schválně — je to pětkrát tentýž
+podnik v pěti kabátech, takže se dají poctivě porovnat. Bar a bistro to mají
+jinak: tam je každá šablona jiný podnik, a proto má vlastní `cfg.*.js`.
 
 ## Struktura
 
 ```
 templates/
-  assets/
-    site.config.js          ← ZDE se upravuje obsah
-    site.config.example.js  ← prázdný skeleton s komentáři
-    site.js                 ← sdílený engine (neupravovat pro běžný projekt)
+  _engine/                  ← sdílený kód, o obsahu nic neví
+    site.js                 ← engine (neupravovat pro běžný projekt)
     theme.js                ← světlé/noční téma podle času (viz níže)
-  kavarna/*.html            ← rozvržení + styl (jedna šablona = jeden soubor)
-  bistro/, bar/             ← vlastní sady šablon s vlastními konfiguracemi
+    config.example.js       ← prázdný skeleton s komentáři
+  kavarna/
+    cfg.kavarna.js          ← ZDE se upravuje obsah (společný pro všech pět)
+    *.html                  ← rozvržení + styl (jedna šablona = jeden soubor)
+  bistro/, bar/             ← vlastní sady šablon, konfigurace u každé zvlášť
 ../index.html               ← rozcestník pro porovnání všech pěti
 ../photos/optimized/        ← fotky hero a galerie
 ../photos/menu-optimized/   ← fotky jídel a nápojů
@@ -48,7 +53,7 @@ templates/
 ## Nový web za pár kroků
 
 1. Zkopírujte celou složku (nebo celý repozitář) do nového projektu.
-2. `cp assets/site.config.example.js assets/site.config.js` a vyplňte:
+2. `cp _engine/config.example.js kavarna/cfg.kavarna.js` a vyplňte:
    název, kontakty, otevírací dobu, hero text, galerii, menu, alergeny.
 3. Nahrajte fotky do `photos/optimized/` (hero + galerie) a
    `photos/menu-optimized/` (položky menu). Doporučeno `.webp`, šířka ~1600 px
@@ -56,7 +61,7 @@ templates/
 4. Smažte šablony, které nepoužijete, a přejmenujte tu zvolenou na `index.html`.
    Přesunete-li ji o dvě úrovně výš do kořene projektu, opravte cesty k fotkám
    v konfiguraci (`../../photos/…` → `photos/…`) a ke skriptům v HTML
-   (`../assets/…` → `assets/…`). Platí to pro všech pět stejně — žádná
+   (`../_engine/…` → `_engine/…`). Platí to pro všech pět stejně — žádná
    šablona už nemá výjimku.
 5. Otevřete v prohlížeči a projděte všechny sekce.
 
@@ -84,7 +89,7 @@ Každá šablona má druhou, tmavou paletu. Přepíná se sama: přes den světl
 po soumraku tmavá. Čas se čte pro `Europe/Prague` (letní čas řeší `Intl`),
 takže výsledek nezávisí na tom, odkud se host dívá. Hranice dne a noci
 sleduje skutečný východ a západ slunce v ČR po měsících (v prosinci se
-stmívá kolem 16:30, v červnu až po 21:00) — tabulka je v `assets/theme.js`.
+stmívá kolem 16:30, v červnu až po 21:00) — tabulka je v `_engine/theme.js`.
 
 - Návštěvník může téma přepnout tlačítkem v navigaci. Ruční volba má vždy
   přednost a drží 12 hodin (`theme.manualTtlHours`), pak se web vrátí
@@ -93,7 +98,7 @@ stmívá kolem 16:30, v červnu až po 21:00) — tabulka je v `assets/theme.js`
   spousta lidí má telefon v tmavém režimu nastálo a web kavárny by pak
   vypadal tmavě i v poledne.
 - Skript běží v `<head>` před vykreslením stránky, aby v noci neproblesklo
-  světlé pozadí. Proto se `site.config.js` načítá také v hlavičce.
+  světlé pozadí. Proto se `cfg.kavarna.js` načítá také v hlavičce.
 - Barvy noční varianty jsou v CSS bloku `html[data-theme="dark"]` v každé
   šabloně — tam se ladí, stejně jako zbytek designu.
 - Vlastní `brand.color` funguje i v noci: akcent se přes `color-mix`
@@ -115,7 +120,7 @@ python -m http.server 8000
 
 ## Rozšíření enginu
 
-`assets/site.js` rozumí těmto atributům v HTML:
+`_engine/site.js` rozumí těmto atributům v HTML:
 
 | Atribut | Efekt |
 |---|---|

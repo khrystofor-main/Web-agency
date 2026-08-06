@@ -1,7 +1,7 @@
 # Šablony webu pro bistro
 
 **Pět** jednostránkových šablon, každá pro jinou kuchyni. Sdílí stejný engine
-jako šablony pro kavárnu (`../assets/site.js`, `../assets/theme.js`), obsah
+jako šablony pro kavárnu (`../_engine/site.js`, `../_engine/theme.js`), obsah
 konkrétního podniku je vždy v jednom souboru `cfg.*.js`.
 
 | Šablona | Soubor | Kuchyně | Styl | Písma |
@@ -44,11 +44,11 @@ složky).
 ## Nový web za pár kroků
 
 1. Vyberte šablonu a zkopírujte ji spolu s `cfg.*.js` a složkou
-   `../assets/` do nového projektu.
+   `../_engine/` do nového projektu.
 2. Vyplňte `cfg.*.js`: název, kontakty, otevírací dobu, hero text, menu.
-   Struktura a komentáře jsou v `../assets/site.config.example.js`.
+   Struktura a komentáře jsou v `../_engine/config.example.js`.
 3. Přejmenujte zvolenou šablonu na `index.html` a opravte cesty ke skriptům
-   (`../assets/…` → `assets/…`).
+   (`../_engine/…` → `_engine/…`).
 4. Otevřete v prohlížeči a projděte všechny sekce, oba jazyky a obě témata.
 
 ## Co šablony umí

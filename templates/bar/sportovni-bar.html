@@ -311,7 +311,7 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
 }
 </style>
 <script src="cfg.sportovni-bar.js"></script>
-<script src="../assets/theme.js"></script>
+<script src="../_engine/theme.js"></script>
 </head>
 <body>
 
@@ -450,7 +450,7 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
 <script>window.TEMPLATE={letterClass:'ch',letterIndexVar:true};</script>
 <script>
 /* Program zápasů — jediná věc, kterou umí jen tahle šablona, takže
-   nepatří do sdíleného enginu (assets/site.js) a bydlí tady.
+   nepatří do sdíleného enginu (_engine/site.js) a bydlí tady.
    Data jsou v cfg.sportovni-bar.js pod klíčem `matches`. Když pole
    chybí nebo je prázdné, tabule se vůbec nezobrazí a hero se sesype
    do dvou sloupců — žádná díra po prázdném panelu. */
@@ -476,6 +476,6 @@ footer .tiny{margin-top:22px;font-size:.74rem;color:var(--raised-faint)}
      vykreslujeme před site.js, takže se přeloží při prvním setLang(). */
 })();
 </script>
-<script src="../assets/site.js"></script>
+<script src="../_engine/site.js"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 # Šablony webu pro bar a hospodu
 
 **Pět** jednostránkových šablon, každá pro jiný typ podniku. Sdílí stejný
-engine jako šablony pro kavárnu a bistro (`../assets/site.js`,
-`../assets/theme.js`), obsah konkrétního podniku je vždy v jednom souboru
+engine jako šablony pro kavárnu a bistro (`../_engine/site.js`,
+`../_engine/theme.js`), obsah konkrétního podniku je vždy v jednom souboru
 `cfg.*.js`.
 
 | Šablona | Soubor | Podnik | Styl | Písma |
@@ -49,7 +49,7 @@ fotografa je v README uvnitř každé složky.
 ### Chybějící fotka nikdy nedělá díru
 
 Engine u vygenerovaných obrázků poslouchá událost `error`
-(`markMissingPhotos` v `../assets/site.js`): když se soubor nenačte,
+(`markMissingPhotos` v `../_engine/site.js`): když se soubor nenačte,
 obal dostane třídu `is-missing`, obrázek se schová a šablona na to místo
 nakreslí vzor ve svém duchu — nýtovaný plech, kužel světla, prázdnou
 etiketu, pruhy obrazovky, šrafuru. Sady, které fotky mají (kavárna,
@@ -105,11 +105,11 @@ se dějí prakticky na jednom bodě.
 ## Nový web za pár kroků
 
 1. Vyberte šablonu a zkopírujte ji spolu s `cfg.*.js` a složkou
-   `../assets/` do nového projektu.
+   `../_engine/` do nového projektu.
 2. Vyplňte `cfg.*.js`: název, kontakty, otevírací dobu, hero text, nabídku.
-   Struktura a komentáře jsou v `../assets/site.config.example.js`.
+   Struktura a komentáře jsou v `../_engine/config.example.js`.
 3. Přejmenujte zvolenou šablonu na `index.html` a opravte cesty ke skriptům
-   (`../assets/…` → `assets/…`) a k fotkám.
+   (`../_engine/…` → `_engine/…`) a k fotkám.
 4. Otevřete v prohlížeči a projděte všechny sekce, oba jazyky a obě témata.
 
 ## Co šablony umí

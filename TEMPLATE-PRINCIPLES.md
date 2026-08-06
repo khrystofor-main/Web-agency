@@ -54,7 +54,7 @@ Dělicí čára je ostrá a vyplatí se ji hlídat:
   otevírací doba, texty hero, položky menu, cesty k fotkám.
 - **HTML šablony** — typografie, barvy, rozvržení, animace a statická copy,
   která patří k designu, ne k podniku (`data-cs` / `data-en`).
-- **`assets/site.js`** — sdílený engine. Do něj se sahá jen tehdy, když nová
+- **`_engine/site.js`** — sdílený engine. Do něj se sahá jen tehdy, když nová
   schopnost dává smysl **pro všechny** šablony.
 
 Test: mám změnit něco kvůli jedné šabloně? Pak to nepatří do enginu.

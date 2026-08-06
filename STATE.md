@@ -6,6 +6,16 @@
 > описывают ту стадию и оставлены как история — актуальную картину дают
 > шапка, свежая запись и справочные разделы (Goal / Stack / Site structure / Files).
 
+## 2026-08-06 — единая раскладка шаблонов: `templates/<вертикаль>/` + `_engine/`
+
+Структура наслоилась исторически и к трём вертикалям пришла в трёх разных видах. Кафе было единственной вертикалью без своей папки: четыре шаблона лежали прямо в `templates/`, пятая (Warm Paper) — вообще вне, в `site/`, как остаток от времён, когда проект был сайтом одного заведения. Бар и бистро при этом давно стояли в `templates/<вертикаль>/`.
+
+- **Фаза 1** — пять шаблонов кафе переехали в `templates/kavarna/`, папка `site/` удалена. Номера ушли из имён файлов: после удаления `variant-3` осталась череда `variant-1, -2, -4, -5`, а таблица в README говорила о шаблонах 1–5. Теперь имена по стилю (`swiss`, `editorial`, `terracotta`, `corporate-luxury`, `warm-paper`)
+- **Фаза 2** — движок отделён от контента. `assets/` → `_engine/` (только `site.js`, `theme.js`, `config.example.js`), а конфиг демо-кафе уехал к шаблонам как `kavarna/cfg.kavarna.js`. Теперь все 20 шаблонов подключаются одинаково: свой `cfg.*.js` рядом + `../_engine/`
+- **Конфиг кафе намеренно остался один на пять шаблонов** и на пять копий не разбивался: это пять дизайнов одного заведения, в том и смысл сравнения. Дублирование контента по вариантам уже случалось раньше и разъехалось (см. запись 2026-07-29), возвращать это не стали. У бара и бистро конфиги свои, потому что там пять *разных* заведений
+- Ловушка, которую поймал чекер ссылок: после переноса `../index.html` в шаблонах кафе вёл в никуда — на глубине 2 нужен `../../index.html`, как у бара
+- Оригиналы `photos/menu photos/` (18 PNG, 18,7 МБ) убраны из индекса; комментарий в `.gitignore` это утверждал давно, но правило покрывало только `photos/demo/`
+
 ## 2026-07-30 — ночная тема по времени + Warm Paper как пятая шаблона
 
 Ветка `templates-auto-theme`. Решения пользователя: автосмену темы делать **только** в шаблонах, хаб оставить с ручным переключателем; Warm Paper — не демо-сайт PF Café, а полноценная пятая шаблона, в которую так же вставляются данные любого кафе.
@@ -104,9 +114,9 @@ ships with, not the product.
 | Layer | Choice | Notes |
 |---|---|---|
 | Markup | One self-contained HTML per template (HTML+CSS inline) | No build step, no frameworks |
-| Content | `templates/assets/site.config.js` | Single source for all five templates |
-| Engine | `templates/assets/site.js` | i18n, hours, gallery, menu, carousel, nav, reveal |
-| Theme | `templates/assets/theme.js` | Light by day / dark after dusk, `Europe/Prague` |
+| Content | `templates/kavarna/cfg.kavarna.js` | Single source for all five templates |
+| Engine | `templates/_engine/site.js` | i18n, hours, gallery, menu, carousel, nav, reveal |
+| Theme | `templates/_engine/theme.js` | Light by day / dark after dusk, `Europe/Prague` |
 | Fonts | Per template, Google Fonts CDN | Warm Paper: Playfair Display + Inter |
 | Photos | WebP, q80, longest side 1920px (menu ≤800px) | `photos/optimized/`, `photos/menu-optimized/` |
 | Animations | IntersectionObserver + vanilla JS; GSAP in templates 3 and 5 | `prefers-reduced-motion` respected |
@@ -146,7 +156,7 @@ template cards with palette swatches, price, contacts + message form.
 ## Data source
 
 `cafe info/pf-cafe.json` — Google Places export, source of the **demo** content
-that now lives in `templates/assets/site.config.js`. Key facts used:
+that now lives in `templates/kavarna/cfg.kavarna.js`. Key facts used:
 - Name: PF Café · Rating 4.7 (518) · Daily 9:00–22:00 (rounded from 9:09)
 - Address: Dominikánské nám. 685/1A, 602 00 Brno-střed
 - Phone: +420 605 289 064
@@ -157,18 +167,19 @@ that now lives in `templates/assets/site.config.js`. Key facts used:
 ```
 index.html                          — hub Rosa Web (own dark theme, manual toggle)
 templates/
+  _engine/site.js                   — shared engine, knows nothing about content
+  _engine/theme.js                  — light/dark by time in Czechia
+  _engine/config.example.js         — empty skeleton with comments
   kavarna/                          — 5 templates, one venue type, 5 design styles
+    cfg.kavarna.js                  — ALL café data (demo: generic "Kavárna"),
+                                      shared by all five on purpose
     warm-paper.html                 — Warm Paper (paper cream, greenery)
     swiss.html                      — Swiss Minimal
     editorial.html                  — Editorial (GSAP)
     terracotta.html                 — Terracotta
     corporate-luxury.html           — Corporate Luxury (GSAP)
-  bistro/<cuisine>.html + cfg.*.js  — 5 templates by cuisine
-  bar/<venue>.html + cfg.*.js       — 5 templates by venue type
-  assets/site.config.js             — ALL café data (demo: generic "Kavárna")
-  assets/site.config.example.js     — empty skeleton with comments
-  assets/site.js                    — shared engine
-  assets/theme.js                   — light/dark by time in Czechia
+  bistro/<cuisine>.html + cfg.*.js  — 5 templates by cuisine, one config each
+  bar/<venue>.html + cfg.*.js       — 5 templates by venue type, one config each
   README.md                         — "how to build a site for your café"
 photos/optimized/*.webp             — hero + gallery (café)
 photos/menu-optimized/*.webp        — menu items (café)
@@ -179,10 +190,12 @@ STATE.md                            — this file
 IDEA.md                             — original one-line brief
 ```
 
-All three verticals follow one layout: `templates/<vertical>/<name>.html`,
-engine and shared config one level up in `templates/assets/`. Café templates
-are named by design style, bar and bistro by venue subtype — the axis differs
-because the café set is one venue in five looks, the other two are five venues.
+All three verticals follow one layout: `templates/<vertical>/<name>.html` with
+its `cfg.*.js` next to it; the engine sits apart in `templates/_engine/` and
+holds no content. Café templates are named by design style, bar and bistro by
+venue subtype — the axis differs because the café set is one venue in five
+looks, the other two are five venues. For the same reason the café templates
+share a single config while bar and bistro get one per template.
 
 ## Changelog
 
@@ -225,7 +238,7 @@ because the café set is one venue in five looks, the other two are five venues.
 ## Conventions
 
 - Czech copy is source of truth; EN follows
-- Content belongs in `site.config.js`; typography, layout and animation belong in the template
+- Content belongs in the vertical's `cfg.*.js`; typography, layout and animation belong in the template
 - Both themes share one rule — colors go through tokens, never hardcoded per theme
 - Animations: 0.7–0.9s, `cubic-bezier(.19,1,.22,1)` easing (Warm Paper; other templates set their own)
 - Radius 18px cards, 99px pills (Warm Paper)
