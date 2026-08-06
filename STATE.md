@@ -16,6 +16,16 @@
 - Ловушка, которую поймал чекер ссылок: после переноса `../index.html` в шаблонах кафе вёл в никуда — на глубине 2 нужен `../../index.html`, как у бара
 - Оригиналы `photos/menu photos/` (18 PNG, 18,7 МБ) убраны из индекса; комментарий в `.gitignore` это утверждал давно, но правило покрывало только `photos/demo/`
 
+## 2026-08-06 — блок «Web na míru» + страница услуги
+
+Ветка `worktree-web-na-miru`. Хаб продавал одну модель — аренда готовой шаблоны за 300 Kč/měsíc; из сайта не было видно, что можно заказать сайт с нуля. Решения пользователя: отдельная страница, а не якорь; пунктирная рамка как отличие от витрин; ярлык «Na míru» вместо «Šablona 6».
+
+Ветка была написана до перехода хаба на витрины с табами и опиралась на сетку `.card`, которой в `index.html` больше нет. Поэтому интеграция переписана с нуля поверх текущего `main`, а не смёржена: два исходных коммита сохранены в `backup/web-na-miru-pre-rebase`.
+
+- `index.html` — четвёртый блок `.showcase.showcase--custom` в конце `#sablony`, после витрин кафе/бистро/бара. Переиспользует оболочку `.showcase` и типографику `.showcase-info`, но без табов и iframe-превью: услуга одна, переключать нечего. Отличается пунктирной рамкой на `--line-strong` (обычная `--line` на тёмном фоне не читается) и крупным `+` вместо свотчей
+- Цена «1000 Kč» стоит бейджем рядом с плюсом, а не отдельной строкой; секция `#cena` осталась одной панелью — сайт на заказ подробно описан на своей странице, дублировать его в прайсе незачем
+- `na-miru.html` — страница услуги в стиле хаба: hero, «Co je součástí» (индивидуальный дизайн, расширенные функции), «Jak to probíhá» (4 шага), прайс, CTA на `mailto:` с заполненными темой и телом. Переключатель темы и анти-FOUC скопированы из хаба, ключ `localStorage` тот же (`theme`), поэтому тема переносится между страницами
+
 ## 2026-07-30 — ночная тема по времени + Warm Paper как пятая шаблона
 
 Ветка `templates-auto-theme`. Решения пользователя: автосмену темы делать **только** в шаблонах, хаб оставить с ручным переключателем; Warm Paper — не демо-сайт PF Café, а полноценная пятая шаблона, в которую так же вставляются данные любого кафе.
@@ -150,8 +160,9 @@ character differs. Everything below is built by `site.js` from the config.
 - **Footer** — logo, address, phone, Maps link, photo credits, back-link to the hub
 - **Nav** — logo, section anchors, CZ/EN toggle, theme toggle; gains `.scrolled` past 40px
 
-Hub (`index.html`) is a separate portfolio page: hero with portrait, five
-template cards with palette swatches, price, contacts + message form.
+Hub (`index.html`) is a separate portfolio page: hero with portrait, three
+tabbed showcases (kavárna / bistro / bar) with lazy iframe previews, a
+"web na míru" block linking to `na-miru.html`, price, contacts + message form.
 
 ## Data source
 
@@ -166,6 +177,7 @@ that now lives in `templates/kavarna/cfg.kavarna.js`. Key facts used:
 
 ```
 index.html                          — hub Rosa Web (own dark theme, manual toggle)
+na-miru.html                        — landing page for the custom-build add-on service
 templates/
   _engine/site.js                   — shared engine, knows nothing about content
   _engine/theme.js                  — light/dark by time in Czechia
